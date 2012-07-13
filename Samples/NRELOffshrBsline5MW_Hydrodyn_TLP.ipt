@@ -1,12 +1,12 @@
 NREL 5.0 MW offshore baseline floating platform HydroDyn input properties for the TLP.
-Compatible with HydroDyn v1.00.00b-jbj
+Compatible with HydroDyn v1.00.00c-bjj
 ---------------------- FEATURES ------------------------------------------------
   2            StrctType      - Switch for type of structure (1=Fixed Bottom; 2=Floating Platform)
 ---------------------- ENVIRONMENTAL CONDITIONS --------------------------------
 1025.0         WtrDens        - Water density (kg/m^3)
  200.0         WtrDpth        - Water depth (meters)
 ---------------------- WAVES ---------------------------------------------------
-   2           WaveMod        - Incident wave kinematics model {0: none=still water, 1: plane progressive (regular), 2: JONSWAP/Pierson-Moskowitz spectrum (irregular), 3: user-defind spectrum from routine UserWaveSpctrm (irregular), 4: GH Bladed wave data [invalid for StrctType=2]} (switch)
+   2           WaveMod        - Incident wave kinematics model {0: none=still water, 1: plane progressive (regular) with optional phase specification (i.e., specify 1P#, where # is the phase in degrees to override WaveSeed), 2: JONSWAP/Pierson-Moskowitz spectrum (irregular), 3: user-defind spectrum from routine UserWaveSpctrm (irregular), 4: GH Bladed wave data [invalid for StrctType=2]} (switch)
    0           WaveStMod      - Model for stretching incident wave kinematics to instantaneous free surface {0: none=no stretching, 1: vertical stretching, 2: extrapolation stretching, 3: Wheeler stretching} (switch) [unused when WaveMod=0 or when StrctType=2]
 3630.0         WaveTMax       - Analysis time for incident wave calculations (sec) [unused when WaveMod=0] [determines WaveDOmega=2Pi/WaveTMax in the IFFT]
    0.25        WaveDT         - Time step for incident wave calculations (sec) [unused when WaveMod=0] [0.1<=WaveDT<=1.0 recommended] [determines WaveOmegaMax=Pi/WaveDT in the IFFT]
@@ -19,8 +19,8 @@ DEFAULT        WavePkShp      - Peak shape parameter of incident wave spectrum (
  FALSE         WaveNDAmp      - Flag for normally distributed amplitudes  (T/F)
                GHWvFile       - Root name of GH Bladed files containing wave data (quoted string) [used only when WaveMod=4 and StrctType=1]
    1           NWaveElev      - Number of points where the incident wave elevations can be computed (-)
-   0           WaveElevxi     - List of xi-coordinates for points where the incident wave elevations can be output (meters) [NWaveElev points, separated by commas or white space; usused if NWaveElev = 0]
-   0           WaveElevyi     - List of yi-coordinates for points where the incident wave elevations can be output (meters) [NWaveElev points, separated by commas or white space; usused if NWaveElev = 0]
+   0.0         WaveElevxi     - List of xi-coordinates for points where the incident wave elevations can be output (meters) [NWaveElev points, separated by commas or white space; usused if NWaveElev = 0]
+   0.0         WaveElevyi     - List of yi-coordinates for points where the incident wave elevations can be output (meters) [NWaveElev points, separated by commas or white space; usused if NWaveElev = 0]
 ---------------------- CURRENT -------------------------------------------------
    0           CurrMod        - Current profile model {0: none=no current, 1: standard, 2: user-defined from routine UserCurrent} (switch)
    0.0         CurrSSV0       - Sub-surface current velocity at still water level (m/s) [used only when CurrMod=1]
@@ -41,7 +41,7 @@ JointID    Jointxi     Jointyi      Jointzi
 SetID     D1           D2           CA1          CA2          CD1          CD2
  (-)      (m)          (m)          (-)          (-)          (-)          (-)
   1      18.0         18.0          0.0          0.0          0.6          0.6
----------------------- MORISON MEMBERS ------------------------------------------
+---------------------- MORISON MEMBERS -----------------------------------------
    1           NMembers       - Number of members (-) [must have at least 1]
 Joint1 Joint2 PropertySet NumElements
 1        2         1         100
@@ -52,10 +52,10 @@ Joint1 Joint2 PropertySet NumElements
   60.0         RdtnTMax       - Analysis time for wave radiation kernel calculations (sec) [determines RdtnDOmega=Pi/RdtnTMax in the cosine transform]  [MAKE SURE THIS IS LONG ENOUGH FOR THE RADIATION IMPULSE RESPONSE FUNCTIONS TO DECAY TO NEAR-ZERO FOR THE GIVEN PLATFORM!]
    0.025       RdtnDT         - Time step for wave radiation kernel calculations (sec) [DT<=RdtnDT<=0.1 recommended] [determines RdtnOmegaMax=Pi/RdtnDT in the cosine transform]
 ---------------------- MOORING LINES -------------------------------------------
-   1           LineMod        - Mooring line model {1: standard quasi-static, 2: user-defined from routine UserLine} (switch) 
-   8           NumLines       - Number of mooring lines (-) [used only when LineMod = 1]
-LRadAnch  LAngAnch  LDpthAnch  LRadFair  LAngFair   LDrftFair  LUnstrLen  LDiam   LMassDen  LEAStff  LSeabedCD  LTenTol  LineNodes  [used only when NumLines>0 and LineMod=1]
-(m)       (deg)     (m)        (m)       (deg)      (m)        (m)        (m)     (kg/m)    (N)      (-)        (-)        (-)      [used only when NumLines>0 and LineMod=1]
+   1           LineMod        - Mooring line model {1: standard quasi-static, 2: user-defined from routine UserLine} (switch) [used only when StrctType=2]
+   8           NumLines       - Number of mooring lines (-) [used only when LineMod=1 and StrctType=2]
+LRadAnch  LAngAnch  LDpthAnch  LRadFair  LAngFair   LDrftFair  LUnstrLen  LDiam   LMassDen  LEAStff  LSeabedCD  LTenTol  LineNodes   [used only when NumLines>0 and LineMod=1 and StrctType=2]
+(m)       (deg)     (m)        (m)       (deg)      (m)        (m)        (m)     (kg/m)    (N)      (-)        (-)        (-)       [used only when NumLines>0 and LineMod=1 and StrctType=2]
   27.00     0.0     200.0      27.0        0.0      47.89      151.730    0.127   116.027   1.5E+09  1.0        0.00001     0       
   27.00    90.0     200.0      27.0       90.0      47.89      151.730    0.127   116.027   1.5E+09  1.0        0.00001     0       
   27.00   180.0     200.0      27.0      180.0      47.89      151.730    0.127   116.027   1.5E+09  1.0        0.00001     0       

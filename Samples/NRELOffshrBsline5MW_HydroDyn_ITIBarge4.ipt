@@ -1,13 +1,13 @@
-NREL 5.0 MW offshore baseline monopile platform with rigid foundation HydroDyn input properties.
+NREL 5.0 MW offshore baseline floating platform HydroDyn input properties for the ITI Barge with 4m draft.
 Compatible with HydroDyn v1.00.00c-bjj
 ---------------------- FEATURES ------------------------------------------------
-  1            StrctType      - Switch for type of structure (1=Fixed Bottom; 2=Floating Platform)
+  2            StrctType      - Switch for type of structure (1=Fixed Bottom; 2=Floating Platform)
 ---------------------- ENVIRONMENTAL CONDITIONS --------------------------------
-1027.0         WtrDens        - Water density (kg/m^3)
-  20.0         WtrDpth        - Water depth (meters)
+1025.0         WtrDens        - Water density (kg/m^3)
+ 150.0         WtrDpth        - Water depth (meters)
 ---------------------- WAVES ---------------------------------------------------
    2           WaveMod        - Incident wave kinematics model {0: none=still water, 1: plane progressive (regular) with optional phase specification (i.e., specify 1P#, where # is the phase in degrees to override WaveSeed), 2: JONSWAP/Pierson-Moskowitz spectrum (irregular), 3: user-defind spectrum from routine UserWaveSpctrm (irregular), 4: GH Bladed wave data [invalid for StrctType=2]} (switch)
-   3           WaveStMod      - Model for stretching incident wave kinematics to instantaneous free surface {0: none=no stretching, 1: vertical stretching, 2: extrapolation stretching, 3: Wheeler stretching} (switch) [unused when WaveMod=0 or when StrctType=2]
+   0           WaveStMod      - Model for stretching incident wave kinematics to instantaneous free surface {0: none=no stretching, 1: vertical stretching, 2: extrapolation stretching, 3: Wheeler stretching} (switch) [unused when WaveMod=0 or when StrctType=2]
 3630.0         WaveTMax       - Analysis time for incident wave calculations (sec) [unused when WaveMod=0] [determines WaveDOmega=2Pi/WaveTMax in the IFFT]
    0.25        WaveDT         - Time step for incident wave calculations (sec) [unused when WaveMod=0] [0.1<=WaveDT<=1.0 recommended] [determines WaveOmegaMax=Pi/WaveDT in the IFFT]
    5.0         WaveHs         - Significant wave height of incident waves (meters) [used only when WaveMod=1 or 2]
@@ -34,19 +34,19 @@ DEFAULT        CurrSSDir      - Sub-surface current heading direction (degrees) 
    2           NJoints        - Number of joints (-) [must be at least 2 or exactly 0]
 JointID    Jointxi     Jointyi      Jointzi 
 (-)        (m)         (m)         (m)
- 1         0.0         0.0        -20.0
- 2         0.0         0.0         87.6
+ 1         0.0         0.0         -4.0
+ 2         0.0         0.0          0.0
 --------------------- MORISON MEMBER PROPERTIES --------------------------------
    1           NSets          - Number of member property sets (-) [must be at least 1]
 SetID     D1           D2           CA1          CA2          CD1          CD2
  (-)      (m)          (m)          (-)          (-)          (-)          (-)
-  1       6.0          6.0          1.0          1.0          1.0          1.0
+  1      45.1352     45.1352        0.0          0.0          1.0          1.0
 ---------------------- MORISON MEMBERS -----------------------------------------
    1           NMembers       - Number of members (-) [must have at least 1]
 Joint1 Joint2 PropertySet NumElements
-1        2         1          99
+1        2         1          8
 ---------------------- FLOATING PLATFORM ---------------------------------------
-   ""          WAMITFile      - Root name of WAMIT output files containing the linear, nondimensionalized, hydrostatic restoring matrix (.hst extension), frequency-dependent hydrodynamic added mass matrix and damping matrix (.1 extension), and frequency- and direction-dependent wave excitation force vector per unit wave amplitude (.3 extension) (quoted string) [MAKE SURE THE FREQUENCIES INHERENT IN THESE WAMIT FILES SPAN THE PHYSICALLY-SIGNIFICANT RANGE OF FREQUENCIES FOR THE GIVEN PLATFORM; THEY MUST CONTAIN THE ZERO- AND INFINITE-FREQUENCY LIMITS!]
+"HydroData\Barge" WAMITFile   - Root name of WAMIT output files containing the linear, nondimensionalized, hydrostatic restoring matrix (.hst extension), frequency-dependent hydrodynamic added mass matrix and damping matrix (.1 extension), and frequency- and direction-dependent wave excitation force vector per unit wave amplitude (.3 extension) (quoted string) [MAKE SURE THE FREQUENCIES INHERENT IN THESE WAMIT FILES SPAN THE PHYSICALLY-SIGNIFICANT RANGE OF FREQUENCIES FOR THE GIVEN PLATFORM; THEY MUST CONTAIN THE ZERO- AND INFINITE-FREQUENCY LIMITS!]
    1.0         WAMITULEN      - Characteristic body length scale used to redimensionalize WAMIT output (meters)
 6000.0         PtfmVol0       - Displaced volume of water when the platform is in its undisplaced position (m^3) [USE THE SAME VALUE COMPUTED BY WAMIT AS OUTPUT IN THE .OUT FILE!]
   60.0         RdtnTMax       - Analysis time for wave radiation kernel calculations (sec) [determines RdtnDOmega=Pi/RdtnTMax in the cosine transform]  [MAKE SURE THIS IS LONG ENOUGH FOR THE RADIATION IMPULSE RESPONSE FUNCTIONS TO DECAY TO NEAR-ZERO FOR THE GIVEN PLATFORM!]
@@ -56,7 +56,26 @@ Joint1 Joint2 PropertySet NumElements
    8           NumLines       - Number of mooring lines (-) [used only when LineMod=1 and StrctType=2]
 LRadAnch  LAngAnch  LDpthAnch  LRadFair  LAngFair   LDrftFair  LUnstrLen  LDiam   LMassDen  LEAStff  LSeabedCD  LTenTol  LineNodes   [used only when NumLines>0 and LineMod=1 and StrctType=2]
 (m)       (deg)     (m)        (m)       (deg)      (m)        (m)        (m)     (kg/m)    (N)      (-)        (-)        (-)       [used only when NumLines>0 and LineMod=1 and StrctType=2]
+
+ 423.422   23.965   150.0      28.2843    45.0      4.0        473.312    0.0809  130.403   589.0E6  1.0        0.0001      0       
+ 423.422   66.035   150.0      28.2843    45.0      4.0        473.312    0.0809  130.403   589.0E6  1.0        0.0001      0       
+ 423.422  113.965   150.0      28.2843   135.0      4.0        473.312    0.0809  130.403   589.0E6  1.0        0.0001      0       
+ 423.422  156.035   150.0      28.2843   135.0      4.0        473.312    0.0809  130.403   589.0E6  1.0        0.0001      0       
+ 423.422  203.965   150.0      28.2843   225.0      4.0        473.312    0.0809  130.403   589.0E6  1.0        0.0001      0       
+ 423.422  246.035   150.0      28.2843   225.0      4.0        473.312    0.0809  130.403   589.0E6  1.0        0.0001      0       
+ 423.422  293.965   150.0      28.2843   315.0      4.0        473.312    0.0809  130.403   589.0E6  1.0        0.0001      0       
+ 423.422  336.035   150.0      28.2843   315.0      4.0        473.312    0.0809  130.403   589.0E6  1.0        0.0001      0       
 ---------------------- OUTPUT --------------------------------------------------
-"Wave1Elev"     OutList  
+"Wave1Elev"                                                  - Wave elevation at the platform reference point
+"M1N8FVxi , M1N8FVyi , M1N8FVzi"                             - Longitudinal, lateral, and vertical wave particle velocities at member 1 node 8
+"M1N8FAxi , M1N8FAyi , M1N8FAzi"                             - Longitudinal, lateral, and vertical wave particle accelerations at member 1 node 8
+"Fair1Ten , Fair1Ang , Anch1Ten , Anch1Ang"                  - Line 1 fairlead and anchor effective tensions and vertical angles
+"Fair2Ten , Fair2Ang , Anch2Ten , Anch2Ang"                  - Line 2 fairlead and anchor effective tensions and vertical angles
+"Fair3Ten , Fair3Ang , Anch3Ten , Anch3Ang"                  - Line 3 fairlead and anchor effective tensions and vertical angles
+"Fair4Ten , Fair4Ang , Anch4Ten , Anch4Ang"                  - Line 4 fairlead and anchor effective tensions and vertical angles
+"Fair5Ten , Fair5Ang , Anch5Ten , Anch5Ang"                  - Line 5 fairlead and anchor effective tensions and vertical angles
+"Fair6Ten , Fair6Ang , Anch6Ten , Anch6Ang"                  - Line 6 fairlead and anchor effective tensions and vertical angles
+"Fair7Ten , Fair7Ang , Anch7Ten , Anch7Ang"                  - Line 7 fairlead and anchor effective tensions and vertical angles
+"Fair8Ten , Fair8Ang , Anch8Ten , Anch8Ang"                  - Line 8 fairlead and anchor effective tensions and vertical angles
 
 END of HydroDyn input file (the word "END" must appear in the first 3 columns of this last line).

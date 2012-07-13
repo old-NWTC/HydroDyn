@@ -79,8 +79,6 @@ MODULE FFT_Module
 ! normalize the result by 1/(N-1).
 !------------------------------------------------------------------------
 
-!remove   ! This module is NEW:
-!remove    USE                                       Precision
 ! We need the Precision module and the Abort() and
 ! Int2LStr() functions from the NWTC_IO module.
 
@@ -89,8 +87,6 @@ MODULE FFT_Module
 
    IMPLICIT                               NONE
 
-!bjj start of proposed change v1.00.00a-bjj
-!bjj use this type instead of the data stored herein
    INTEGER, PARAMETER, PRIVATE         :: Undef_trans   = -1            ! transformation type is undefined
    INTEGER, PARAMETER, PRIVATE         :: COS_trans     = 1             ! COSINE transformation
    INTEGER, PARAMETER, PRIVATE         :: Fourier_trans = 2             ! FAST FOURIER transformation
@@ -106,29 +102,16 @@ MODULE FFT_Module
    END TYPE FFT_DataType      
 
 
-
-!rmREAL(ReKi),              PRIVATE, SAVE :: InvN             ! Normization constant
-!rmREAL(ReKi), ALLOCATABLE, PRIVATE, SAVE :: wSave(:)         ! Working array for performing transforms
-!rm
-!rmINTEGER,                 PRIVATE, SAVE :: N                ! Number of steps
-!rm
-!rmLOGICAL,                 PRIVATE, SAVE :: Normalize        ! Whether or not to normalize
-!bjj END of proposed change v1.00.00a-bjj
-
 !------------------------------------------------------------------------
 CONTAINS
 
-!bjj start of proposed change v1.00.00a-bjj
-!rm   SUBROUTINE ApplyCOST( TRH )
    SUBROUTINE ApplyCOST( TRH, FFT_Data, ErrStat )
-!bjj end of proposed change
    
          ! Perform cosine transform.
 
       IMPLICIT                         NONE
 
       REAL(ReKi), INTENT(INOUT)     :: TRH(:)
-!bjj start of proposed change v1.00.00a-bjj
       TYPE(FFT_DataType), INTENT(IN):: FFT_Data             ! the handle to this instance of the FFT Module
       
       INTEGER, INTENT(OUT), OPTIONAL:: ErrStat
@@ -143,15 +126,10 @@ CONTAINS
       ELSE
          TrapErrors = .FALSE.         
       END IF
-!bjj end of proposed change v1.00.00a-bjj
-
 
 
         ! Make sure the array isn't too small
 
-!bjj start of proposed change v1.00.00a-bjj
-!rm      IF ( SIZE(TRH) < N )  &
-!rm          CALL ProgAbort( 'Error in call to cosine transform.  Array size is not large enough.' )
       IF ( SIZE(TRH) < FFT_Data%N )  THEN
           CALL ProgAbort( 'Error in call to cosine transform.  Array size is not large enough.', TrapErrors )
           ErrStat = 1         ! The code can't get here unless PRESENT(ErrStat)
@@ -164,7 +142,6 @@ CONTAINS
           RETURN
       END IF      
       
-!bjj end of proposed change v1.00.00a-bjj
 
         ! Perform the cosine transform with a FFTpack routine
 
@@ -176,10 +153,7 @@ CONTAINS
 
    END SUBROUTINE ApplyCOST
   !------------------------------------------------------------------------
-!bjj start of proposed change v1.00.00a-bjj
-!rm   SUBROUTINE ApplyFFT( TRH )
    SUBROUTINE ApplyFFT( TRH, FFT_Data, ErrStat )
-!bjj end of proposed change v1.00.00a-bjj
          ! Perform Backward FFT: given TRH, a REAL array representing complex numbers,
          ! return an array TRH, of real numbers.
          !     CALL FOURTH ( TRH, NumSteps, 1, WorkT, NumSteps+2 ) ! Sandia
@@ -187,7 +161,6 @@ CONTAINS
       IMPLICIT                         NONE
 
       REAL(ReKi), INTENT(INOUT)     :: TRH(:)
-!bjj start of proposed change v1.00.00a-bjj
       TYPE(FFT_DataType), INTENT(IN):: FFT_Data             ! the handle to this instance of the FFT Module
       INTEGER, INTENT(OUT), OPTIONAL:: ErrStat
       
@@ -200,16 +173,11 @@ CONTAINS
       ELSE
          TrapErrors = .FALSE.         
       END IF
-!bjj end of proposed change v1.00.00a-bjj
-
 
 
 
         ! Make sure the array isn't too small
 
-!bjj start of proposed change v1.00.00a-bjj
-!rm      IF ( SIZE(TRH) < N )  &
-!rm          CALL ProgAbort( 'Error in call to FFT.  Array size is not large enough.' )
       IF ( SIZE(TRH) < FFT_Data%N )  THEN
           CALL ProgAbort( 'Error in call to FFT.  Array size is not large enough.', TrapErrors )
           ErrStat = 1         ! The code can't get here unless PRESENT(ErrStat)
@@ -221,7 +189,6 @@ CONTAINS
           ErrStat = 1
           RETURN
       END IF            
-!bjj end of proposed change v1.00.00a-bjj
 
         ! Perform the FFT with a FFTpack routine
 
@@ -233,10 +200,7 @@ CONTAINS
 
    END SUBROUTINE ApplyFFT
   !------------------------------------------------------------------------
-!bjj start of proposed change v1.00.00a-bjj
-!rm   SUBROUTINE ApplyFFT_cx( TRH, TRH_complex )
    SUBROUTINE ApplyFFT_cx( TRH, TRH_complex, FFT_Data, ErrStat )
-!bjj end of proposed change v1.00.00a-bjj
          ! Perform Backward FFT: given TRH, a REAL array representing complex numbers,
          ! return an array TRH, of real numbers.
 
@@ -244,15 +208,12 @@ CONTAINS
 
       REAL(ReKi),    INTENT(OUT)    :: TRH(:)
       COMPLEX(ReKi), INTENT(IN)     :: TRH_complex(:)
-!bjj start of proposed change v1.00.00a-bjj
       TYPE(FFT_DataType), INTENT(IN):: FFT_Data             ! the handle to this instance of the FFT Module
       INTEGER, INTENT(OUT), OPTIONAL:: ErrStat
-!bjj end of proposed change v1.00.00a-bjj
 
       INTEGER                       :: I
       INTEGER                       :: Indx
       
-!bjj start of proposed change v1.00.00a-bjj     
       LOGICAL                       :: TrapErrors
 
          
@@ -262,15 +223,11 @@ CONTAINS
       ELSE
          TrapErrors = .FALSE.         
       END IF
-!bjj end of proposed change v1.00.00a-bjj
 
 
 
         ! Make sure the arrays aren't too small
 
-!bjj start of proposed change v1.00.00a-bjj
-!rm      IF ( ( SIZE(TRH) < N ) .OR. ( SIZE(TRH_complex) < ( N/2 + 1 ) ) )  &
-!rm          CALL ProgAbort( 'Error in call to FFT.  Array size is not large enough.' )
       IF ( ( SIZE(TRH) < FFT_Data%N ) .OR. ( SIZE(TRH_complex) < ( FFT_Data%N/2 + 1 ) ) )  THEN
           CALL ProgAbort( 'Error in call to FFT.  Array size is not large enough.', TrapErrors )
           ErrStat = 1         ! The code can't get here unless PRESENT(ErrStat)
@@ -282,27 +239,20 @@ CONTAINS
           ErrStat = 1
           RETURN
       END IF      
-!bjj end of proposed change v1.00.00a-bjj
 
         ! Make sure that the imaginary components at the zeroeth and largest
         ! positive frequency are zero, else abort.
 
-!bjj start of proposed change v1.00.00a-bjj
-!rm      IF ( AIMAG( TRH_complex(1    ) ) /= 0.0 )  &
-!rm          CALL ProgAbort( 'Error in call to FFT.  The imaginary component at the zeroeth frequency must be zero.' )
-!rm      IF ( AIMAG( TRH_complex(N/2+1) ) /= 0.0 )  &
-!rm          CALL ProgAbort( 'Error in call to FFT.  The imaginary component at the largest positive frequency must be zero.' )
-      IF ( AIMAG( TRH_complex(1    ) ) /= 0.0 )  THEN
+      IF ( .NOT. EqualRealNos( 0.0_ReKi, AIMAG( TRH_complex(1    ) ) ) ) THEN
           CALL ProgAbort( 'Error in call to FFT.  The imaginary component at the zeroeth frequency must be zero.', TrapErrors )
           ErrStat = 1         ! The code can't get here unless PRESENT(ErrStat)
           RETURN      
-      ELSE IF ( AIMAG( TRH_complex(FFT_Data%N/2+1) ) /= 0.0 )  THEN
+      ELSE IF ( .NOT. EqualRealNos( 0.0_ReKi, AIMAG( TRH_complex(FFT_Data%N/2+1) ) ) )  THEN
           CALL ProgAbort( 'Error in call to FFT. '// &
                           'The imaginary component at the largest positive frequency must be zero.', TrapErrors )
           ErrStat = 1         ! The code can't get here unless PRESENT(ErrStat)
           RETURN
       END IF
-!bjj end of proposed change v1.00.00a-bjj
 
         ! Initialize the TRH array with Complex numbers
 
@@ -330,16 +280,12 @@ CONTAINS
 
    END SUBROUTINE ApplyFFT_cx
   !------------------------------------------------------------------------
-!bjj start of proposed change v1.00.00a-bjj
-!rm   SUBROUTINE ApplySINT( TRH )
    SUBROUTINE ApplySINT( TRH, FFT_Data, ErrStat )
-!bjj end of proposed change v1.00.00a-bjj
          ! Perform sine transform.
 
       IMPLICIT                         NONE
 
       REAL(ReKi), INTENT(INOUT)     :: TRH(:)
-!bjj start of proposed change v1.00.00a-bjj
       TYPE(FFT_DataType), INTENT(IN):: FFT_Data             ! the handle to this instance of the FFT Module
       INTEGER, INTENT(OUT), OPTIONAL:: ErrStat
       
@@ -352,15 +298,10 @@ CONTAINS
       ELSE
          TrapErrors = .FALSE.         
       END IF
-!bjj end of proposed change v1.00.00a-bjj
-
 
 
         ! Make sure the array isn't too small
 
-!bjj start of proposed change v1.00.00a-bjj
-!rm      IF ( SIZE(TRH) < N )  &
-!rm          CALL ProgAbort( 'Error in call to sine transform.  Array size is not large enough.' )
       IF ( SIZE(TRH) < FFT_Data%N )  THEN
           CALL ProgAbort( 'Error in call to sine transform.  Array size is not large enough.', TrapErrors )
           ErrStat = 1
@@ -372,16 +313,10 @@ CONTAINS
           ErrStat = 1
           RETURN
       END IF
-!bjj end of proposed change v1.00.00a-bjj
 
         ! Make sure that the value at the zeroeth and largest positive
         ! frequency are zero, else abort.
 
-!bjj start of proposed change v1.00.00a-bjj
-!RM      IF ( TRH(1) /= 0.0 )  &
-!rm          CALL ProgAbort( 'Error in call to FFT.  The value at the zeroeth frequency must be zero.' )
-!rm      IF ( TRH(N) /= 0.0 )  &
-!rm          CALL ProgAbort( 'Error in call to FFT.  The value at the largest positive frequency must be zero.' )
       IF ( TRH(1) /= 0.0 )  THEN
           CALL ProgAbort( 'Error in call to FFT.  The value at the zeroeth frequency must be zero.', TrapErrors )
           ErrStat = 1
@@ -391,7 +326,6 @@ CONTAINS
           ErrStat = 1
           RETURN
       END IF
-!bjj end of proposed change v1.00.00a-bjj
 
         ! Perform the sine transform with a FFTpack routine
 
@@ -657,8 +591,6 @@ CONTAINS
 
     LOGICAL               :: DividesN1(NFact)       ! Does this factor divide NTR-1?
 
-!remove   ! This variable is NEW:
-!remove    CHARACTER(11), EXTERNAL :: Int2LStr             ! A function to convert an interger to a left-justified string.
 
     IF ( PRESENT( ErrStat ) ) ErrStat = 0
 

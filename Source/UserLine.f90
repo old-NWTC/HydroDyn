@@ -138,7 +138,7 @@ CONTAINS
          ! Passed Variables:
          
       REAL(ReKi),              INTENT( IN    )  :: X        (6)                  ! The 3 components of the translational displacement         (in m) of        the platform reference and the 3 components of the rotational displacement             (in rad) of        the platform relative to the inertial frame.
-      REAL(ReKi),              INTENT( IN    )  :: ZTime                         ! Current simulation time, sec.
+      REAL(DbKi),              INTENT( IN    )  :: ZTime                         ! Current simulation time, sec.
 
       REAL(ReKi),              INTENT(   OUT )  :: F        (6)                  ! The 3 components of the total force from all mooring lines (in N) acting at the platform reference and the 3 components of the total moment from all mooring lines (in N-m) acting at the platform reference; positive forces are in the direction of positive platform displacement.
 

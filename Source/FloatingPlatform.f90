@@ -8,53 +8,7 @@ MODULE FloatingPlatform
 
    USE                                  NWTC_Library
 
-!BJJ start of proposed change v1.00.00a-bjj
    USE                                  UserLineModule
-
-!REMOVE THE BELOW
-!rm REAL(ReKi)                   :: HdroAdMsI (6,6)                                 ! Infinite-frequency limit of the frequency-dependent hydrodynamic added mass matrix from the radiation problem (kg, kg-m, kg-m^2 )
-!rm REAL(ReKi)                   :: HdroSttc  (6,6)                                 ! Linear hydrostatic restoring matrix from waterplane area and the center-of-buoyancy (kg/s^2, kg-m/s^2, kg-m^2/s^2)
-!rm REAL(ReKi), ALLOCATABLE      :: LAnchHTe  (:)                                   ! Effective horizontal tension at the anchor   of each mooring line (N)
-!rm REAL(ReKi), ALLOCATABLE      :: LAnchVTe  (:)                                   ! Effective vertical   tension at the anchor   of each mooring line (N)
-!rm REAL(ReKi), ALLOCATABLE      :: LAnchxi   (:)                                   ! xi-coordinate of each anchor   in the inertial frame        coordinate system (meters)
-!rm REAL(ReKi), ALLOCATABLE      :: LAnchyi   (:)                                   ! yi-coordinate of each anchor   in the inertial frame        coordinate system (meters)
-!rm REAL(ReKi), ALLOCATABLE      :: LAnchzi   (:)                                   ! zi-coordinate of each anchor   in the inertial frame        coordinate system (meters)
-!rm REAL(ReKi), ALLOCATABLE      :: LEAStff   (:)                                   ! Extensional stiffness of each mooring line (N)
-!rm REAL(ReKi), ALLOCATABLE      :: LFairHTe  (:)                                   ! Effective horizontal tension at the fairlead of each mooring line (N)
-!rm REAL(ReKi), ALLOCATABLE      :: LFairVTe  (:)                                   ! Effective vertical   tension at the fairlead of each mooring line (N)
-!rm REAL(ReKi), ALLOCATABLE      :: LFairxt   (:)                                   ! xt-coordinate of each fairlead in the tower base / platform coordinate system (meters)
-!rm REAL(ReKi), ALLOCATABLE      :: LFairyt   (:)                                   ! yt-coordinate of each fairlead in the tower base / platform coordinate system (meters)
-!rm REAL(ReKi), ALLOCATABLE      :: LFairzt   (:)                                   ! zt-coordinate of each fairlead in the tower base / platform coordinate system (meters)
-!rm REAL(ReKi), ALLOCATABLE      :: LFldWght  (:)                                   ! Weight of each mooring line in fluid per unit length (N/m)
-!rm REAL(ReKi), ALLOCATABLE      :: LNodesPi  (:,:,:)                               ! xi- (1), yi- (2), and zi (3) -coordinates in the inertial frame of the position of each node of each line where the line position and tension can be output (meters)
-!rm REAL(ReKi), ALLOCATABLE      :: LNodesTe  (:,:)                                 ! Effective line tensions                                                         at each node of each line where the line position and tension can be output (N     )
-
-!rm REAL(ReKi), ALLOCATABLE      :: LNodesX   (:)                                   ! X -coordinates in the local coordinate system of the current line (this coordinate system lies at the current anchor, Z being vertical, and X directed from the current anchor to the current fairlead) of each node where the line position and tension can be output (meters)
-!rm REAL(ReKi), ALLOCATABLE      :: LNodesZ   (:)                                   ! Z -coordinates in the local coordinate system of the current line (this coordinate system lies at the current anchor, Z being vertical, and X directed from the current anchor to the current fairlead) of each node where the line position and tension can be output (meters)
-
-!rm REAL(ReKi), ALLOCATABLE      :: LSeabedCD (:)                                   ! Coefficient of seabed static friction drag of each mooring line (a negative value indicates no seabed) (-)
-!rm REAL(ReKi), ALLOCATABLE      :: LSNodes   (:,:)                                 ! Unstretched arc distance along mooring line from anchor to each node where the line position and tension can be output (meters)
-!rm REAL(ReKi), ALLOCATABLE      :: LTenTol   (:)                                   ! Convergence tolerance within Newton-Raphson iteration of each mooring line specified as a fraction of tension (-)
-!rm REAL(ReKi), ALLOCATABLE      :: LUnstrLen (:)                                   ! Unstretched length of each mooring line (meters)
-!rm REAL(ReKi)                   :: PtfmCD                                          ! Effective platform normalized hydrodynamic viscous drag coefficient in calculation of viscous drag term from Morison's equation (-)
-!rm REAL(ReKi)                   :: PtfmDiam                                        ! Effective platform diameter in calculation of viscous drag term from Morison's equation (meters)
-!rm REAL(ReKi)                   :: PtfmVol0                                        ! Displaced volume of water when the platform is in its undisplaced position (m^3)
-!rm REAL(ReKi)                   :: RdtnDT                                          ! Time step for wave radiation kernel calculations (sec)
-!rm REAL(ReKi)                   :: RdtnTMax                                        ! Analysis time for wave radiation kernel calculations (sec)
-!rm REAL(ReKi), ALLOCATABLE      :: RdtnKrnl  (:,:,:)                               ! Instantaneous values of the wave radiation kernel (kg/s^2, kg-m/s^2, kg-m^2/s^2)
-!rm REAL(ReKi), ALLOCATABLE      :: WaveExctn (:,:)                                 ! Instantaneous values of the total excitation force on the support platfrom from incident waves (N, N-m)
-!rm REAL(ReKi), ALLOCATABLE      :: XDHistory (:,:)                                 ! The time history of the 3 components of the translational velocity        (in m/s)        of the platform reference and the 3 components of the rotational (angular) velocity  (in rad/s)        of the platform relative to the inertial frame
-
-!rm INTEGER                      :: LineMod                                         ! Mooring line model switch {0: none, 1: standard quasi-static, 2: user-defined from routine UserLine} (switch)
-!rm INTEGER                      :: LineNodes                                       ! Number of nodes per line where the mooring line position and tension can be output (-)
-!rm INTEGER                      :: NStepRdtn                                       ! Total number of frequency components = total number of time steps in the wave radiation kernel (-)
-!rm INTEGER                      :: NStepRdtn1                                      ! = NStepRdtn + 1 (-)
-!rm INTEGER                      :: NumLines                                        ! Number of mooring lines (-)
-!rm
-!rm LOGICAL                      :: UseRdtn                                         ! Flag for determining whether or not the to model wave radiation damping (flag)
-!rm
-!rm CHARACTER(1024)              :: DirRoot
-!REMOVE THE ABOVE
 
 TYPE, PUBLIC :: Line_InitDataType
    REAL(ReKi)                           :: LAnchxi                                ! xi-coordinate of the anchor   in the inertial frame        coordinate system (meters)
@@ -79,10 +33,9 @@ TYPE, PUBLIC :: FltPtfm_InitDataType
    REAL(ReKi)                           :: PtfmCD                 = 0.0           ! Effective platform normalized hydrodynamic viscous drag coefficient in calculation of viscous drag term from Morison's equation (-)
    REAL(ReKi)                           :: PtfmDiam               = 0.0           ! Effective platform diameter in calculation of viscous drag term from Morison's equation (meters)
    REAL(ReKi)                           :: PtfmVol0               = 0.0           ! Displaced volume of water when the platform is in its undisplaced position (m^3)
-   REAL(ReKi)                           :: RdtnDT                 = 0.0           ! Time step for wave radiation kernel calculations (sec)
-   REAL(ReKi)                           :: RdtnTMax               = 0.0           ! Analysis time for wave radiation kernel calculations; the actual analysis time may be larger than this value in order for the maintain an effecient (co)sine transform (sec)
+   REAL(DbKi)                           :: RdtnDT                 = 0.0           ! Time step for wave radiation kernel calculations (sec)
+   REAL(DbKi)                           :: RdtnTMax               = 0.0           ! Analysis time for wave radiation kernel calculations; the actual analysis time may be larger than this value in order for the maintain an effecient (co)sine transform (sec)
    REAL(ReKi)                           :: WAMITULEN              = 1.0           ! Characteristic body length scale used to redimensionalize WAMIT output (meters)
-!bjj rm v1.00.00a-bjj:   REAL(ReKi)                           :: X0         (6)                         ! The 3 components of the initial translational displacement (in m) of the platform reference and the 3 components of the initial rotational displacement (in rad) of the platform relative to the inertial frame
 
    TYPE(Line_InitDataType), ALLOCATABLE :: MooringLine(:)
    INTEGER                              :: LineMod                = 0             ! Mooring line model switch {0: none, 1: standard quasi-static, 2: user-defined from routine UserLine} (switch)
@@ -127,13 +80,13 @@ TYPE, PUBLIC :: FltPtfm_DataType
    REAL(ReKi)                           :: PtfmCD                                 ! Effective platform normalized hydrodynamic viscous drag coefficient in calculation of viscous drag term from Morison's equation (-)
    REAL(ReKi)                           :: PtfmDiam                               ! Effective platform diameter in calculation of viscous drag term from Morison's equation (meters)
    REAL(ReKi)                           :: PtfmVol0                               ! Displaced volume of water when the platform is in its undisplaced position (m^3)
-   REAL(ReKi)                           :: RdtnDT                                 ! Time step for wave radiation kernel calculations (sec)
-   REAL(ReKi)                           :: RdtnTMax                               ! Analysis time for wave radiation kernel calculations (sec)
+   REAL(DbKi)                           :: RdtnDT                                 ! Time step for wave radiation kernel calculations (sec)
+   REAL(DbKi)                           :: RdtnTMax                               ! Analysis time for wave radiation kernel calculations (sec)
    REAL(ReKi), ALLOCATABLE              :: RdtnKrnl  (:,:,:)                      ! Instantaneous values of the wave radiation kernel (kg/s^2, kg-m/s^2, kg-m^2/s^2)
    REAL(ReKi), ALLOCATABLE              :: WaveExctn (:,:)                        ! Instantaneous values of the total excitation force on the support platfrom from incident waves (N, N-m)
    REAL(ReKi), ALLOCATABLE              :: XDHistory (:,:)                        ! The time history of the 3 components of the translational velocity        (in m/s)        of the platform reference and the 3 components of the rotational (angular) velocity  (in rad/s)        of the platform relative to the inertial frame
 
-   REAL(ReKi)                           :: LastTime               = 0.0           ! Last time the values in XDHistory were saved (sec)
+   REAL(DbKi)                           :: LastTime               = 0.0           ! Last time the values in XDHistory were saved (sec)
 
    TYPE(Line_DataType), ALLOCATABLE     :: MooringLine (:)
    TYPE(UserLine_DataType)              :: UserLine_Data                          ! Stores data for the UserLineModule
@@ -151,20 +104,7 @@ TYPE, PUBLIC :: FltPtfm_DataType
    LOGICAL                              :: UseRdtn                = .FALSE.       ! Flag for determining whether or not the to model wave radiation damping (flag)   
 END TYPE FltPtfm_DataType
 
-!TYPE, PUBLIC :: UserLine_DataType
-!   PRIVATE
-!   REAL(ReKi), ALLOCATABLE      :: LAnchHTe  (:)                                   ! Effective horizontal tension at the anchor   of each mooring line (N)
-!   REAL(ReKi), ALLOCATABLE      :: LAnchVTe  (:)                                   ! Effective vertical   tension at the anchor   of each mooring line (N)
-!   REAL(ReKi), ALLOCATABLE      :: LFairHTe  (:)                                   ! Effective horizontal tension at the fairlead of each mooring line (N)
-!   REAL(ReKi), ALLOCATABLE      :: LFairVTe  (:)                                   ! Effective vertical   tension at the fairlead of each mooring line (N)
-!   INTEGER                      :: LineNodes                                       ! Number of nodes per line where the mooring line position and tension can be output (-)
-!   REAL(ReKi), ALLOCATABLE      :: LNodesTe  (:,:)                                 ! Effective line tensions                                                         at each node of each line where the line position and tension can be output (N     )
-!   REAL(ReKi), ALLOCATABLE      :: LNodesX   (:)                                   ! X -coordinates in the local coordinate system of the current line (this coordinate system lies at the current anchor, Z being vertical, and X directed from the current anchor to the current fairlead) of each node where the line position and tension can be output (meters)
-!   REAL(ReKi), ALLOCATABLE      :: LNodesZ   (:)                                   ! Z -coordinates in the local coordinate system of the current line (this coordinate system lies at the current anchor, Z being vertical, and X directed from the current anchor to the current fairlead) of each node where the line position and tension can be output (meters)
-!END TYPE UserLine_DataType
-!BJJ end of proposed change v1.00.00a-bjj
-
-   REAL(ReKi), PARAMETER, PRIVATE      :: OnePlusEps  = 1.0 + EPSILON(OnePlusEps)   ! The number slighty greater than unity in the precision of ReKi.
+   REAL(DbKi), PARAMETER, PRIVATE      :: OnePlusEps  = 1.0 + EPSILON(OnePlusEps)   ! The number slighty greater than unity in the precision of DbKi.
 
 CONTAINS
 !=======================================================================
@@ -186,29 +126,14 @@ CONTAINS
 
    INTEGER,    INTENT(IN )            :: ILine                                    ! Mooring line number (-)
 
-!bjj start of proposed change v1.00.00a-bjj
    TYPE(FltPtfm_DataType), INTENT(IN) :: FP_Data
    INTEGER,    INTENT(OUT)            :: ErrStat                                  ! a non-zero value indicates an error has occurred
 
    ErrStat = 0
-!bjj end of proposed change
 
 
       ! Abort if the mooring line parameters have not been computed yet or if
       !   ILine is not one of the existing mooring lines:
-
-!bjj start of proposed change v1.00.00a-bjj
-!this must be reorganized with the new data types
-!   IF ( .NOT. ALLOCATED ( LAnchHTe )                )  THEN
-!      CALL ProgAbort ( ' Routine InitFltngPtfmLd() must be called before routine AnchorTension().', TrapErrors = .TRUE.)
-!      ErrStat = 1
-!      RETURN
-!   ELSEIF ( ( ILine < 1 ) .OR. ( ILine > FP_Data%NumLines ) )  THEN
-!      CALL ProgAbort ( ' Mooring line '//TRIM( Int2LStr( ILine ) )//' has not been analyzed.', TrapErrors = .TRUE.)
-!      ErrStat = 1
-!      RETURN
-!   ENDIF
-
 
    IF ( ( ILine < 1 ) .OR. ( ILine > FP_Data%NumLines ) )  THEN
       CALL ProgAbort ( ' Mooring line '//TRIM( Int2LStr( ILine ) )//' has not been analyzed.', TrapErrors = .TRUE.)
@@ -219,7 +144,6 @@ CONTAINS
       ErrStat = 1
       RETURN
    ENDIF
-!bjj end of proposed change v1.00.00a-bjj
 
 
       ! Return the instantaneous effective tension and angle:
@@ -254,28 +178,14 @@ CONTAINS
 
    INTEGER,    INTENT(IN )            :: ILine                                    ! Mooring line number (-)
 
-!bjj start of proposed change v1.00.00a-bjj
    TYPE(FltPtfm_DataType), INTENT(IN) :: FP_Data
    INTEGER,    INTENT(OUT)            :: ErrStat                                  ! a non-zero value indicates an error has occurred
 
    ErrStat = 0
-!bjj end of proposed change
 
 
       ! Abort if the mooring line parameters have not been computed yet or if
       !   ILine is not one of the existing mooring lines:
-
-!bjj start of proposed change v1.00.00a-bjj
-!bjj: this must be reordered for the new data types:
-!   IF ( .NOT. ALLOCATED ( LFairHTe )                )  THEN
-!      CALL ProgAbort ( ' Routine InitFltngPtfmLd() must be called before routine FairleadTension().', TrapErrors = .TRUE.)
-!      ErrStat = 1
-!      RETURN
-!   ELSEIF ( ( ILine < 1 ) .OR. ( ILine > FP_Data%NumLines ) )  THEN
-!      CALL ProgAbort ( ' Mooring line '//TRIM( Int2LStr( ILine ) )//' has not been analyzed.', TrapErrors = .TRUE.)
-!      ErrStat = 1
-!      RETURN
-!   ENDIF
 
    IF ( ( ILine < 1 ) .OR. ( ILine > FP_Data%NumLines ) )  THEN
       CALL ProgAbort ( ' Mooring line '//TRIM( Int2LStr( ILine ) )//' has not been analyzed.', TrapErrors = .TRUE.)
@@ -286,8 +196,6 @@ CONTAINS
       ErrStat = 1
       RETURN
    ENDIF
-
-!bjj end of proposed change v1.00.00a-bjj
 
 
       ! Return the instantaneous effective tension and angle:
@@ -353,13 +261,11 @@ CONTAINS
    REAL(ReKi),            INTENT(  OUT) :: PtfmFt   (6)                           ! The 3 components of the portion of the platform force (in N  ) acting at the platform reference and the 3 components of the portion of the platform moment (in N-m  ) acting at the platform reference associated with everything but the added-mass effects; positive forces are in the direction of motion
    REAL(ReKi),            INTENT(IN   ) :: X        (6)                           ! The 3 components of the translational displacement    (in m  )        of the platform reference and the 3 components of the rotational displacement        (in rad  )        of the platform relative to the inertial frame
    REAL(ReKi),            INTENT(IN   ) :: XD       (6)                           ! The 3 components of the translational velocity        (in m/s)        of the platform reference and the 3 components of the rotational (angular) velocity  (in rad/s)        of the platform relative to the inertial frame
-   REAL(ReKi),            INTENT(IN   ) :: ZTime                                  ! Current simulation time (sec)
+   REAL(DbKi),            INTENT(IN   ) :: ZTime                                  ! Current simulation time (sec)
 
-!bjj start of proposed change v1.00.00a-bjj
    TYPE(Waves_DataType)  ,INTENT(INOUT) :: WaveDat                                ! the data structure containing the wave data
    TYPE(FltPtfm_DataType),INTENT(INOUT) :: FP_Data                                ! data structure containing the floating platform data
    INTEGER,               INTENT(  OUT) :: ErrStat                                ! A non-zero value indicates an error occurred
-!bjj end
 
       ! Local Variables:
 
@@ -372,13 +278,7 @@ CONTAINS
    REAL(ReKi)                           :: F_Viscous(6)                            ! Total load contribution from viscous drag (N, N-m)
    REAL(ReKi)                           :: F_Waves  (6)                            ! Total load contribution from incident waves (i.e., the diffraction problem) (N, N-m)
    REAL(ReKi)                           :: IncrmntXD                               ! Incremental change in XD over a single radiation time step (m/s, rad/s)
-!bjj start of proposed change   
-!this must be stored in the data type so we can call multiple instances
-!rm   REAL(ReKi), SAVE                     :: LastTime    = 0.0                       ! Last time the values in XDHistory where saved (sec)
-!bjj end of proposed change   
-!bjj start of proposed change v1.00.00a-bjj
    REAL(ReKi)                           :: Lamda0                                  ! Catenary parameter used to generate the initial guesses of the horizontal and vertical tensions at the fairlead for the Newton-Raphson iteration (-)
-!bjj end of proposed change v1.00.00a-bjj   
    REAL(ReKi)                           :: LFairxi                                 ! xi-coordinate of the current fairlead in the inertial frame coordinate system (meters)
    REAL(ReKi)                           :: LFairxiRef                              ! xi-coordinate of the current fairlead relative to the platform reference point in the inertial frame coordinate system (meters)
    REAL(ReKi)                           :: LFairxiTe                               ! xi-component of the effective tension at the fairlead of the current mooring line (N)
@@ -389,9 +289,6 @@ CONTAINS
    REAL(ReKi)                           :: LFairziRef                              ! zi-coordinate of the current fairlead relative to the platform reference point in the inertial frame coordinate system (meters)
    REAL(ReKi)                           :: LFairziTe                               ! zi-component of the effective tension at the fairlead of the current mooring line (N)
    REAL(ReKi)                           :: MagVRel                                 ! The magnitude of the horizontal incident wave velocity relative to the current platform node at the current time (m/s)
-!bjj START OF PROPOSED CHANGE V1.00.00A-BJJ: this parameter can be in the module data
-!RM   REAL(ReKi), PARAMETER                :: OnePlusEps  = 1.0 + EPSILON(OnePlusEps) ! The number slighty greater than unity in the precision of ReKi.
-!bjj END OF PROPOSED CHANGE: this parameter can be in the module data
    REAL(ReKi)                           :: PtfmVelocity     (2)                    ! Velocity of the current platform node in the xi- (1) and yi- (2) directions, respectively, at the current time (m/s)
    REAL(ReKi)                           :: RdtnRmndr                               ! ZTime - RdtnTime(IndRdtn)
    REAL(ReKi)                           :: SINPhi                                  ! Sine   of the angle between the xi-axis of the inertia frame and the X-axis of the local coordinate system of the current mooring line (-)
@@ -410,18 +307,10 @@ CONTAINS
    INTEGER                              :: J                                       ! Generic index
    INTEGER                              :: JNode                                   ! The index of the current platform node / element (-) [1 to PtfmNodes]
    INTEGER                              :: K                                       ! Generic index
-!bjj start of proposed change   
-!this must be stored in the data type so we can call multiple instances
-!rm   INTEGER,    SAVE                     :: LastIndRdtn                             ! Index into the radiation     arrays saved from the last call as a starting point for this call.
-!rm   INTEGER,    SAVE                     :: LastIndRdtn2                            ! Index into the radiation     arrays saved from the last call as a starting point for this call.
-!rm   INTEGER,    SAVE                     :: LastIndWave = 1                         ! Index into the incident wave arrays saved from the last call as a starting point for this call.
-!bjj end of proposed change
-
-!bjj start of proposed change v1.00.00a-bjj
+   
       ! initialize the error status
    ErrStat = 0
 
-!bjj end of proposed change
 
       ! Abort if the wave excitation loads have not been computed yet:
 
@@ -435,11 +324,11 @@ CONTAINS
       !   problem):
 
    DO I = 1,6     ! Loop through all wave excitation forces and moments
-      F_Waves(I) = InterpStp ( ZTime, WaveDat%WaveTime(:), FP_Data%WaveExctn(:,I), FP_Data%LastIndWave, WaveDat%NStepWave )
+      F_Waves(I) = InterpStp ( REAL(ZTime, ReKi), WaveDat%WaveTime(:), FP_Data%WaveExctn(:,I), &
+                                                  FP_Data%LastIndWave, WaveDat%NStepWave       )
    ENDDO          ! I - All wave excitation forces and moments
 
 
-!bjj start of proposed change v1.00.00a-bjj
    IF ( FP_Data%CalculateFirstGuess ) THEN
    
       ! Get the transformation matrix, TransMat0, from the inertial frame to the
@@ -503,7 +392,6 @@ CONTAINS
    
       FP_Data%CalculateFirstGuess = .FALSE.
    END IF
-!bjj end of proposed change v1.00.00a-bjj
 
       ! Compute the load contribution from hydrostatics:
 
@@ -545,7 +433,7 @@ CONTAINS
       ! NOTE: When IndRdtn > LastIndRdtn, IndRdtn will equal           LastIndRdtn + 1 if DT <= RdtnDT;
       !       When IndRdtn > LastIndRdtn, IndRdtn will be greater than LastIndRdtn + 1 if DT >  RdtnDT.
 !BJJ: this needs a better check so that it is ALWAYS done (MATLAB/Simulink could possibly avoid this step by starting at ZTime>0, OR there may be some numerical issues where this is NOT EXACTLY zero)
-      IF ( ZTime == 0.0 )  THEN              ! (1) .TRUE. if we are on the initialization pass where ZTime = 0.0 (and IndRdtn = 0)
+      IF ( ZTime == 0.0_DbKi )  THEN              ! (1) .TRUE. if we are on the initialization pass where ZTime = 0.0 (and IndRdtn = 0)
 
          DO J = 1,6  ! Loop through all platform DOFs
             FP_Data%XDHistory(IndRdtn,J) = XD(J)
@@ -758,7 +646,6 @@ CONTAINS
       !   current anchor to the current fairlead).  Also, compute the orientation
       !   of this local coordinate system:
 
-!bjj: note that i removed the .0 after the 2.0 on the exponents so that the compiler knows that these exponents are integers and it is therefore easier to compute!
          XF         = SQRT( ( LFairxi - FP_Data%MooringLine(I)%LAnchxi )**2 + ( LFairyi - FP_Data%MooringLine(I)%LAnchyi )**2 )
          ZF         =         LFairzi - FP_Data%MooringLine(I)%LAnchzi
 
@@ -826,12 +713,6 @@ CONTAINS
 
 
       ! CALL the user-defined platform loading model:
-!bjj start of proposed change v1.00.00a-bjj
-!UserLine is now a module
-!rm      CALL UserLine ( X              , ZTime    , FP_Data%DirRoot        , F_Lines        , &
-!rm                      FP_Data%NumLines, LineNodes, LFairHTe       , LFairVTe       , &
-!rm                      LAnchHTe       , LAnchVTe , LNodesPi(:,:,1), LNodesPi(:,:,2), &
-!rm                      LNodesPi(:,:,3), LNodesTe                         )
                       
       CALL UserLine ( X, ZTime, F_Lines, FP_Data%UserLine_Data, ErrStat )
       
@@ -866,7 +747,6 @@ CONTAINS
          
       END DO      
            
-!bjj end of proposed change
 
    ENDSELECT
 
@@ -896,10 +776,6 @@ CONTAINS
 
 !JASON: USE THIS TO TEST RELATIVE MAGNITUDES:WRITE (*,*) ZTime, F_Waves(5), F_Rdtn(5), F_Viscous(5), F_Lines(5)   !JASON:USE THIS TO TEST RELATIVE MAGNITUDES:
    RETURN
-!jmj Start of proposed change.  v6.02b-jmj  15-Nov-2006.
-!jmj Replace the hard-coded mooring line restoring calculation with a general
-!jmj   purpose, quasi-static solution based on the analytical catenary cable
-!jmj   equations with seabed interaction:
    CONTAINS
 !=======================================================================
 !JASON: SHOULD THIS ROUTINE (Catenary) BE PLACED IN NWTC_Subs OR IN ITS OWN DLL?
@@ -1437,200 +1313,9 @@ CONTAINS
       RETURN
       END SUBROUTINE Catenary
 !=======================================================================
-!bjj start of proposed change v1.00.00a-bjj
-!bjj: this is now stored in UserLine.f90
-!!JASON: MOVE THIS USER-DEFINED ROUTINE (UserLine) TO THE UserSubs.f90 OF HydroDyn WHEN THE PLATFORM LOADING FUNCTIONALITY HAS BEEN DOCUMENTED!!!!!
-!      SUBROUTINE UserLine ( X       , ZTime    , DirRoot , F       , &
-!                            NumLines, LineNodes, FairHTen, FairVTen, &
-!                            AnchHTen, AnchVTen , Nodesxi , Nodesyi , &
-!                            Nodeszi , NodesTen                         )
-!
-!
-!         ! This is a dummy routine for holding the place of a user-specified
-!         ! mooring system.  Modify this code to create your own model of an
-!         ! array of mooring lines.  The local variables and associated
-!         ! calculations below provide a template for making this
-!         ! user-specified mooring system model include a linear 6x6 restoring
-!         ! matrix with offset.  These are provided as an example only and can
-!         ! be modified or deleted as desired by the user without detriment to
-!         ! the interface (i.e., they are not necessary for the interface).
-!
-!         ! The primary output of this routine is array F(:), which must
-!         ! contain the 3 components of the total force from all mooring lines
-!         ! (in N) acting at the platform reference and the 3 components of the
-!         ! total moment from all mooring lines (in N-m) acting at the platform
-!         ! reference; positive forces are in the direction of positive
-!         ! platform displacement.  This primary output effects the overall
-!         ! dynamic response of the system.  However, this routine must also
-!         ! compute:
-!         !   Array FairHTen(:)   - Effective horizontal tension at the fairlead of each mooring line
-!         !   Array FairVTen(:)   - Effective vertical   tension at the fairlead of each mooring line
-!         !   Array AnchHTen(:)   - Effective horizontal tension at the anchor   of each mooring line
-!         !   Array AnchVTen(:)   - Effective vertical   tension at the anchor   of each mooring line
-!         !   Array NodesTen(:,:) - Effective line tensions              at each node of each line
-!         !   Array Nodesxi (:,:) - xi-coordinates in the inertial frame of each node of each line
-!         !   Array Nodesyi (:,:) - yi-coordinates in the inertial frame of each node of each line
-!         !   Array Nodeszi (:,:) - zi-coordinates in the inertial frame of each node of each line
-!         ! These secondary outputs are only used to determine what to output
-!         ! for the associated parameters placed in the OutList from the
-!         ! primary input file.  The number of mooring lines where the fairlead
-!         ! and anchor tensions can be output and the number of nodes per line
-!         ! where the mooring line position and tension can be output, NumLines
-!         ! and LineNodes, respectively, are additional inputs to this routine.
-!
-!
-!      IMPLICIT                        NONE
-!
-!
-!         ! Passed Variables:
-!
-!      INTEGER,    INTENT(IN )      :: LineNodes                                       ! Number of nodes per line where the mooring line position and tension can be output, (-).
-!      INTEGER,    INTENT(IN )      :: NumLines                                        ! Number of mooring lines where the fairlead and anchor tensions can be output, (-).
-!
-!!bjj: these outputs must be in a derived type such as
-!! TYPE :: LineType
-!!      INTEGER                      :: LineNodes
-!!      REAL(ReKi)                   :: AnchHTen                                        ! Effective horizontal tension at the anchor   of this mooring line, N.
-!!      REAL(ReKi)                   :: AnchVTen                                        ! Effective vertical   tension at the anchor   of this mooring line, N.
-!!      REAL(ReKi)                   :: FairHTen                                        ! Effective horizontal tension at the fairlead of this mooring line, N.
-!!      REAL(ReKi)                   :: FairVTen                                        ! Effective vertical   tension at the fairlead of this mooring line, N.
-!!      REAL(ReKi), ALLOCATABLE      :: NodesTen (:) !(LineNodes)                       ! Effective line tensions              at each node of this line, N.
-!!      REAL(ReKi), ALLOCATABLE      :: Nodesxi  (:) !(LineNodes)                       ! xi-coordinates in the inertial frame of each node of this line, meters.
-!!      REAL(ReKi), ALLOCATABLE      :: Nodesyi  (:) !(LineNodes)                       ! yi-coordinates in the inertial frame of each node of this line, meters.
-!!      REAL(ReKi), ALLOCATABLE      :: Nodeszi  (:) !(LineNodes)                       ! zi-coordinates in the inertial frame of each node of this line, meters.
-!!END TYPE LineType
-!!
-!!TYPE(LineType), intent(out)        :: LineOutputData(NumLines)
-!!bjj: so that LineNodes can vary by Line
-!
-!      REAL(ReKi), INTENT(OUT)      :: F        (6)                                    ! The 3 components of the total force from all mooring lines (in N) acting at the platform reference and the 3 components of the total moment from all mooring lines (in N-m) acting at the platform reference; positive forces are in the direction of positive platform displacement.
-!      REAL(ReKi), INTENT(OUT)      :: AnchHTen (NumLines          )                   ! Effective horizontal tension at the anchor   of each mooring line, N.
-!      REAL(ReKi), INTENT(OUT)      :: AnchVTen (NumLines          )                   ! Effective vertical   tension at the anchor   of each mooring line, N.
-!      REAL(ReKi), INTENT(OUT)      :: FairHTen (NumLines          )                   ! Effective horizontal tension at the fairlead of each mooring line, N.
-!      REAL(ReKi), INTENT(OUT)      :: FairVTen (NumLines          )                   ! Effective vertical   tension at the fairlead of each mooring line, N.
-!      REAL(ReKi), INTENT(OUT)      :: NodesTen (NumLines,LineNodes)                   ! Effective line tensions              at each node of each line, N.
-!      REAL(ReKi), INTENT(OUT)      :: Nodesxi  (NumLines,LineNodes)                   ! xi-coordinates in the inertial frame of each node of each line, meters.
-!      REAL(ReKi), INTENT(OUT)      :: Nodesyi  (NumLines,LineNodes)                   ! yi-coordinates in the inertial frame of each node of each line, meters.
-!      REAL(ReKi), INTENT(OUT)      :: Nodeszi  (NumLines,LineNodes)                   ! zi-coordinates in the inertial frame of each node of each line, meters.
-!      REAL(ReKi), INTENT(IN )      :: X        (6)                                    ! The 3 components of the translational displacement         (in m) of        the platform reference and the 3 components of the rotational displacement             (in rad) of        the platform relative to the inertial frame.
-!      REAL(ReKi), INTENT(IN )      :: ZTime                                           ! Current simulation time, sec.
-!
-!      CHARACTER(1024), INTENT(IN ) :: DirRoot                                         ! The name of the root file including the full path to the current working directory.  This may be useful if you want this routine to write a permanent record of what it does to be stored with the simulation results: the results should be stored in a file whose name (including path) is generated by appending any suitable extension to DirRoot.
-!
-!
-!         ! Local Variables:
-!
-!      REAL(ReKi)                   :: F0       (6)                                    ! Total mooring line load acting on the support platform in its undisplaced position (N, N-m)
-!      REAL(ReKi)                   :: Stff     (6,6)                                  ! Linear restoring matrix from all mooring lines (kg/s^2, kg-m/s^2, kg-m^2/s^2)
-!
-!      INTEGER                      :: I                                               ! Generic index.
-!      INTEGER                      :: J                                               ! Generic index.
-!
-!
-!
-!      F0  (1  ) = 0.0
-!      F0  (2  ) = 0.0
-!      F0  (3  ) = 0.0
-!      F0  (4  ) = 0.0
-!      F0  (5  ) = 0.0
-!      F0  (6  ) = 0.0
-!
-!      Stff(1,:) = (/ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 /)
-!      Stff(2,:) = (/ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 /)
-!      Stff(3,:) = (/ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 /)
-!      Stff(4,:) = (/ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 /)
-!      Stff(5,:) = (/ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 /)
-!      Stff(6,:) = (/ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 /)
-!
-!!JASON: VALUES FOR OldTLP; REMOVE THIS!!!F0  (1  ) =         0.0 !JASON: VALUES FOR OldTLP; REMOVE THIS!!!
-!!JASON: VALUES FOR OldTLP; REMOVE THIS!!!F0  (2  ) =         0.0 !JASON: VALUES FOR OldTLP; REMOVE THIS!!!
-!!JASON: VALUES FOR OldTLP; REMOVE THIS!!!F0  (3  ) = -41050000.0 !JASON: VALUES FOR OldTLP; REMOVE THIS!!!
-!!JASON: VALUES FOR OldTLP; REMOVE THIS!!!F0  (4  ) =         0.0 !JASON: VALUES FOR OldTLP; REMOVE THIS!!!
-!!JASON: VALUES FOR OldTLP; REMOVE THIS!!!F0  (5  ) =         0.0 !JASON: VALUES FOR OldTLP; REMOVE THIS!!!
-!!JASON: VALUES FOR OldTLP; REMOVE THIS!!!F0  (6  ) =         0.0 !JASON: VALUES FOR OldTLP; REMOVE THIS!!!
-!!JASON: VALUES FOR OldTLP; REMOVE THIS!!!Stff(1,:) = (/    907000.0,        0.0,         0.0,           0.0,   -16100000.0,        0.0 /)   !JASON: VALUES FOR OldTLP; REMOVE THIS!!!
-!!JASON: VALUES FOR OldTLP; REMOVE THIS!!!Stff(2,:) = (/         0.0,   907000.0,         0.0,    16100000.0,           0.0,        0.0 /)   !JASON: VALUES FOR OldTLP; REMOVE THIS!!!
-!!JASON: VALUES FOR OldTLP; REMOVE THIS!!!Stff(3,:) = (/         0.0,        0.0, 213000000.0,           0.0,           0.0,        0.0 /)   !JASON: VALUES FOR OldTLP; REMOVE THIS!!!
-!!JASON: VALUES FOR OldTLP; REMOVE THIS!!!Stff(4,:) = (/         0.0, 15600000.0,         0.0, 10600000000.0,           0.0,        0.0 /)   !JASON: VALUES FOR OldTLP; REMOVE THIS!!!
-!!JASON: VALUES FOR OldTLP; REMOVE THIS!!!Stff(5,:) = (/ -15600000.0,        0.0,         0.0,           0.0, 10600000000.0,        0.0 /)   !JASON: VALUES FOR OldTLP; REMOVE THIS!!!
-!!JASON: VALUES FOR OldTLP; REMOVE THIS!!!Stff(6,:) = (/         0.0,        0.0,         0.0,           0.0,           0.0, 82900000.0 /)   !JASON: VALUES FOR OldTLP; REMOVE THIS!!!
-!F0  (1  ) = 0.0   !JASON: VALUES FOR MIT/NREL SDB; REMOVE THIS!!!
-!F0  (2  ) = 0.0   !JASON: VALUES FOR MIT/NREL SDB; REMOVE THIS!!!
-!F0  (3  ) = 0.0   !JASON: VALUES FOR MIT/NREL SDB; REMOVE THIS!!!
-!F0  (4  ) = 0.0   !JASON: VALUES FOR MIT/NREL SDB; REMOVE THIS!!!
-!F0  (5  ) = 0.0   !JASON: VALUES FOR MIT/NREL SDB; REMOVE THIS!!!
-!F0  (6  ) = 0.0   !JASON: VALUES FOR MIT/NREL SDB; REMOVE THIS!!!
-!Stff(1,:) = (/ 4000000.0,       0.0, 0.0, 0.0, 0.0, 0.0 /)  !JASON: VALUES FOR MIT/NREL SDB; REMOVE THIS!!!
-!Stff(2,:) = (/       0.0, 4000000.0, 0.0, 0.0, 0.0, 0.0 /)  !JASON: VALUES FOR MIT/NREL SDB; REMOVE THIS!!!
-!Stff(3,:) = (/       0.0,       0.0, 0.0, 0.0, 0.0, 0.0 /)  !JASON: VALUES FOR MIT/NREL SDB; REMOVE THIS!!!
-!Stff(4,:) = (/       0.0,       0.0, 0.0, 0.0, 0.0, 0.0 /)  !JASON: VALUES FOR MIT/NREL SDB; REMOVE THIS!!!
-!Stff(5,:) = (/       0.0,       0.0, 0.0, 0.0, 0.0, 0.0 /)  !JASON: VALUES FOR MIT/NREL SDB; REMOVE THIS!!!
-!Stff(6,:) = (/       0.0,       0.0, 0.0, 0.0, 0.0, 0.0 /)  !JASON: VALUES FOR MIT/NREL SDB; REMOVE THIS!!!
-!!JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!F0  (1  ) =         0.0 !JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!
-!!JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!F0  (2  ) =         0.0 !JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!
-!!JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!F0  (3  ) =  -6150000.0 !JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!
-!!JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!F0  (4  ) =         0.0 !JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!
-!!JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!F0  (5  ) =         0.0 !JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!
-!!JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!F0  (6  ) =         0.0 !JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!
-!!JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!Stff(1,:) = (/  15920.0,       0.0,     0.0,        0.0,   144700.0,       0.0 /)   !JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!
-!!JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!Stff(2,:) = (/      0.0,   15920.0,     0.0,  -144600.0,        0.0,       0.0 /)   !JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!
-!!JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!Stff(3,:) = (/      0.0,       0.0, 24930.0,        0.0,        0.0,       0.0 /)   !JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!
-!!JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!Stff(4,:) = (/      0.0, -144500.0,     0.0, 38740000.0,        0.0,       0.0 /)   !JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!
-!!JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!Stff(5,:) = (/ 144500.0,       0.0,     0.0,        0.0, 38740000.0,       0.0 /)   !JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!
-!!JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!Stff(6,:) = (/      0.0,       0.0,     0.0,        0.0,        0.0, 2797000.0 /)   !JASON: VALUES FOR ITI BARGE; REMOVE THIS!!!
-!
-!      DO I = 1,6     ! Loop through all mooring line forces and moments
-!            F(I) = F0(I)
-!         DO J = 1,6  ! Loop through all platform DOFs
-!            F(I) = F (I) - Stff(I,J)*X(J)
-!         ENDDO       ! J - All platform DOFs
-!      ENDDO          ! I - All mooring line forces and moments
-!
-!
-!
-!      DO I = 1,NumLines       ! Loop through all mooring lines where the fairlead and anchor tensions can be output
-!
-!         FairHTen   (I  ) = 0.0
-!         FairVTen   (I  ) = 0.0
-!         AnchHTen   (I  ) = 0.0
-!         AnchVTen   (I  ) = 0.0
-!
-!         DO J = 1,LineNodes   ! Loop through all nodes per line where the line position and tension can be output
-!
-!            Nodesxi (I,J) = 0.0
-!            Nodesyi (I,J) = 0.0
-!            Nodeszi (I,J) = 0.0
-!            NodesTen(I,J) = 0.0
-!
-!         ENDDO                ! J - All nodes per line where the line position and tension can be output
-!
-!      ENDDO                   ! I - All mooring lines where the fairlead and anchor tensions can be output
-!
-!
-!
-!      RETURN
-!      END SUBROUTINE UserLine
-!!=======================================================================
-!!jmj End of proposed change.  v6.02b-jmj  15-Nov-2006.
-!bjj end of propsoed change v1.00.00a-bjj
    END SUBROUTINE FltngPtfmLd
 !=======================================================================
-!bjj start of proposed change v1.00.00a-bjj
-!rm   SUBROUTINE InitFltngPtfmLd ( WAMITFile  , PtfmVol0In, PtfmDiamIn , PtfmCDIn , &
-!rm                                RdtnTMaxIn , RdtnDTIn  , NumLinesIn , LineModIn, &
-!rm                                LAnchxiIn  , LAnchyiIn , LAnchziIn  , LFairxtIn, &
-!rm                                LFairytIn  , LFairztIn , LUnstrLenIn, LDiam    , &
-!rm                                LMassDen   , LEAStffIn , LSeabedCDIn, LTenTolIn, &
-!rm                                LineNodesIn, LSNodesIn , X0                        )
-
-!   SUBROUTINE InitFltngPtfmLd ( WAMITFile  , PtfmVol0In, PtfmDiamIn , PtfmCDIn , &
-!                                RdtnTMaxIn , RdtnDTIn  , NumLinesIn , LineModIn, &
-!                                LAnchxiIn  , LAnchyiIn , LAnchziIn  , LFairxtIn, &
-!                                LFairytIn  , LFairztIn , LUnstrLenIn, LDiam    , &
-!                                LMassDen   , LEAStffIn , LSeabedCDIn, LTenTolIn, &
-!                                LineNodesIn, LSNodesIn , X0, DirRootIn,      )
    SUBROUTINE InitFltngPtfmLd ( FltPtfm_InitData , WaveDat, FP_Data , ErrStat )
-!bjj end of proposed change
 
       ! This routine is used to initialize the variables used in the time
       ! domain hydrodynamic loading and mooring system dynamics routines
@@ -1645,47 +1330,15 @@ CONTAINS
 
 
       ! Passed Variables:
-!BJJ START OF PROPOSED CHANGE V1.00.00A-BJJ
-!   INTEGER,    INTENT(IN )      :: LineNodesIn                                     ! Number of nodes per line where the mooring line position and tension can be output (-)
-!   INTEGER,    INTENT(IN )      :: NumLinesIn                                      ! Number of mooring lines (-)
-!
-!   REAL(ReKi), INTENT(IN )      :: LAnchxiIn  (NumLinesIn)                         ! xi-coordinate of each anchor   in the inertial frame        coordinate system (meters)
-!   REAL(ReKi), INTENT(IN )      :: LAnchyiIn  (NumLinesIn)                         ! yi-coordinate of each anchor   in the inertial frame        coordinate system (meters)
-!   REAL(ReKi), INTENT(IN )      :: LAnchziIn  (NumLinesIn)                         ! zi-coordinate of each anchor   in the inertial frame        coordinate system (meters)
-!   REAL(ReKi), INTENT(IN )      :: LDiam      (NumLinesIn)                         ! Effective diameter of each mooring line for calculation of the line buoyancy (meters)
-!   REAL(ReKi), INTENT(IN )      :: LEAStffIn  (NumLinesIn)                         ! Extensional stiffness of each mooring line (N)
-!   REAL(ReKi), INTENT(IN )      :: LFairxtIn  (NumLinesIn)                         ! xt-coordinate of each fairlead in the tower base / platform coordinate system (meters)
-!   REAL(ReKi), INTENT(IN )      :: LFairytIn  (NumLinesIn)                         ! yt-coordinate of each fairlead in the tower base / platform coordinate system (meters)
-!   REAL(ReKi), INTENT(IN )      :: LFairztIn  (NumLinesIn)                         ! zt-coordinate of each fairlead in the tower base / platform coordinate system (meters)
-!   REAL(ReKi), INTENT(IN )      :: LMassDen   (NumLinesIn)                         ! Mass density of each mooring line (kg/m)
-!   REAL(ReKi), INTENT(IN )      :: LSeabedCDIn(NumLinesIn)                         ! Coefficient of seabed static friction drag of each mooring line (a negative value indicates no seabed) (-)
-!   REAL(ReKi), INTENT(IN )      :: LSNodesIn  (NumLinesIn,LineNodesIn)             ! Unstretched arc distance along mooring line from anchor to each node where the line position and tension can be output (meters)
-!   REAL(ReKi), INTENT(IN )      :: LTenTolIn  (NumLinesIn)                         ! Convergence tolerance within Newton-Raphson iteration of each mooring line specified as a fraction of tension (-)
-!   REAL(ReKi), INTENT(IN )      :: LUnstrLenIn(NumLinesIn)                         ! Unstretched length of each mooring line (meters)
-!   REAL(ReKi), INTENT(IN )      :: PtfmCDIn                                        ! Effective platform normalized hydrodynamic viscous drag coefficient in calculation of viscous drag term from Morison's equation (-)
-!   REAL(ReKi), INTENT(IN )      :: PtfmDiamIn                                      ! Effective platform diameter in calculation of viscous drag term from Morison's equation (meters)
-!   REAL(ReKi), INTENT(IN )      :: PtfmVol0In                                      ! Displaced volume of water when the platform is in its undisplaced position (m^3)
-!   REAL(ReKi), INTENT(IN )      :: RdtnDTIn                                        ! Time step for wave radiation kernel calculations (sec)
-!   REAL(ReKi), INTENT(IN )      :: RdtnTMaxIn                                      ! Analysis time for wave radiation kernel calculations; the actual analysis time may be larger than this value in order for the maintain an effecient (co)sine transform (sec)
-!   REAL(ReKi), INTENT(IN )      :: X0         (6)                                  ! The 3 components of the initial translational displacement (in m) of the platform reference and the 3 components of the initial rotational displacement (in rad) of the platform relative to the inertial frame
-!
-!   INTEGER,    INTENT(IN )      :: LineModIn                                       ! Mooring line model switch {0: none, 1: standard quasi-static, 2: user-defined from routine UserLine} (switch)
-!
-!   CHARACTER(1024), INTENT(IN )   :: WAMITFile                                       ! Root name of WAMIT output files containing the linear, nondimensionalized, hydrostatic restoring matrix (.hst extension), frequency-dependent hydrodynamic added mass matrix and damping matrix (.1 extension), and frequency- and direction-dependent wave excitation force vector per unit wave amplitude (.3 extension)
-
    TYPE(FltPtfm_InitDataType), INTENT(IN) :: FltPtfm_InitData                      ! data to initialize the floating platform module
    TYPE(Waves_DataType),       INTENT(IN) :: WaveDat
    TYPE(FltPtfm_DataType),     INTENT(OUT):: FP_Data                               ! data for the Floating platform module
    INTEGER,                    INTENT(OUT):: ErrStat                               ! a non-zero value indicates an error has occurred
-!BJJ END OF PROPOSED CHANGE
 
       ! Local Variables:
 
    COMPLEX(ReKi), ALLOCATABLE             :: HdroExctn (:,:,:)                    ! Frequency- and direction-dependent complex hydrodynamic wave excitation force per unit wave amplitude vector (kg/s^2, kg-m/s^2)
-!jbj: start of proposed change v1.00.00b-jbj
-!rm   COMPLEX(ReKi), ALLOCATABLE             :: WaveExctnC(:,:)                      ! Fourier transform of the instantaneous value of the total excitation force on the support platfrom from incident waves (N-s, N-m-s)
    COMPLEX(ReKi), ALLOCATABLE             :: WaveExctnC(:,:)                      ! Discrete Fourier transform of the instantaneous value of the total excitation force on the support platfrom from incident waves (N, N-m)
-!jbj: end of proposed change v1.00.00b-jbj
    COMPLEX(ReKi), ALLOCATABLE             :: X_Diffrctn(:,:)                      ! Frequency-dependent complex hydrodynamic wave excitation force per unit wave amplitude vector at the chosen wave heading direction, WaveDir (kg/s^2, kg-m/s^2)
 
    REAL(ReKi)                             :: DffrctDim (6)                        ! Matrix used to redimensionalize WAMIT hydrodynamic wave excitation force  output (kg/s^2, kg-m/s^2            )
@@ -1694,22 +1347,14 @@ CONTAINS
    REAL(ReKi), ALLOCATABLE                :: HdroFreq  (:)                        ! Frequency components inherent in the hydrodynamic added mass matrix, hydrodynamic daming matrix, and complex wave excitation force per unit wave amplitude vector (rad/s)
    REAL(ReKi), ALLOCATABLE                :: HdroWvDir (:)                        ! Incident wave propagation heading direction components inherent in the complex wave excitation force per unit wave amplitude vector (degrees)
    REAL(ReKi)                             :: HighFreq    = 0.0                    ! The highest frequency component in the WAMIT file, not counting infinity.
-   REAL(ReKi)                             :: Krnl_Fact                            ! Factor used to scale the magnitude of the RdtnKnrl  as required by the discrete time (co)sine transform (-)
-!bjj rm v1.00.00a-bjj:   REAL(ReKi)                             :: Lamda0                               ! Catenary parameter used to generate the initial guesses of the horizontal and vertical tensions at the fairlead for the Newton-Raphson iteration (-)
-!bjj rm v1.00.00a-bjj:   REAL(ReKi)                             :: LFairxi                              ! xi-coordinate of the current fairlead in the inertial frame coordinate system (meters)
-!bjj rm v1.00.00a-bjj:   REAL(ReKi)                             :: LFairyi                              ! yi-coordinate of the current fairlead in the inertial frame coordinate system (meters)
-!bjj rm v1.00.00a-bjj:   REAL(ReKi)                             :: LFairzi                              ! zi-coordinate of the current fairlead in the inertial frame coordinate system (meters)
+   REAL(DbKi)                             :: Krnl_Fact                            ! Factor used to scale the magnitude of the RdtnKnrl  as required by the discrete time (co)sine transform (-)
    REAL(ReKi)                             :: Omega                                ! Wave frequency (rad/s)
    REAL(ReKi)                             :: PrvDir                               ! The value of TmpDir from the previous line (degrees)
    REAL(ReKi)                             :: PrvPer                               ! The value of TmpPer from the previous line (sec    )
-!bjj start of proposed change v1.00.00a-bjj
-!we'll rename this WAMITULEN and make it an input parameter
-!rm   REAL(ReKi), PARAMETER                  :: PtfmULEN    = 1.0                    ! Characteristic body length scale used to redimensionalize WAMIT output (meters) !JASON: BECAUSE I HAVE FIXED THIS TO UNITY, THE WAMIT .GDF FILE MUST HAVE ULEN SET TO 1.0.  SHOULD WE INSTEAD MAKE PtfmULEN AN ACTUAL INPUT TO THE PROGRAM WITHIN PtfmFile???
-!bjj end of proposed change v1.00.00a-bjj
    REAL(ReKi)                             :: RdtnDim   (6,6)                      ! Matrix used to redimensionalize WAMIT hydrodynamic added mass and damping output (kg    , kg-m    , kg-m^2    )
    REAL(ReKi)                             :: RdtnDOmega                           ! Frequency step for wave radiation kernel calculations (rad/s)
    REAL(ReKi)                             :: RdtnOmegaMax                         ! Maximum frequency used in the (co)sine transform to fine the radiation impulse response functions (rad/s)
-   REAL(ReKi), ALLOCATABLE                :: RdtnTime  (:)                        ! Simulation times at which the instantaneous values of the wave radiation kernel are determined (sec)
+   REAL(DbKi), ALLOCATABLE                :: RdtnTime  (:)                        ! Simulation times at which the instantaneous values of the wave radiation kernel are determined (sec)
    REAL(ReKi)                             :: SttcDim   (6,6)                      ! Matrix used to redimensionalize WAMIT hydrostatic  restoring              output (kg/s^2, kg-m/s^2, kg-m^2/s^2)
    REAL(ReKi)                             :: TmpData1                             ! A temporary           value  read in from a WAMIT file (-      )
    REAL(ReKi)                             :: TmpData2                             ! A temporary           value  read in from a WAMIT file (-      )
@@ -1717,59 +1362,36 @@ CONTAINS
    REAL(ReKi)                             :: TmpIm                                ! A temporary imaginary value  read in from a WAMIT file (-      ) - stored as a REAL value
    REAL(ReKi)                             :: TmpPer                               ! A temporary period           read in from a WAMIT file (sec    )
    REAL(ReKi)                             :: TmpRe                                ! A temporary real      value  read in from a WAMIT file (-      )
-!bjj rm v1.00.00a-bjj:   REAL(ReKi)                             :: TransMat0 (3,3)                      ! Transformation matrix from the inertial frame to the initial tower base / platform coordinate system (-)
    REAL(ReKi), ALLOCATABLE                :: WAMITFreq (:)                        ! Frequency      components as ordered in the WAMIT output files (rad/s  )
    REAL(ReKi), ALLOCATABLE                :: WAMITPer  (:)                        ! Period         components as ordered in the WAMIT output files (sec    )
    REAL(ReKi), ALLOCATABLE                :: WAMITWvDir(:)                        ! Wave direction components as ordered in the WAMIT output files (degrees)
-!bjj rm v1.00.00a-bjj:   REAL(ReKi)                             :: XF                                   ! Horizontal distance between anchor and fairlead of the current mooring line (meters)
-!bjj rm v1.00.00a-bjj:   REAL(ReKi)                             :: XF2                                  ! = XF*XF
-!bjj rm v1.00.00a-bjj:   REAL(ReKi)                             :: ZF                                   ! Vertical   distance between anchor and fairlead of the current mooring line (meters)
-!bjj rm v1.00.00a-bjj:   REAL(ReKi)                             :: ZF2                                  ! = ZF*ZF
 
    INTEGER                                :: I                                    ! Generic index
    INTEGER                                :: Indx                                 ! Cycles through the upper-triangular portion (diagonal and above) of the frequency-dependent hydrodynamic added mass and damping matrices from the radiation problem
    INTEGER                                :: InsertInd                            ! The lowest sorted index whose associated frequency component is higher than the current frequency component -- this is to sort the frequency components from lowest to highest
    INTEGER                                :: J                                    ! Generic index
    INTEGER                                :: K                                    ! Generic index
-!bjj start of proposed change
-!b/c this gets SAVEd by default when initialized here, I'm going to initialize in the subroutine body instead   
-!rm   INTEGER                                :: LastInd     = 1                      ! Index into the arrays saved from the last call as a starting point for this call
    INTEGER                                :: LastInd                              ! Index into the arrays saved from the last call as a starting point for this call
-!bjj end of proposed change   
    INTEGER                                :: NInpFreq                             ! Number of input frequency components inherent in the hydrodynamic added mass matrix, hydrodynamic daming matrix, and complex wave excitation force per unit wave amplitude vector (-)
    INTEGER                                :: NInpWvDir                            ! Number of input incident wave propagation heading direction components inherent in the complex wave excitation force per unit wave amplitude vector (-)
    INTEGER                                :: NStepRdtn2                           ! ( NStepRdtn-1 )/2
    INTEGER,    ALLOCATABLE                :: SortFreqInd (:)                      ! The array of indices such that WAMITFreq (SortFreqInd (:)) is sorted from lowest to highest frequency (-)
    INTEGER,    ALLOCATABLE                :: SortWvDirInd(:)                      ! The array of indices such that WAMITWvDir(SortWvDirInd(:)) is sorted from lowest to highest agnle     (-)
    INTEGER                                :: Sttus                                ! Status returned by an attempted allocation or READ.
-!bjj start of proposed change v1.00.00a-bjj   
    INTEGER,    ALLOCATABLE                :: User_LineNodes (:)                   ! Temp array to hold line nodes on each line
-!bjj end of proposed change v1.00.00a-bjj   
    INTEGER                                :: UnW1        = 31                     ! I/O unit number for the WAMIT output file with the .1   extension; this file contains the linear, nondimensionalized, frequency-dependent solution to the radiation   problem.
    INTEGER                                :: UnW3        = 32                     ! I/O unit number for the WAMIT output file with the .3   extension; this file contains the linear, nondimensionalized, frequency-dependent solution to the diffraction problem.
    INTEGER                                :: UnWh        = 33                     ! I/O unit number for the WAMIT output file with the .hst extension; this file contains the linear, nondimensionalized hydrostatic restoring matrix.
 
-!bjj: these with the initialization are SAVEd by default???
    LOGICAL                                :: FirstFreq                            ! When .TRUE., indicates we're still looping through the first frequency component.
    LOGICAL                                :: FirstPass                            ! When .TRUE., indicates we're on the first pass through a loop.
-!bjj start of proposed change
-!b/c this gets SAVEd by default when initialized here, I'm going to initialize in the subroutine body instead   
-!rm   LOGICAL                                :: InfFreq     = .FALSE.                ! When .TRUE., indicates that the infinite-frequency limit of added mass is contained within the WAMIT output files.
    LOGICAL                                :: InfFreq                              ! When .TRUE., indicates that the infinite-frequency limit of added mass is contained within the WAMIT output files.
-!bjj end of proposed change   
    LOGICAL                                :: NewPer                               ! When .TRUE., indicates that the period has just changed.
-!bjj start of proposed change
-!b/c this gets SAVEd by default when initialized here, I'm going to initialize in the subroutine body instead   
-!rm   LOGICAL                                :: RdtnFrmAM   = .FALSE.                ! Determine the wave radiation kernel from the frequency-dependent hydrodynamic added mass matrix? (.TRUE = yes, .FALSE. = determine the wave radiation kernel from the frequency-dependent hydrodynamic damping matrix) !JASON: SHOULD YOU MAKE THIS AN INPUT???<--JASON: IT IS NOT WISE TO COMPUTE THE RADIATION KERNEL FROM THE FREQUENCY-DEPENDENT ADDED MASS MATRIX, UNLESS A CORRECTION IS APPLIED.  THIS IS DESCRIBED IN THE WAMIT USER'S GUIDE!!!!
-!rm   LOGICAL                                :: ZeroFreq    = .FALSE.                ! When .TRUE., indicates that the zero    -frequency limit of added mass is contained within the WAMIT output files.
    LOGICAL                                :: RdtnFrmAM                            ! Determine the wave radiation kernel from the frequency-dependent hydrodynamic added mass matrix? (.TRUE = yes, .FALSE. = determine the wave radiation kernel from the frequency-dependent hydrodynamic damping matrix) !JASON: SHOULD YOU MAKE THIS AN INPUT???<--JASON: IT IS NOT WISE TO COMPUTE THE RADIATION KERNEL FROM THE FREQUENCY-DEPENDENT ADDED MASS MATRIX, UNLESS A CORRECTION IS APPLIED.  THIS IS DESCRIBED IN THE WAMIT USER'S GUIDE!!!!
    LOGICAL                                :: ZeroFreq                             ! When .TRUE., indicates that the zero    -frequency limit of added mass is contained within the WAMIT output files.
-!bjj end of proposed change   
 
    CHARACTER(1024)                        :: Line                                 ! String to temporarily hold the value of a line within a WAMIT output file.
 
-!bjj start of proposed change v1.00.00a-bjj
-!   CHARACTER(*), INTENT(IN)     :: DirRootIn
    TYPE(FFT_DataType)                     :: FFT_Data                             ! the instance of the FFT module we're using
 
       ! Initialize data
@@ -1779,23 +1401,9 @@ CONTAINS
    InfFreq   = .FALSE.
    RdtnFrmAM = .FALSE.
    ZeroFreq  = .FALSE.
-!bjj end of proposed change v1.00.00a-bjj
 
 
       ! Save these values for future use:
-
-!bjj start of proposed change v1.00.00a-bjj
-!   PtfmVol0     = PtfmVol0In
-!   PtfmDiam     = PtfmDiamIn
-!   PtfmCD       = PtfmCDIn
-!   RdtnDT       = RdtnDTIn
-!   IF ( RdtnTMaxIn == 0.0 )  THEN   ! .TRUE. when we don't want to model wave radiation damping; set RdtnTMax to some minimum value greater than zero to avoid an error in the calculations below.
-!      RdtnTMax  = RdtnDTIn
-!      UseRdtn   = .FALSE.
-!   ELSE                             ! We will be modeling wave radiation damping.
-!      RdtnTMax  = RdtnTMaxIn
-!      UseRdtn   = .TRUE.
-!   ENDIF
 
    FP_Data%PtfmVol0     = FltPtfm_InitData%PtfmVol0
    FP_Data%PtfmDiam     = FltPtfm_InitData%PtfmDiam
@@ -1809,19 +1417,12 @@ CONTAINS
       FP_Data%UseRdtn   = .TRUE.
    ENDIF
 
-!bjj end of proposed change v1.00.00a-bjj
-
 
    RdtnOmegaMax = Pi/FP_Data%RdtnDT
 
 
-
-
       ! ProgAbort if the wave elevation has not been computed yet:
-!bjj start of proposed change v1.00.00a-bjj
-!rm   IF ( .NOT. ALLOCATED ( WaveElev ) )  THEN
    IF ( .NOT. Waves_IsAllocated( WaveDat, 'WaveElev  ', ErrStat ) ) THEN
-!bjj end of proposed change v1.00.00a-bjj
       CALL ProgAbort ( ' Routine InitWaves() must be called before routine InitFltngPtfmLd().', TrapErrors = .TRUE.)
       ErrStat = 1
       RETURN
@@ -1830,13 +1431,11 @@ CONTAINS
       ! Initialize the variables associated with the mooring system:
 
    FP_Data%LineMod      = FltPtfm_InitData%LineMod
-!bjj start of proposed change V1.00.00a-bjj
    
    IF ( FP_Data%LineMod == 2 )  THEN  ! .TRUE if we have user-defined mooring lines.
    
          ! call the UserLineModule's initialization routine to get NumLines and LineNodes
          
-!      CALL UserLine_Init( FltPtfm_InitData%DirRoot, FP_Data%UserLine_Data, ErrStat )
       CALL UserLine_Init( FltPtfm_InitData%DirRoot, FP_Data%NumLines, User_LineNodes, &
                                                     FP_Data%UserLine_Data, ErrStat )
       IF ( ErrStat /= 0 ) THEN
@@ -1888,159 +1487,6 @@ CONTAINS
          CALL ProgAbort ( ' Error allocating memory for the MooringLine array.', TrapErrors = .TRUE.)
          RETURN
       ENDIF
-
-!   END IF 
-!rm   LineNodes    = FltPtfm_InitData%LineNodes
-!RM   FP_Data%NumLines     = FltPtfm_InitData%NumLines
-!REMOVE THESE NOW, TOO:
-!RM   ALLOCATE ( LAnchHTe (NumLines            ) , STAT=ErrStat )
-!RM   IF ( ErrStat /= 0 )  THEN
-!RM      CALL ProgAbort ( ' Error allocating memory for the LAnchHTe array.', TrapErrors = .TRUE.)
-!RM      RETURN
-!RM   ENDIF
-!RM
-!RM   ALLOCATE ( LAnchVTe (NumLines            ) , STAT=ErrStat )
-!RM   IF ( ErrStat /= 0 )  THEN
-!RM      CALL ProgAbort ( ' Error allocating memory for the LAnchVTe array.', TrapErrors = .TRUE.)
-!RM      RETURN
-!RM   ENDIF
-!RM
-!RM   ALLOCATE ( LFairHTe (NumLines            ) , STAT=ErrStat )
-!RM   IF ( ErrStat /= 0 )  THEN
-!RM      CALL ProgAbort ( ' Error allocating memory for the LFairHTe array.', TrapErrors = .TRUE.)
-!RM      RETURN
-!RM   ENDIF
-!RM
-!RM   ALLOCATE ( LFairVTe (NumLines            ) , STAT=ErrStat )
-!RM   IF ( ErrStat /= 0 )  THEN
-!RM      CALL ProgAbort ( ' Error allocating memory for the LFairVTe array.', TrapErrors = .TRUE.)
-!RM      RETURN
-!RM   ENDIF
-!RM
-!RM   ALLOCATE ( LNodesPi (NumLines,LineNodes,3) , STAT=ErrStat )
-!RM   IF ( ErrStat /= 0 )  THEN
-!RM      CALL ProgAbort ( ' Error allocating memory for the LNodesPi array.', TrapErrors = .TRUE.)
-!RM      RETURN
-!RM   ENDIF
-!RM
-!RM   ALLOCATE ( LNodesTe (NumLines,LineNodes  ) , STAT=ErrStat )
-!RM   IF ( ErrStat /= 0 )  THEN
-!RM      CALL ProgAbort ( ' Error allocating memory for the LNodesTe array.', TrapErrors = .TRUE.)
-!RM      RETURN
-!RM   ENDIF
-!RM
-!RM   LAnchHTe(:    ) = 0.0
-!RM   LAnchVTe(:    ) = 0.0
-!RM   LFairHTe(:    ) = 0.0
-!RM   LFairVTe(:    ) = 0.0
-!RM   LNodesPi(:,:,:) = 0.0
-!RM   LNodesTe(:,:  ) = 0.0
-!
-!   ALLOCATE ( FP_Data%MooringLine( FP_Data%NumLines ), STAT=ErrStat )
-!   IF ( ErrStat /= 0 )  THEN
-!      CALL ProgAbort ( ' Error allocating memory for the MooringLine array.', TrapErrors = .TRUE.)
-!      RETURN
-!   ENDIF
-
-!rm   IF ( FP_Data%LineMod == 1 )  THEN  ! .TRUE if we have standard quasi-static mooring lines.
-!rm
-!rm      ALLOCATE ( LAnchxi  (NumLines          ) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LAnchxi array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LAnchyi  (NumLines          ) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LAnchyi array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LAnchzi  (NumLines          ) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LAnchzi array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LFairxt  (NumLines          ) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LFairxt array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LFairyt  (NumLines          ) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LFairyt array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LFairzt  (NumLines          ) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LFairzt array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LUnstrLen(NumLines          ) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LUnstrLen array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LEAStff  (NumLines          ) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LEAStff array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LSeabedCD(NumLines          ) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LSeabedCD array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LTenTol  (NumLines          ) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LTenTol array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LFldWght (NumLines          ) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LFldWght array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LSNodes  (NumLines,LineNodes) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LSNodes array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LNodesX  (         LineNodes) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LNodesX array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm      ALLOCATE ( LNodesZ  (         LineNodes) , STAT=ErrStat )
-!rm      IF ( ErrStat /= 0 )  THEN
-!rm         CALL ProgAbort ( ' Error allocating memory for the LNodesZ array.', TrapErrors = .TRUE.)
-!rm         RETURN
-!rm      ENDIF
-!rm
-!rm
-!rm
-!rm      LAnchxi  (:  ) = FltPtfm_InitData%LAnchxi  (:  )
-!rm      LAnchyi  (:  ) = FltPtfm_InitData%LAnchyi  (:  )
-!rm      LAnchzi  (:  ) = FltPtfm_InitData%LAnchzi  (:  )
-!rm      LFairxt  (:  ) = FltPtfm_InitData%LFairxt  (:  )
-!rm      LFairyt  (:  ) = FltPtfm_InitData%LFairyt  (:  )
-!rm      LFairzt  (:  ) = FltPtfm_InitData%LFairzt  (:  )
-!rm      LUnstrLen(:  ) = FltPtfm_InitData%LUnstrLen(:  )
-!rm      LEAStff  (:  ) = FltPtfm_InitData%LEAStff  (:  )
-!rm      LSeabedCD(:  ) = FltPtfm_InitData%LSeabedCD(:  )
-!rm      LTenTol  (:  ) = FltPtfm_InitData%LTenTol  (:  )
-!rm      LSNodes  (:,:) = FltPtfm_InitData%LSNodes  (:,:)
 
 
       DO I = 1,FP_Data%NumLines
@@ -2100,17 +1546,6 @@ CONTAINS
          FP_Data%MooringLine(I)%LNodesTe = 0.0_ReKi
 
       END DO
-!bjj END of proposed change v1.00.00a-bjj
-
-
-!bjj start of proposed change v1.00.00a-bjj
-!bjj: move this initialization to the load calculation so that we don't need an initial displacement for our guess:
-!rm      ! Get the transformation matrix, TransMat0, from the inertial frame to the
-!rm      !   initial tower base / platform coordinate system:
-!rm
-!rm      CALL SmllRotTrans ( 'platform displacement', FltPtfm_InitData%X0(4), FltPtfm_InitData%X0(5), &
-!rm                                                   FltPtfm_InitData%X0(6), TransMat0 )
-!bjj end of proposed change v1.00.00a-bjj
 
 
       DO I = 1,FP_Data%NumLines ! Loop through all mooring lines
@@ -2121,62 +1556,9 @@ CONTAINS
       ! NOTE: The buoyancy is calculated assuming that the entire length of the
       !       mooring line is submerged in the water.
 
-!bjj start of proposed change v1.00.00a-bjj
-!rm         LFldWght(I) = ( LMassDen(I) - WtrDens*PiOvr4*LDiam(I)*LDiam(I) )*Gravity
          FP_Data%MooringLine(I)%LFldWght = ( FltPtfm_InitData%MooringLine(I)%LMassDen - &
                                              WaveDat%WtrDens*PiOvr4*(FltPtfm_InitData%MooringLine(I)%LDiam**2) )*WaveDat%Gravity
-!bjj end of proposed change
 
-!bjj start of proposed change v1.00.00a-bjj
-!rm      ! Transform the fairlead location from the initial platform to the inertial
-!rm      !    frame coordinate system:
-!rm      ! NOTE: TransMat0^T = TransMat0^-1 where ^T = matrix transpose and ^-1 =
-!rm      !       matrix inverse.
-!rm
-!rm         LFairxi = FltPtfm_InitData%X0(1) + TransMat0(1,1)*FP_Data%MooringLine(I)%LFairxt &
-!rm                                          + TransMat0(2,1)*FP_Data%MooringLine(I)%LFairyt &
-!rm                                          + TransMat0(3,1)*FP_Data%MooringLine(I)%LFairzt
-!rm         LFairyi = FltPtfm_InitData%X0(2) + TransMat0(1,2)*FP_Data%MooringLine(I)%LFairxt &
-!rm                                          + TransMat0(2,2)*FP_Data%MooringLine(I)%LFairyt &
-!rm                                          + TransMat0(3,2)*FP_Data%MooringLine(I)%LFairzt
-!rm         LFairzi = FltPtfm_InitData%X0(3) + TransMat0(1,3)*FP_Data%MooringLine(I)%LFairxt &
-!rm                                          + TransMat0(2,3)*FP_Data%MooringLine(I)%LFairyt &
-!rm                                          + TransMat0(3,3)*FP_Data%MooringLine(I)%LFairzt
-!rm
-!rm
-!rm      ! Transform the fairlead location from the inertial frame coordinate system
-!rm      !   to the local coordinate system of the current line (this coordinate
-!rm      !   system lies at the current anchor, Z being vertical, and X directed from
-!rm      !   the current anchor to the current fairlead):
-!rm
-!rm!bjj: note that i changed the exponents from 2.0 to 2 so that the compiler knows that the exponent is an integer and can perform the computation easier!
-!rm         XF      = SQRT( ( LFairxi - FP_Data%MooringLine(I)%LAnchxi )**2 + ( LFairyi - FP_Data%MooringLine(I)%LAnchyi )**2 )
-!rm         ZF      =         LFairzi - FP_Data%MooringLine(I)%LAnchzi
-!rm
-!rm         XF2     = XF*XF
-!rm         ZF2     = ZF*ZF
-!rm
-!rm
-!rm      ! Generate the initial guess values for the horizontal and vertical tensions
-!rm      !   at the fairlead in the Newton-Raphson iteration for the catenary mooring
-!rm      !   line solution.  Use starting values documented in: Peyrot, Alain H. and
-!rm      !   Goulois, A. M., "Analysis Of Cable Structures," Computers & Structures,
-!rm      !   Vol. 10, 1979, pp. 805-813:
-!rm
-!rm         IF     ( XF                               == 0.0               )  THEN ! .TRUE. if the current mooring line is exactly vertical
-!rm            Lamda0 = 1.0E+06
-!rm         ELSEIF ( FP_Data%MooringLine(I)%LUnstrLen <= SQRT( XF2 + ZF2 ) )  THEN ! .TRUE. if the current mooring line is taut
-!rm            Lamda0 = 0.2
-!rm         ELSE                                                                   ! The current mooring line must be slack and not vertical
-!rm            Lamda0 = SQRT( 3.0*( ( FP_Data%MooringLine(I)%LUnstrLen**2 - ZF2 )/XF2 - 1.0 ) )
-!rm         ENDIF
-!rm
-!rm         FP_Data%MooringLine(I)%LFairHTe = ABS( 0.5*FP_Data%MooringLine(I)%LFldWght*  XF/     Lamda0    )
-!rm         FP_Data%MooringLine(I)%LFairVTe =      0.5*FP_Data%MooringLine(I)%LFldWght*( ZF/TANH(Lamda0) + &
-!rm                                                    FP_Data%MooringLine(I)%LUnstrLen                    )
-!rm
-!rm
-!bjj end of proposed change v1.00.00a-bjj
       ENDDO             ! I - All mooring lines
 
    ENDIF
@@ -2195,7 +1577,6 @@ CONTAINS
       !   element-by-element multiplication, instead of matrix-by-matrix
       !   multiplication:
 
-!BJJ: I replaced PtfmULEN with FltPtfm_InitData%WAMITULEN in the following 8 equations:
    SttcDim(1,1) = WaveDat%RhoXg  *FltPtfm_InitData%WAMITULEN**2  ! Force-translation
    SttcDim(1,4) = WaveDat%RhoXg  *FltPtfm_InitData%WAMITULEN**3  ! Force-rotation/Moment-translation - Hydrostatic restoring
    SttcDim(4,4) = WaveDat%RhoXg  *FltPtfm_InitData%WAMITULEN**4  ! Moment-rotation
@@ -2799,7 +2180,7 @@ CONTAINS
       RETURN
    ELSEIF ( HighFreq > RdtnOmegaMax      )  THEN   ! .TRUE. if the highest frequency component (not counting infinity) in the WAMIT file is greater than RdtnOmegaMax
       CALL ProgAbort ( ' Based on the frequency range found in "'//TRIM(FltPtfm_InitData%WAMITFile)//'.1",'       // &
-                   ' RdtnDT must be set smaller than '//TRIM(Flt2LStr( Pi/HighFreq ))//' sec'// &
+                   ' RdtnDT must be set smaller than '//TRIM(Num2LStr( Pi/HighFreq ))//' sec'// &
                    ' in order to accurately compute the radiation impulse response functions.', TrapErrors = .TRUE.)
       ErrStat = 1
       RETURN
@@ -2874,7 +2255,7 @@ CONTAINS
       ! Calculate the factor needed by the discrete sine transform in the
       !   calculation of the wave radiation kernel:
 
-      Krnl_Fact = -1.0/FP_Data%RdtnDT ! This factor is needed by the discrete time sine transform
+      Krnl_Fact = -1.0_DbKi/FP_Data%RdtnDT ! This factor is needed by the discrete time sine transform
 
 
 
@@ -2916,9 +2297,6 @@ CONTAINS
       ! Compute the sine transforms to find the time-domain representation of
       !   the wave radiation kernel:
 
-!bjj start of proposed change v1.00.00a-bjj
-!i added the FFT_Data and ErrStat parameters to the FFT_Module subroutine calls
-!rm      CALL InitSINT ( NStepRdtn, .TRUE. )
       CALL InitSINT ( FP_Data%NStepRdtn, FFT_Data, .TRUE., ErrStat )
       IF ( ErrStat /= 0 ) RETURN
 
@@ -2936,7 +2314,6 @@ CONTAINS
 
       CALL ExitSINT(FFT_Data, ErrStat)
       IF ( ErrStat /= 0 ) RETURN
-!bjj end of proposed change
 
 
    ELSE                    ! We must be determining the wave radiation kernel from the frequency-dependent hydrodynamic damping matrix
@@ -2986,8 +2363,6 @@ CONTAINS
       ! Compute the cosine transforms to find the time-domain representation of
       !   the wave radiation kernel:
 
-!bjj start of proposed change v1.00.00a-bjj
-!i added the FFT_Data and ErrStat parameters to the FFT_Module subroutine calls
       CALL InitCOST ( FP_Data%NStepRdtn, FFT_Data, .TRUE., ErrStat )
       IF ( ErrStat /= 0 ) RETURN
 
@@ -3005,7 +2380,6 @@ CONTAINS
 
       CALL ExitCOST(FFT_Data, ErrStat)
       IF ( ErrStat /= 0 ) RETURN
-!bjj end of proposed change
 
 
    ENDIF
@@ -3044,10 +2418,7 @@ CONTAINS
 
 
 
-!jbj: start of proposed change v1.00.00b-jbj
-!rm   CASE ( 1, 2, 3 )        ! Plane progressive (regular) wave, JONSWAP/Pierson-Moskowitz spectrum (irregular) wave, or user-defined spectrum (irregular) wave.
    CASE ( 1, 2, 3, 10 )    ! Plane progressive (regular) wave, JONSWAP/Pierson-Moskowitz spectrum (irregular) wave, or user-defined spectrum (irregular) wave.
-!jbj: end of proposed change v1.00.00b-jbj
 
 
 
@@ -3093,53 +2464,32 @@ CONTAINS
       ENDIF
 
 
-!jbj: start of proposed change v1.00.00b-jbj
-!rm
-!rm      ! Compute the positive-frequency components (including zero) of the Fourier
-!rm      !  transforms of the wave excitation force:
-!rm
-!rm      DO I = 0,WaveDat%NStepWave2  ! Loop through the positive frequency components (including zero) of the Fourier transforms
       ! Compute the positive-frequency components (including zero) of the discrete
       !   Fourier transform of the wave excitation force:
 
       DO I = 0,WaveDat%NStepWave2  ! Loop through the positive frequency components (including zero) of the discrete Fourier transform
-!jbj: end of proposed change v1.00.00b-jbj
 
 
       ! Compute the frequency of this component:
 
          Omega = I*WaveDat%WaveDOmega
 
-!jbj: start of proposed change v1.00.00b-jbj
-!rm      ! Compute the Fourier transform of the instantaneous value of the total
-!rm      !   excitation force on the support platfrom from incident waves:
       ! Compute the discrete Fourier transform of the instantaneous value of the
       !   total excitation force on the support platfrom from incident waves:
-!jbj: end of proposed change v1.00.00b-jbj
 
          DO J = 1,6           ! Loop through all wave excitation forces and moments
             WaveExctnC(I,J) = WaveDat%WaveElevC0(I)*InterpStp ( Omega, HdroFreq(:), X_Diffrctn(:,J), LastInd, NInpFreq )
          ENDDO                ! J - All wave excitation forces and moments
 
 
-!jbj: start of proposed change v1.00.00b-jbj
-!rm      ENDDO                ! I - The positive frequency components (including zero) of the Fourier transforms
-!rm
-!rm
-!rm      ! Compute the inverse Fourier transforms to find the time-domain
-!rm      !   representations of the wave excitation forces:
       ENDDO                ! I - The positive frequency components (including zero) of the discrete Fourier transform
 
 
 
       ! Compute the inverse discrete Fourier transform to find the time-domain
       !   representation of the wave excitation force:
-!jmj End of proposed change.  v6.10d-jmj  13-Aug-2009.
 
-!jbj: end of proposed change v1.00.00b-jbj
 
-!bjj start of proposed change v1.00.00a-bjj
-!bjj i added FFT_Data and ErrStat arguments to the subroutine calls in the FFT_Module
       CALL InitFFT ( WaveDat%NStepWave, FFT_Data, .TRUE., ErrStat )
       IF ( ErrStat /= 0 ) RETURN
 
@@ -3150,7 +2500,6 @@ CONTAINS
 
       CALL ExitFFT(FFT_Data, ErrStat)
       IF ( ErrStat /= 0 ) RETURN
-!bjj end of proposed change
 
 
 
@@ -3184,9 +2533,7 @@ CONTAINS
    IF ( ALLOCATED( SortFreqInd  ) ) DEALLOCATE( SortFreqInd  )
    IF ( ALLOCATED( SortWvDirInd ) ) DEALLOCATE( SortWvDirInd )
 
-!bjj start of proposed change v1.00.00a-bjj   
    IF ( ALLOCATED( User_LineNodes ) ) DEALLOCATE( User_LineNodes )
-!bjj end of proposed change   
 
    RETURN
    END SUBROUTINE InitFltngPtfmLd
@@ -3211,37 +2558,15 @@ CONTAINS
    INTEGER,    INTENT(IN )           :: JNode                                    ! The index of the current mooring line node (-)
    INTEGER,    INTENT(IN )           :: KDirection                               ! 1, 2, or 3, for the xi-, yi-, or zi-directions, respectively (-)
 
-!bjj start of proposed change v1.00.00a-bjj
    TYPE(FltPtfm_DataType),INTENT(IN) :: FP_Data
    INTEGER,    INTENT(OUT)           :: ErrStat                                  ! a non-zero value indicates an error has occurred
 
    ErrStat = 0
-!bjj end of proposed change
 
 
       ! Abort if the mooring line parameters have not been computed yet, if ILine
       !   is not one of the existing mooring lines, if JNode is not one of the
       !   existing line nodes, or if KDirection is not specified properly:
-
-!bjj start of propsoed change v1.00.00a-bjj
-!bjj: this must be reorganized due to new data types
-!   IF ( .NOT. ALLOCATED ( LNodesPi )                   )  THEN
-!      CALL ProgAbort ( ' Routine InitFltngPtfmLd() must be called before routine LinePosition().', TrapErrors = .TRUE.)
-!      ErrStat = 1
-!      RETURN
-!   ELSEIF ( ( ILine < 1 ) .OR. ( ILine > FP_Data%NumLines  )   )  THEN
-!      CALL ProgAbort ( ' Mooring line '//TRIM( Int2LStr( ILine ) )//' has not been analyzed.', TrapErrors = .TRUE.)
-!      ErrStat = 1
-!      RETURN
-!   ELSEIF ( ( JNode < 1 ) .OR. ( JNode > LineNodes )   )  THEN
-!      CALL ProgAbort ( ' Line node '   //TRIM( Int2LStr( Jnode ) )//' has not been analyzed.', TrapErrors = .TRUE.)
-!      ErrStat = 1
-!      RETURN
-!   ELSEIF ( ( KDirection < 1 ) .OR. ( KDirection > 3 ) )  THEN
-!      CALL ProgAbort ( ' KDirection must be 1, 2, or 3 in routine LinePosition().'          , TrapErrors = .TRUE.)
-!      ErrStat = 1
-!      RETURN
-!   ENDIF
 
    IF ( ( ILine < 1 ) .OR. ( ILine > FP_Data%NumLines  )                       )  THEN
       CALL ProgAbort ( ' Mooring line '//TRIM( Int2LStr( ILine ) )//' has not been analyzed.'    , TrapErrors = .TRUE.)
@@ -3264,7 +2589,6 @@ CONTAINS
       ErrStat = 1
       RETURN
    ENDIF
-!bjj end of proposed change
 
       ! Return the instantaneous line position:
 
@@ -3293,32 +2617,15 @@ CONTAINS
    INTEGER,    INTENT(IN )           :: ILine                                    ! Mooring line number (-)
    INTEGER,    INTENT(IN )           :: JNode                                    ! The index of the current mooring line node (-)
 
-!bjj start of proposed change v1.00.00a-bjj
    TYPE(FltPtfm_DataType),INTENT(IN) :: FP_Data                                  ! data for this instance of the floating platform module
    INTEGER,    INTENT(OUT)           :: ErrStat                                  ! a non-zero value indicates an error has occurred
 
    ErrStat = 0
-!bjj end of proposed change
 
       ! Abort if the mooring line parameters have not been computed yet, if ILine
       !   is not one of the existing mooring lines, or if JNode is not one of the
       !   existing line nodes:
 
-!bjj start of proposed change v1.00.00a-bjj
-!bjj this needs to be reordered due to new data types
-!   IF ( .NOT. ALLOCATED ( LNodesTe )                 )  THEN
-!      CALL ProgAbort ( ' Routine InitFltngPtfmLd() must be called before routine LineTension().', TrapErrors = .TRUE.)
-!      ErrStat = 1
-!      RETURN
-!   ELSEIF ( ( ILine < 1 ) .OR. ( ILine > FP_Data%NumLines  ) )  THEN
-!      CALL ProgAbort ( ' Mooring line '//TRIM( Int2LStr( ILine ) )//' has not been analyzed.', TrapErrors = .TRUE.)
-!      ErrStat = 1
-!      RETURN
-!   ELSEIF ( ( JNode < 1 ) .OR. ( JNode > LineNodes ) )  THEN
-!      CALL ProgAbort ( ' Line node '   //TRIM( Int2LStr( Jnode ) )//' has not been analyzed.', TrapErrors = .TRUE.)
-!      ErrStat = 1
-!      RETURN
-!   ENDIF
 
    IF ( ( ILine < 1 ) .OR. ( ILine > FP_Data%NumLines  )                        )  THEN
       CALL ProgAbort ( ' Mooring line '//TRIM( Int2LStr( ILine ) )//' has not been analyzed.'   , TrapErrors = .TRUE.)
@@ -3337,7 +2644,6 @@ CONTAINS
       ErrStat = 1
       RETURN
    ENDIF
-!bjj end of proposed change v1.00.00a-bjj
 
 
 
@@ -3349,7 +2655,6 @@ CONTAINS
 
    RETURN
    END FUNCTION LineTension
-!bjj start of proposed change v1.00.00a-bjj
 !======================================================================= 
 FUNCTION FP_GetNumLines ( FP_Data )
    
@@ -3384,7 +2689,48 @@ FUNCTION FP_GetNumLineNodes ( FP_Data, ILine, ErrStat )
    END IF   
    
 END FUNCTION FP_GetNumLineNodes  
-!bjj end of proposed change v1.00.00a-bjj
+!=======================================================================
+FUNCTION FP_GetValue ( VarName, FP_Data, ErrStat )
+
+         ! Passed variables
+
+   CHARACTER(*),          INTENT(IN )   :: VarName                                         ! the name of the variable we're trying to obtain
+   TYPE(FltPtfm_DataType),INTENT(IN)    :: FP_Data                                         ! data for this instance of the floating platform module
+   INTEGER,               INTENT(OUT)   :: ErrStat
+   
+   REAL(ReKi)                           :: FP_GetValue                                       ! This function
+
+         ! local variables
+   
+   CHARACTER(20)                        :: VarNameUC
+
+   !-------------------------------------------------------------------------------------------------
+   ! Set the initial error status and return value
+   !-------------------------------------------------------------------------------------------------
+   
+   ErrStat     = 0
+   FP_GetValue = 0.0
+
+   !-------------------------------------------------------------------------------------------------
+   ! Return the requested values.
+   !-------------------------------------------------------------------------------------------------
+
+   VarNameUC = VarName
+   CALL Conv2UC( VarNameUC )
+
+   SELECT CASE ( TRIM(VarNameUC) )
+
+      CASE ( 'RDTNTMAX' )
+         FP_GetValue = FP_Data%RdtnTMax                     
+
+      CASE DEFAULT       
+      
+         CALL WrScr( ' Invalid variable name "'//TRIM(VarName)//'" in FP_GetValue().' )
+         ErrStat = 1
+
+   END SELECT
+
+END FUNCTION FP_GetValue
 !=======================================================================
    SUBROUTINE FP_Terminate(FP_Data, ErrStat )
 

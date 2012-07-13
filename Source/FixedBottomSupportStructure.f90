@@ -35,12 +35,10 @@ CONTAINS
    REAL(ReKi),           INTENT(  OUT)      :: TwrFt    (6)                       ! The surge/xi (1), sway/yi (2), and heave/zi (3)-components of the portion of the tower force per unit length (in N/m) at the current tower element and the roll/xi (4), pitch/yi (5), and yaw/zi (6)-components of the portion of the tower moment per unit length (in N-m/m) acting at the current tower element associated with everything but the added-mass effects; positive forces are in the direction of motion.
    REAL(ReKi),           INTENT(IN   )      :: X        (6)                       ! The 3 components of the translational displacement (in m  ) of the current tower node and the 3 components of the rotational displacement       (in rad  ) of the current tower element relative to the inertial frame origin at ground level [onshore] or MSL [offshore].
    REAL(ReKi),           INTENT(IN   )      :: XD       (6)                       ! The 3 components of the translational velocity     (in m/s) of the current tower node and the 3 components of the rotational (angular) velocity (in rad/s) of the current tower element relative to the inertial frame origin at ground level [onshore] or MSL [offshore].
-   REAL(ReKi),           INTENT(IN   )      :: ZTime                              ! Current simulation time (sec)
+   REAL(DbKi),           INTENT(IN   )      :: ZTime                              ! Current simulation time (sec)
 
-!bjj start of proposed change v1.00.00a-bjj
    TYPE(Waves_DataType), INTENT(INOUT)      :: WaveDat                            ! wave data
    INTEGER,              INTENT(OUT)        :: ErrStat                            ! A non-zero value indicates an error occurred
-!bjj end of proposed change   
    INTEGER,              INTENT(IN )        :: JNode                              ! The number of the current tower node / element (-) [1 to TwrNodes]
 
    
@@ -66,10 +64,8 @@ CONTAINS
    INTEGER                                  :: K                                  ! Generic index
 
 
-!bjj start of proposed change v1.00.00a-bjj
       ! Initialize the error status
    ErrStat = 0      
-!bjj end of proposed change v1.00.00a-bjj
 
       ! Initialize the added mass matrix per unit length of the current tower
       !   element, TwrAM, and the portion of the current tower element load per
