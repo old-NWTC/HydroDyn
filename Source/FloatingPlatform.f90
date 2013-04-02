@@ -265,7 +265,7 @@ CONTAINS
 
    TYPE(Waves_DataType)  ,INTENT(INOUT) :: WaveDat                                ! the data structure containing the wave data
    TYPE(FltPtfm_DataType),INTENT(INOUT) :: FP_Data                                ! data structure containing the floating platform data
-   INTEGER,               INTENT(  OUT) :: ErrStat                                ! A non-zero value indicates an error occurred
+   INTEGER(IntKi),        INTENT(  OUT) :: ErrStat                                ! A non-zero value indicates an error occurred
 
       ! Local Variables:
 
@@ -308,6 +308,8 @@ CONTAINS
    INTEGER                              :: JNode                                   ! The index of the current platform node / element (-) [1 to PtfmNodes]
    INTEGER                              :: K                                       ! Generic index
    
+   character(1024) :: ErrMsg
+   
       ! initialize the error status
    ErrStat = 0
 
@@ -334,8 +336,8 @@ CONTAINS
       ! Get the transformation matrix, TransMat0, from the inertial frame to the
       !   initial tower base / platform coordinate system:
 
-      CALL SmllRotTrans ( 'platform displacement', X(4), X(5), X(6), TransMat )
-
+      CALL SmllRotTrans ( 'platform displacement', X(4), X(5), X(6), TransMat, errstat=ErrStat, errmsg=ErrMsg )
+      IF ( ErrStat /= ErrID_None ) CALL WrScr(ErrMsg)
 
       DO I = 1,FP_Data%NumLines ! Loop through all mooring lines
 
@@ -617,8 +619,8 @@ CONTAINS
       ! Get the transformation matrix, TransMat, from the inertial frame to the
       !   tower base / platform coordinate system:
 
-      CALL SmllRotTrans ( 'platform displacement', X(4), X(5), X(6), TransMat )
-
+      CALL SmllRotTrans ( 'platform displacement', X(4), X(5), X(6), TransMat, errstat=ErrStat, errmsg=ErrMsg )
+      IF ( ErrStat /= ErrID_None ) CALL WrScr(ErrMsg)
 
       DO I = 1,FP_Data%NumLines ! Loop through all mooring lines
 
