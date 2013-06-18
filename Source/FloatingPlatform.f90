@@ -309,7 +309,8 @@ CONTAINS
    INTEGER                              :: K                                       ! Generic index
    
    character(1024) :: ErrMsg
-   
+   LOGICAL, save :: InitPass = .true.
+
       ! initialize the error status
    ErrStat = 0
 
@@ -435,7 +436,9 @@ CONTAINS
       ! NOTE: When IndRdtn > LastIndRdtn, IndRdtn will equal           LastIndRdtn + 1 if DT <= RdtnDT;
       !       When IndRdtn > LastIndRdtn, IndRdtn will be greater than LastIndRdtn + 1 if DT >  RdtnDT.
 !BJJ: this needs a better check so that it is ALWAYS done (MATLAB/Simulink could possibly avoid this step by starting at ZTime>0, OR there may be some numerical issues where this is NOT EXACTLY zero)
-      IF ( ZTime == 0.0_DbKi )  THEN              ! (1) .TRUE. if we are on the initialization pass where ZTime = 0.0 (and IndRdtn = 0)
+      IF ( InitPass )  THEN              ! (1) .TRUE. if we are on the initialization pass where ZTime = 0.0 (and IndRdtn = 0)
+
+         InitPass = .FALSE.
 
          DO J = 1,6  ! Loop through all platform DOFs
             FP_Data%XDHistory(IndRdtn,J) = XD(J)
@@ -462,7 +465,7 @@ CONTAINS
          FP_Data%LastTime     = ZTime                     ! Save the value of ZTime associated with LastIndRdtn for the next call to this routine
 
 !BJJ: this needs a better check in case there may be some numerical issues where this is NOT EXACTLY the same...
-      ELSEIF ( ZTime == FP_Data%LastTime )  THEN     ! (3). .TRUE. if the time has not changed since the last time we have increased in time by at least RdtnDt (i.e., on a call to the corrector)
+      ELSEIF ( EqualRealNos(ZTime, FP_Data%LastTime) )  THEN     ! (3). .TRUE. if the time has not changed since the last time we have increased in time by at least RdtnDt (i.e., on a call to the corrector)
 
          DO J = 1,6                       ! Loop through all platform DOFs
 
@@ -652,7 +655,7 @@ CONTAINS
          ZF         =         LFairzi - FP_Data%MooringLine(I)%LAnchzi
 
 !bjj: should this be compared with epsilon instead of 0.0 to avoid numerical instability?
-         IF ( XF == 0.0 )  THEN  ! .TRUE. if the current mooring line is exactly vertical; thus, the solution below is ill-conditioned because the orientation is undefined; so set it such that the tensions and nodal positions are only vertical
+         IF ( EqualRealNos(XF, 0.0_ReKi) )  THEN  ! .TRUE. if the current mooring line is exactly vertical; thus, the solution below is ill-conditioned because the orientation is undefined; so set it such that the tensions and nodal positions are only vertical
             COSPhi  = 0.0
             SINPhi  = 0.0
          ELSE                    ! The current mooring line must not be vertical; use simple trigonometry
