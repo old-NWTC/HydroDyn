@@ -10,6 +10,10 @@
    !                  Also updated to check that transform has been initialized for the
    !                    correct type (to avoid having wSave too small)
 !=======================================================================
+! File last committed: $Date: 2013-09-21 23:01:53 -0600 (Sat, 21 Sep 2013) $
+! (File) Revision #: $Rev: 199 $
+! URL: $HeadURL: https://windsvn.nrel.gov/HydroDyn/branches/HydroDyn_Modularization/Source/FFTMod.f90 $
+!=======================================================================
 MODULE FFT_Module
 !-----------------------------------------------------------------------
 ! DESCRIPTION OF THE INVERSE FOURIER TRANSFORM ROUTINE:
