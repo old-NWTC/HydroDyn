@@ -94,7 +94,7 @@ LIB_SOURCES =           \
 	ModMesh_Types.f90    \
 	ModMesh.f90          \
 	ModMesh_Mapping.f90  \
-        NWTC_Library_Types.f90 \
+	NWTC_Library_Types.f90 \
 	NWTC_Library.f90
 
 HD_SOURCES =                 \
@@ -113,6 +113,7 @@ HD_SOURCES =                 \
 	WAMIT_Types.f90           \
 	WAMIT_Output.f90          \
 	WAMIT.f90                 \
+	WAMIT_Interp.f90			  \
 	HydroDyn_Output.f90       \
 	HydroDyn_Types.f90        \
 	HydroDyn_Input.f90        \
@@ -139,10 +140,10 @@ default:  $(INTER_DIR) $(DEST_DIR)/$(OUTPUT_NAME)$(EXE_EXT)
    # General rules for compliling the files.
 
 %.obj: %.f90
-	$(FC)  $(FFLAGS) -c $< -o $(INTER_DIR)/$@ -J $(INTER_DIR) -B $(INTER_DIR)
+	$(FC)  -I $(INTER_DIR) $(FFLAGS) -c $< -o $(INTER_DIR)/$@ -J $(INTER_DIR) -B $(INTER_DIR)
 
 fftpack.obj: fftpack.f
-	$(F77) $(FFLAGS) -c $< -o $(INTER_DIR)/$@ -J $(INTER_DIR) -B $(INTER_DIR)
+	$(F77) -I $(INTER_DIR) $(FFLAGS) -c $< -o $(INTER_DIR)/$@ -J $(INTER_DIR) -B $(INTER_DIR)
 
 
 
@@ -181,7 +182,9 @@ Conv_Radiation_Types.obj:   NWTC_Library.obj
 Conv_Radiation.obj:         Conv_Radiation_Types.obj
 
 WAMIT_Types.obj:            NWTC_Library.obj Conv_Radiation_Types.obj SS_Radiation_Types.obj Waves_Types.obj
-WAMIT.obj:                  WAMIT_Types.obj WAMIT_Output.obj Waves_Types.obj Conv_Radiation.obj SS_Radiation.obj FFTMod.obj
+WAMIT.obj:                  WAMIT_Types.obj WAMIT_Output.obj Waves_Types.obj Conv_Radiation.obj SS_Radiation.obj FFTMod.obj WAMIT_Interp.obj
+
+WAMIT_Interp.obj:				 NWTC_Library.obj
 
 HydroDyn_Output_Types.obj:  NWTC_Library.obj
 WAMIT_Output.obj:           WAMIT_Types.obj Waves.obj
