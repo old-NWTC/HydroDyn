@@ -139,6 +139,8 @@ IMPLICIT NONE
     TYPE(MeshType)  :: MrsnLumpedMesh_position      ! A motions mesh which has all translational displacements set to zero.  Used in the transfer of hydrodynamic loads from the various HD-related meshes to the AllHdroOrigin mesh [-]
     TYPE(MeshType)  :: MrsnDistribMesh_position      ! A motions mesh which has all translational displacements set to zero.  Used in the transfer of hydrodynamic loads from the various HD-related meshes to the AllHdroOrigin mesh [-]
     TYPE(HD_ModuleMapType)  :: HD_MeshMap 
+    INTEGER(IntKi)  :: Decimate      ! The output decimation counter [-]
+    REAL(DbKi)  :: LastOutTime      ! Last time step which was written to the output file (sec) [-]
   END TYPE HydroDyn_OtherStateType
 ! =======================
 ! =========  HydroDyn_ParameterType  =======
@@ -156,12 +158,14 @@ IMPLICIT NONE
     REAL(ReKi) , DIMENSION(1:6,1:6)  :: AddBQuad      ! Additional quadratic damping (drag) matrix [-]
     REAL(DbKi)  :: DT      ! Time step in seconds for integration of continuous states (if a fixed-step integrator is used) and update of discrete states [-]
     TYPE(OutParmType) , DIMENSION(:), ALLOCATABLE  :: OutParam      !  [-]
-    INTEGER(IntKi)  :: NumOuts      !  [-]
+    INTEGER(IntKi)  :: NumOuts      ! Number of HydroDyn module-level outputs (not the total number including sub-modules [-]
+    INTEGER(IntKi)  :: NumTotalOuts      ! Number of all requested outputs including sub-modules [-]
     INTEGER(IntKi)  :: OutSwtch      ! Output requested channels to: [1=Hydrodyn.out 2=GlueCode.out  3=both files] [-]
     CHARACTER(20)  :: OutFmt      ! Output format for numerical results [-]
     CHARACTER(20)  :: OutSFmt      ! Output format for header strings [-]
     CHARACTER(10)  :: Delim      ! Delimiter string for outputs, defaults to tab-delimiters [-]
     INTEGER(IntKi)  :: UnOutFile      ! File unit for the HydroDyn outputs [-]
+    INTEGER(IntKi)  :: OutDec      ! Write every OutDec time steps [-]
   END TYPE HydroDyn_ParameterType
 ! =======================
 ! =========  HydroDyn_InputType  =======
@@ -1828,6 +1832,8 @@ ENDIF
      CALL MeshCopy( SrcOtherStateData%MrsnLumpedMesh_position, DstOtherStateData%MrsnLumpedMesh_position, CtrlCode, ErrStat, ErrMsg )
      CALL MeshCopy( SrcOtherStateData%MrsnDistribMesh_position, DstOtherStateData%MrsnDistribMesh_position, CtrlCode, ErrStat, ErrMsg )
       CALL HydroDyn_Copyhd_modulemaptype( SrcOtherStateData%HD_MeshMap, DstOtherStateData%HD_MeshMap, CtrlCode, ErrStat, ErrMsg )
+   DstOtherStateData%Decimate = SrcOtherStateData%Decimate
+   DstOtherStateData%LastOutTime = SrcOtherStateData%LastOutTime
  END SUBROUTINE HydroDyn_CopyOtherState
 
  SUBROUTINE HydroDyn_DestroyOtherState( OtherStateData, ErrStat, ErrMsg )
@@ -1966,6 +1972,8 @@ ENDIF
   IF(ALLOCATED(Re_HD_MeshMap_Buf))  DEALLOCATE(Re_HD_MeshMap_Buf)
   IF(ALLOCATED(Db_HD_MeshMap_Buf))  DEALLOCATE(Db_HD_MeshMap_Buf)
   IF(ALLOCATED(Int_HD_MeshMap_Buf)) DEALLOCATE(Int_HD_MeshMap_Buf)
+  Int_BufSz  = Int_BufSz  + 1  ! Decimate
+  Db_BufSz   = Db_BufSz   + 1  ! LastOutTime
   IF ( Re_BufSz  .GT. 0 ) ALLOCATE( ReKiBuf(  Re_BufSz  ) )
   IF ( Db_BufSz  .GT. 0 ) ALLOCATE( DbKiBuf(  Db_BufSz  ) )
   IF ( Int_BufSz .GT. 0 ) ALLOCATE( IntKiBuf( Int_BufSz ) )
@@ -2103,6 +2111,10 @@ ENDIF
   IF( ALLOCATED(Re_HD_MeshMap_Buf) )  DEALLOCATE(Re_HD_MeshMap_Buf)
   IF( ALLOCATED(Db_HD_MeshMap_Buf) )  DEALLOCATE(Db_HD_MeshMap_Buf)
   IF( ALLOCATED(Int_HD_MeshMap_Buf) ) DEALLOCATE(Int_HD_MeshMap_Buf)
+  IF ( .NOT. OnlySize ) IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = (InData%Decimate )
+  Int_Xferred   = Int_Xferred   + 1
+  IF ( .NOT. OnlySize ) DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) =  (InData%LastOutTime )
+  Db_Xferred   = Db_Xferred   + 1
  END SUBROUTINE HydroDyn_PackOtherState
 
  SUBROUTINE HydroDyn_UnPackOtherState( ReKiBuf, DbKiBuf, IntKiBuf, Outdata, ErrStat, ErrMsg )
@@ -2301,6 +2313,10 @@ ENDIF
     Int_Xferred = Int_Xferred + SIZE(Int_HD_MeshMap_Buf)
   ENDIF
   CALL HydroDyn_UnPackhd_modulemaptype( Re_HD_MeshMap_Buf, Db_HD_MeshMap_Buf, Int_HD_MeshMap_Buf, OutData%HD_MeshMap, ErrStat, ErrMsg ) ! HD_MeshMap 
+  OutData%Decimate = IntKiBuf ( Int_Xferred )
+  Int_Xferred   = Int_Xferred   + 1
+  OutData%LastOutTime = DbKiBuf ( Db_Xferred )
+  Db_Xferred   = Db_Xferred   + 1
   Re_Xferred   = Re_Xferred-1
   Db_Xferred   = Db_Xferred-1
   Int_Xferred  = Int_Xferred-1
@@ -2373,11 +2389,13 @@ IF (ALLOCATED(SrcParamData%OutParam)) THEN
    ENDDO
 ENDIF
    DstParamData%NumOuts = SrcParamData%NumOuts
+   DstParamData%NumTotalOuts = SrcParamData%NumTotalOuts
    DstParamData%OutSwtch = SrcParamData%OutSwtch
    DstParamData%OutFmt = SrcParamData%OutFmt
    DstParamData%OutSFmt = SrcParamData%OutSFmt
    DstParamData%Delim = SrcParamData%Delim
    DstParamData%UnOutFile = SrcParamData%UnOutFile
+   DstParamData%OutDec = SrcParamData%OutDec
  END SUBROUTINE HydroDyn_CopyParam
 
  SUBROUTINE HydroDyn_DestroyParam( ParamData, ErrStat, ErrMsg )
@@ -2491,8 +2509,10 @@ DO i1 = LBOUND(InData%OutParam,1), UBOUND(InData%OutParam,1)
   IF(ALLOCATED(Int_OutParam_Buf)) DEALLOCATE(Int_OutParam_Buf)
 ENDDO
   Int_BufSz  = Int_BufSz  + 1  ! NumOuts
+  Int_BufSz  = Int_BufSz  + 1  ! NumTotalOuts
   Int_BufSz  = Int_BufSz  + 1  ! OutSwtch
   Int_BufSz  = Int_BufSz  + 1  ! UnOutFile
+  Int_BufSz  = Int_BufSz  + 1  ! OutDec
   IF ( Re_BufSz  .GT. 0 ) ALLOCATE( ReKiBuf(  Re_BufSz  ) )
   IF ( Db_BufSz  .GT. 0 ) ALLOCATE( DbKiBuf(  Db_BufSz  ) )
   IF ( Int_BufSz .GT. 0 ) ALLOCATE( IntKiBuf( Int_BufSz ) )
@@ -2586,9 +2606,13 @@ DO i1 = LBOUND(InData%OutParam,1), UBOUND(InData%OutParam,1)
 ENDDO
   IF ( .NOT. OnlySize ) IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = (InData%NumOuts )
   Int_Xferred   = Int_Xferred   + 1
+  IF ( .NOT. OnlySize ) IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = (InData%NumTotalOuts )
+  Int_Xferred   = Int_Xferred   + 1
   IF ( .NOT. OnlySize ) IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = (InData%OutSwtch )
   Int_Xferred   = Int_Xferred   + 1
   IF ( .NOT. OnlySize ) IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = (InData%UnOutFile )
+  Int_Xferred   = Int_Xferred   + 1
+  IF ( .NOT. OnlySize ) IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = (InData%OutDec )
   Int_Xferred   = Int_Xferred   + 1
  END SUBROUTINE HydroDyn_PackParam
 
@@ -2735,9 +2759,13 @@ DO i1 = LBOUND(OutData%OutParam,1), UBOUND(OutData%OutParam,1)
 ENDDO
   OutData%NumOuts = IntKiBuf ( Int_Xferred )
   Int_Xferred   = Int_Xferred   + 1
+  OutData%NumTotalOuts = IntKiBuf ( Int_Xferred )
+  Int_Xferred   = Int_Xferred   + 1
   OutData%OutSwtch = IntKiBuf ( Int_Xferred )
   Int_Xferred   = Int_Xferred   + 1
   OutData%UnOutFile = IntKiBuf ( Int_Xferred )
+  Int_Xferred   = Int_Xferred   + 1
+  OutData%OutDec = IntKiBuf ( Int_Xferred )
   Int_Xferred   = Int_Xferred   + 1
   Re_Xferred   = Re_Xferred-1
   Db_Xferred   = Db_Xferred-1
