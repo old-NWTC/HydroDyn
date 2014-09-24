@@ -47,11 +47,13 @@ IMPLICIT NONE
     CHARACTER(1024)  :: InputFile      ! Supplied by Driver:  full path and filename for the HydroDyn module [-]
     LOGICAL  :: UseInputFile      ! Supplied by Driver:  .TRUE. if using a input file, .FALSE. if all inputs are being passed in by the caller [-]
     CHARACTER(1024)  :: OutRootName      ! Supplied by Driver:  The name of the root file (without extension) including the full path [-]
-    REAL(DbKi)  :: DT      ! Supplied by Driver:  Simulation time step (sec) [-]
-    REAL(ReKi)  :: Gravity      ! Supplied by Driver:  Gravitational acceleration (m/s^2) [-]
-    REAL(DbKi)  :: TMax      ! Supplied by Driver:  The total simulation time (sec) [-]
+    REAL(DbKi)  :: DT      ! Supplied by Driver:  Simulation time step [(sec)]
+    REAL(ReKi)  :: Gravity      ! Supplied by Driver:  Gravitational acceleration [(m/s^2)]
+    REAL(DbKi)  :: TMax      ! Supplied by Driver:  The total simulation time [(sec)]
     LOGICAL  :: HasIce      ! Supplied by Driver:  Whether this simulation has ice loading (flag) [-]
-    REAL(ReKi) , DIMENSION(:,:), ALLOCATABLE  :: WaveElevXY      ! Supplied by Driver:  X-Y locations for WaveElevation output (for visualization).  First dimension is the X (1) and Y (2) coordinate.  Second dimension is the point number. [-]
+    REAL(ReKi) , DIMENSION(:,:), ALLOCATABLE  :: WaveElevXY      ! Supplied by Driver:  X-Y locations for WaveElevation output (for visualization).  First dimension is the X (1) and Y (2) coordinate.  Second dimension is the point number. [m,-]
+    REAL(ReKi)  :: PtfmLocationX      ! Supplied by Driver:  X coordinate of platform location in the wave field [m]
+    REAL(ReKi)  :: PtfmLocationY      ! Supplied by Driver:  Y coordinate of platform location in the wave field [m]
     CHARACTER(80)  :: PtfmSgFChr      ! Platform horizontal surge translation force (flag) or DEFAULT [-]
     LOGICAL  :: PtfmSgF      ! Optionally Supplied by Driver:  Platform horizontal surge translation force (flag) [-]
     CHARACTER(80)  :: PtfmSwFChr      ! Platform horizontal sway translation force (flag) or DEFAULT [-]
@@ -222,6 +224,8 @@ IF (ALLOCATED(SrcInitInputData%WaveElevXY)) THEN
    END IF
    DstInitInputData%WaveElevXY = SrcInitInputData%WaveElevXY
 ENDIF
+   DstInitInputData%PtfmLocationX = SrcInitInputData%PtfmLocationX
+   DstInitInputData%PtfmLocationY = SrcInitInputData%PtfmLocationY
    DstInitInputData%PtfmSgFChr = SrcInitInputData%PtfmSgFChr
    DstInitInputData%PtfmSgF = SrcInitInputData%PtfmSgF
    DstInitInputData%PtfmSwFChr = SrcInitInputData%PtfmSwFChr
@@ -348,6 +352,8 @@ ENDIF
   Re_BufSz   = Re_BufSz   + 1  ! Gravity
   Db_BufSz   = Db_BufSz   + 1  ! TMax
   Re_BufSz    = Re_BufSz    + SIZE( InData%WaveElevXY )  ! WaveElevXY 
+  Re_BufSz   = Re_BufSz   + 1  ! PtfmLocationX
+  Re_BufSz   = Re_BufSz   + 1  ! PtfmLocationY
   Re_BufSz    = Re_BufSz    + SIZE( InData%AddF0 )  ! AddF0 
   Re_BufSz    = Re_BufSz    + SIZE( InData%AddCLin )  ! AddCLin 
   Re_BufSz    = Re_BufSz    + SIZE( InData%AddBLin )  ! AddBLin 
@@ -411,6 +417,10 @@ ENDIF
     IF ( .NOT. OnlySize ) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%WaveElevXY))-1 ) =  PACK(InData%WaveElevXY ,.TRUE.)
     Re_Xferred   = Re_Xferred   + SIZE(InData%WaveElevXY)
   ENDIF
+  IF ( .NOT. OnlySize ) ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) =  (InData%PtfmLocationX )
+  Re_Xferred   = Re_Xferred   + 1
+  IF ( .NOT. OnlySize ) ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) =  (InData%PtfmLocationY )
+  Re_Xferred   = Re_Xferred   + 1
   IF ( .NOT. OnlySize ) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddF0))-1 ) =  PACK(InData%AddF0 ,.TRUE.)
   Re_Xferred   = Re_Xferred   + SIZE(InData%AddF0)
   IF ( .NOT. OnlySize ) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddCLin))-1 ) =  PACK(InData%AddCLin ,.TRUE.)
@@ -588,6 +598,10 @@ ENDIF
   DEALLOCATE(mask2)
     Re_Xferred   = Re_Xferred   + SIZE(OutData%WaveElevXY)
   ENDIF
+  OutData%PtfmLocationX = ReKiBuf ( Re_Xferred )
+  Re_Xferred   = Re_Xferred   + 1
+  OutData%PtfmLocationY = ReKiBuf ( Re_Xferred )
+  Re_Xferred   = Re_Xferred   + 1
   ALLOCATE(mask1(SIZE(OutData%AddF0,1))); mask1 = .TRUE.
   OutData%AddF0 = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddF0))-1 ),mask1,OutData%AddF0)
   DEALLOCATE(mask1)
