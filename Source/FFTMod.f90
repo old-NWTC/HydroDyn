@@ -11,8 +11,8 @@
    !                    correct type (to avoid having wSave too small)
 !=======================================================================
 ! File last committed: $Date: 2014-06-25 13:38:20 -0600 (Wed, 25 Jun 2014) $
-! (File) Revision #: $Rev: 451 $
-! URL: $HeadURL: https://windsvn.nrel.gov/HydroDyn/branches/HydroDyn_Modularization/Source/FFTMod.f90 $
+! (File) Revision #: $Rev$
+! URL: $HeadURL$
 !=======================================================================
 MODULE FFT_Module
 !-----------------------------------------------------------------------

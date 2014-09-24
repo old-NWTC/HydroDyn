@@ -18,8 +18,8 @@
 !
 !**********************************************************************************************************************************
 ! File last committed: $Date: 2014-06-17 09:36:15 -0600 (Tue, 17 Jun 2014) $
-! (File) Revision #: $Rev: 239 $
-! URL: $HeadURL: https://windsvn.nrel.gov/NWTC_Library/trunk/source/ModMesh_Mapping.f90 $
+! (File) Revision #: $Rev$
+! URL: $HeadURL$
 !**********************************************************************************************************************************
 ! This code implements the spatial mapping algorithms described in 
 !    Sprague, Michael A.; Jonkman, Jason M.; and Jonkman, Bonnie J., "FAST Modular Wind Turbine CAE Tool: Nonmatching Spatial and  
