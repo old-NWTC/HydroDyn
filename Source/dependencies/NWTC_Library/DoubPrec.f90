@@ -18,8 +18,8 @@
 !
 !**********************************************************************************************************************************
 ! File last committed: $Date: 2014-01-23 12:12:56 -0700 (Thu, 23 Jan 2014) $
-! (File) Revision #: $Rev$
-! URL: $HeadURL$
+! (File) Revision #: $Rev: 507 $
+! URL: $HeadURL: https://windsvn.nrel.gov/HydroDyn/trunk/Source/dependencies/NWTC_Library/DoubPrec.f90 $
 !**********************************************************************************************************************************
 MODULE Precision
 

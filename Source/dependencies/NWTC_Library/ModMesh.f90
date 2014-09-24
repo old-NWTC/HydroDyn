@@ -18,8 +18,8 @@
 !
 !**********************************************************************************************************************************
 ! File last committed: $Date: 2014-06-17 09:36:15 -0600 (Tue, 17 Jun 2014) $
-! (File) Revision #: $Rev$
-! URL: $HeadURL$
+! (File) Revision #: $Rev: 507 $
+! URL: $HeadURL: https://windsvn.nrel.gov/HydroDyn/trunk/Source/dependencies/NWTC_Library/ModMesh.f90 $
 !**********************************************************************************************************************************
 MODULE ModMesh
 

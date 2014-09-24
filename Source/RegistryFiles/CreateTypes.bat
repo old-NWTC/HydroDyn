@@ -10,12 +10,10 @@
 
 
 IF "%COMPUTERNAME%"=="APLATT-21846S" GOTO APLATT-21846S
-IF "%COMPUTERNAME%"=="BJONKMAN-23080S" GOTO BJONKMAN-23080S
 IF "%COMPUTERNAME%"=="GHAYMAN-17919S" GOTO GHAYMAN-17919S
-IF "%COMPUTERNAME%"=="MBUHL-20665S" GOTO MBUHL-20665S
 
 @SET Registry=..\..\bin\Registry_win32.exe
-@SET NWTC_Lib_Loc=.\include
+@SET NWTC_Lib_Loc=..\dependencies\NWTC_Library\
 GOTO DoIt
 
 
@@ -25,21 +23,11 @@ GOTO DoIt
 @SET NWTC_Lib_Loc=C:\Users\aplatt\Documents\software_development\windsvn\NWTC_Library\trunk\source
 GOTO DoIt
 
-:BJONKMAN-23080S
-:: Bonnie: Put your paths here and delete this comment.
-SET Registry=CALL Registry
-SET NWTC_Lib_Loc=C:\Users\bjonkman\Documents\DATA\DesignCodes\miscellaneous\nwtc_subs\SVNdirectory\trunk\source
-GOTO DoIt
-
 :GHAYMAN-17919S
 @SET Registry=C:\Dev\NREL_SVN\FAST\branches\FAST_Registry\Registry.exe
 @SET NWTC_Lib_Loc=C:\Dev\NREL_SVN\NWTC_Library\trunk\source
 GOTO DoIt
 
-:MBUHL-20665S
-@SET Registry=C:\Users\mbuhl\UserData\CAEtools\Miscellaneous\Registry\Source\Registry.exe
-@SET NWTC_Lib_Loc=C:\Users\mbuhl\UserData\CAEtools\Miscellaneous\NWTC_Library\trunk\source
-GOTO DoIt
 
 
 :DoIt

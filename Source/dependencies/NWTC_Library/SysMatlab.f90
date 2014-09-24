@@ -18,8 +18,8 @@
 !
 !**********************************************************************************************************************************
 ! File last committed: $Date: 2014-06-13 10:04:28 -0600 (Fri, 13 Jun 2014) $
-! (File) Revision #: $Rev$
-! URL: $HeadURL$
+! (File) Revision #: $Rev: 507 $
+! URL: $HeadURL: https://windsvn.nrel.gov/HydroDyn/trunk/Source/dependencies/NWTC_Library/SysMatlab.f90 $
 !**********************************************************************************************************************************
 MODULE SysSubs
 

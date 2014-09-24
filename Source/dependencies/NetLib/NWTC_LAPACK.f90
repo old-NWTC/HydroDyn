@@ -5,8 +5,8 @@
 !
 !**********************************************************************************************************************************
 ! File last committed: $Date: 2013-09-21 22:37:32 -0600 (Sat, 21 Sep 2013) $
-! (File) Revision #: $Rev$
-! URL: $HeadURL$
+! (File) Revision #: $Rev: 507 $
+! URL: $HeadURL: https://windsvn.nrel.gov/HydroDyn/trunk/Source/dependencies/NetLib/NWTC_LAPACK.f90 $
 !**********************************************************************************************************************************
 MODULE NWTC_LAPACK
 
