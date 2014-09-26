@@ -23,6 +23,12 @@ GOTO DoIt
 @SET NWTC_Lib_Loc=C:\Users\aplatt\Documents\software_development\windsvn\NWTC_Library\trunk\source
 GOTO DoIt
 
+:BJONKMAN-23080S
+:: Bonnie: Put your paths here and delete this comment.
+SET Registry=CALL Registry
+SET NWTC_Lib_Loc=C:\Users\bjonkman\Documents\DATA\DesignCodes\miscellaneous\nwtc_subs\SVNdirectory\trunk\source
+GOTO DoIt
+
 :GHAYMAN-17919S
 @SET Registry=C:\Dev\NREL_SVN\FAST\branches\FAST_Registry\Registry.exe
 @SET NWTC_Lib_Loc=C:\Dev\NREL_SVN\NWTC_Library\trunk\source
