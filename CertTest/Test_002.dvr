@@ -1,5 +1,5 @@
 HydroDyn Driver file for Unit Test_002.  
-Compatible with HydroDyn v2.00.01a-gjh
+Compatible with HydroDyn v2.02.00a-adp
 FALSE            Echo                - Echo the input file data (flag)
 ---------------------- ENVIRONMENTAL CONDITIONS -------------------------------
 9.80665          Gravity             - Gravity (m/s^2)

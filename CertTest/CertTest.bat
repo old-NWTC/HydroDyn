@@ -115,6 +115,11 @@ rem *******************************************************
 @CALL :GenTestHeader %Test02%
 @CALL :RunHydroDyn Test_002.dvr
 
+rem *******************************************************
+:Test2
+@CALL :GenTestHeader %Test03%
+@CALL :RunHydroDyn Test_003.dvr
+
 
 rem ******************************************************
 rem  Let's look at the comparisons.

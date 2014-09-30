@@ -131,8 +131,6 @@ IMPLICIT NONE
 ! =======================
 ! =========  Waves2_OutputType  =======
   TYPE, PUBLIC :: Waves2_OutputType
-    CHARACTER(10) , DIMENSION(:), ALLOCATABLE  :: WriteOutputHdr      !  [-]
-    CHARACTER(10) , DIMENSION(:), ALLOCATABLE  :: WriteOutputUnt      !  [-]
     REAL(ReKi) , DIMENSION(:), ALLOCATABLE  :: WriteOutput      !  [-]
   END TYPE Waves2_OutputType
 ! =======================
@@ -1833,32 +1831,6 @@ ENDDO
 ! 
    ErrStat = ErrID_None
    ErrMsg  = ""
-IF (ALLOCATED(SrcOutputData%WriteOutputHdr)) THEN
-   i1_l = LBOUND(SrcOutputData%WriteOutputHdr,1)
-   i1_u = UBOUND(SrcOutputData%WriteOutputHdr,1)
-   IF (.NOT. ALLOCATED(DstOutputData%WriteOutputHdr)) THEN 
-      ALLOCATE(DstOutputData%WriteOutputHdr(i1_l:i1_u),STAT=ErrStat)
-      IF (ErrStat /= 0) THEN 
-         ErrStat = ErrID_Fatal 
-         ErrMsg = 'Waves2_CopyOutput: Error allocating DstOutputData%WriteOutputHdr.'
-         RETURN
-      END IF
-   END IF
-   DstOutputData%WriteOutputHdr = SrcOutputData%WriteOutputHdr
-ENDIF
-IF (ALLOCATED(SrcOutputData%WriteOutputUnt)) THEN
-   i1_l = LBOUND(SrcOutputData%WriteOutputUnt,1)
-   i1_u = UBOUND(SrcOutputData%WriteOutputUnt,1)
-   IF (.NOT. ALLOCATED(DstOutputData%WriteOutputUnt)) THEN 
-      ALLOCATE(DstOutputData%WriteOutputUnt(i1_l:i1_u),STAT=ErrStat)
-      IF (ErrStat /= 0) THEN 
-         ErrStat = ErrID_Fatal 
-         ErrMsg = 'Waves2_CopyOutput: Error allocating DstOutputData%WriteOutputUnt.'
-         RETURN
-      END IF
-   END IF
-   DstOutputData%WriteOutputUnt = SrcOutputData%WriteOutputUnt
-ENDIF
 IF (ALLOCATED(SrcOutputData%WriteOutput)) THEN
    i1_l = LBOUND(SrcOutputData%WriteOutput,1)
    i1_u = UBOUND(SrcOutputData%WriteOutput,1)
@@ -1882,12 +1854,6 @@ ENDIF
 ! 
   ErrStat = ErrID_None
   ErrMsg  = ""
-IF (ALLOCATED(OutputData%WriteOutputHdr)) THEN
-   DEALLOCATE(OutputData%WriteOutputHdr)
-ENDIF
-IF (ALLOCATED(OutputData%WriteOutputUnt)) THEN
-   DEALLOCATE(OutputData%WriteOutputUnt)
-ENDIF
 IF (ALLOCATED(OutputData%WriteOutput)) THEN
    DEALLOCATE(OutputData%WriteOutput)
 ENDIF
@@ -2234,10 +2200,6 @@ ENDIF
  endif
  order = SIZE(u) - 1
  IF ( order .eq. 0 ) THEN
-IF (ALLOCATED(u_out%WriteOutputHdr) .AND. ALLOCATED(u(1)%WriteOutputHdr)) THEN
-END IF ! check if allocated
-IF (ALLOCATED(u_out%WriteOutputUnt) .AND. ALLOCATED(u(1)%WriteOutputUnt)) THEN
-END IF ! check if allocated
 IF (ALLOCATED(u_out%WriteOutput) .AND. ALLOCATED(u(1)%WriteOutput)) THEN
   u_out%WriteOutput = u(1)%WriteOutput
 END IF ! check if allocated
@@ -2247,10 +2209,6 @@ END IF ! check if allocated
     ErrMsg  = ' Error in Waves2_Output_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
     RETURN
   END IF
-IF (ALLOCATED(u_out%WriteOutputHdr) .AND. ALLOCATED(u(1)%WriteOutputHdr)) THEN
-END IF ! check if allocated
-IF (ALLOCATED(u_out%WriteOutputUnt) .AND. ALLOCATED(u(1)%WriteOutputUnt)) THEN
-END IF ! check if allocated
 IF (ALLOCATED(u_out%WriteOutput) .AND. ALLOCATED(u(1)%WriteOutput)) THEN
   ALLOCATE(b1(SIZE(u_out%WriteOutput,1)))
   ALLOCATE(c1(SIZE(u_out%WriteOutput,1)))
@@ -2275,10 +2233,6 @@ END IF ! check if allocated
     ErrMsg  = ' Error in Waves2_Output_ExtrapInterp: t(1) must not equal t(3) to avoid a division-by-zero error.'
     RETURN
   END IF
-IF (ALLOCATED(u_out%WriteOutputHdr) .AND. ALLOCATED(u(1)%WriteOutputHdr)) THEN
-END IF ! check if allocated
-IF (ALLOCATED(u_out%WriteOutputUnt) .AND. ALLOCATED(u(1)%WriteOutputUnt)) THEN
-END IF ! check if allocated
 IF (ALLOCATED(u_out%WriteOutput) .AND. ALLOCATED(u(1)%WriteOutput)) THEN
   ALLOCATE(b1(SIZE(u_out%WriteOutput,1)))
   ALLOCATE(c1(SIZE(u_out%WriteOutput,1)))
