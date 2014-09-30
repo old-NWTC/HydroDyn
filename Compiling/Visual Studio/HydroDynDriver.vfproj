@@ -5,7 +5,7 @@
 		<Platform Name="x64"/></Platforms>
 	<Configurations>
 		<Configuration Name="Debug|Win32" OutputDirectory="..\..\bin">
-				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" Preprocess="preprocessYes" PreprocessorDefinitions="FPE_TRAP_ENABLED" StandardWarnings="standardWarningsF03" DisableSpecificDiagnostics="5268" WarnDeclarations="true" WarnUnusedVariables="true" WarnUnalignedData="false" WarnUncalled="true" WarnInterfaces="true" InitLocalVarToNAN="true" FloatingPointExceptionHandling="fpe0" FloatingPointStackCheck="true" Traceback="true" NullPointerCheck="true" BoundsCheck="true" UninitializedVariablesCheck="true" RuntimeLibrary="rtMultiThreadedDebug" UseMkl="mklSequential"/>
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" Preprocess="preprocessYes" PreprocessorDefinitions="FPE_TRAP_ENABLED" StandardWarnings="standardWarningsF03" DisableSpecificDiagnostics="5268" WarnDeclarations="true" WarnUnalignedData="false" WarnInterfaces="true" InitLocalVarToNAN="true" FloatingPointExceptionHandling="fpe0" FloatingPointStackCheck="true" Traceback="true" NullPointerCheck="true" BoundsCheck="true" UninitializedVariablesCheck="true" RuntimeLibrary="rtMultiThreadedDebug" UseMkl="mklSequential"/>
 				<Tool Name="VFLinkerTool" OutputFile="$(OutDir)\HydroDynDriver_dev_$(ConfigurationName)_$(PlatformName).exe" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole" StackReserveSize="999999999" LargeAddressAware="addrAwareLarge"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true"/>
@@ -25,7 +25,7 @@
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
 		<Configuration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" Preprocess="preprocessYes" PreprocessorDefinitions="FPE_TRAP_ENABLED" WarnDeclarations="true" WarnInterfaces="true" Traceback="true" NullPointerCheck="true" BoundsCheck="true" UninitializedVariablesCheck="true" RuntimeLibrary="rtMultiThreadedDebug" UseMkl="mklSequential"/>
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" Preprocess="preprocessYes" PreprocessorDefinitions="FPE_TRAP_ENABLED" StandardWarnings="standardWarningsF03" DisableSpecificDiagnostics="5268" WarnDeclarations="true" WarnInterfaces="true" Traceback="true" NullPointerCheck="true" BoundsCheck="true" UninitializedVariablesCheck="true" RuntimeLibrary="rtMultiThreadedDebug" UseMkl="mklSequential"/>
 				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole" StackReserveSize="100000000"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
@@ -35,7 +35,7 @@
 				<Tool Name="VFPostBuildEventTool"/>
 				<Tool Name="VFManifestTool" SuppressStartupBanner="true"/></Configuration>
 		<Configuration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Preprocess="preprocessYes" PreprocessorDefinitions="FPE_TRAP_ENABLED" UseMkl="mklSequential"/>
+				<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" Preprocess="preprocessYes" PreprocessorDefinitions="FPE_TRAP_ENABLED" StandardWarnings="standardWarningsF03" DisableSpecificDiagnostics="5268" UseMkl="mklSequential"/>
 				<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" SubSystem="subSystemConsole" StackReserveSize="999999999"/>
 				<Tool Name="VFResourceCompilerTool"/>
 				<Tool Name="VFMidlTool" SuppressStartupBanner="true" TargetEnvironment="midlTargetAMD64"/>
@@ -57,7 +57,7 @@
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat Conv_Radiation" Description="Running Registry for Conv_Radiation" Outputs="..\..\Source\Conv_Radiation_Types.f90"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\Conv_Radiation_Types.f90">
 			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
+				<Tool Name="VFFortranCompilerTool" WarnUnusedVariables="false"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\RegistryFiles\Current.txt">
 			<FileConfiguration Name="Debug|Win32">
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat Current" Description="Running Registry for Current" Outputs="..\..\Source\Current_Types.f90"/></FileConfiguration>
@@ -65,7 +65,7 @@
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat Current" Description="Running Registry for Current" Outputs="..\..\Source\Current_Types.f90"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\Current_Types.f90">
 			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
+				<Tool Name="VFFortranCompilerTool" WarnUnusedVariables="false"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\RegistryFiles\HydroDyn.txt">
 			<FileConfiguration Name="Debug|Win32">
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat HydroDyn" Description="Running Registry for HydroDyn" Outputs="..\..\Source\HydroDyn_Types.f90"/></FileConfiguration>
@@ -73,7 +73,7 @@
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat HydroDyn" Description="Running Registry for HydroDyn" Outputs="..\..\Source\HydroDyn_Types.f90"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\HydroDyn_Types.f90">
 			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
+				<Tool Name="VFFortranCompilerTool" WarnUnusedVariables="false"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\RegistryFiles\Morison.txt">
 			<FileConfiguration Name="Debug|Win32">
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat Morison" Description="Running Registry for Morison" Outputs="..\..\Source\Morison_Types.f90"/></FileConfiguration>
@@ -81,7 +81,7 @@
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat Morison" Description="Running Registry for Morison" Outputs="..\..\Source\Morison_Types.f90"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\Morison_Types.f90">
 			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
+				<Tool Name="VFFortranCompilerTool" WarnUnusedVariables="false"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\RegistryFiles\SS_Radiation.txt">
 			<FileConfiguration Name="Debug|Win32">
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat SS_Radiation" Description="Running Registry for SS_Radiation" Outputs="..\..\Source\SS_Radiation_Types.f90"/></FileConfiguration>
@@ -89,7 +89,7 @@
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat SS_Radiation" Description="Running Registry for SS_Radiation" Outputs="..\..\Source\SS_Radiation_Types.f90"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\SS_Radiation_Types.f90">
 			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
+				<Tool Name="VFFortranCompilerTool" WarnUnusedVariables="false"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\RegistryFiles\WAMIT.txt">
 			<FileConfiguration Name="Debug|Win32">
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat WAMIT" Description="Running Registry for WAMIT" Outputs="..\..\Source\WAMIT_Types.f90"/></FileConfiguration>
@@ -102,10 +102,10 @@
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat WAMIT2" Description="Running Registry for WAMIT2" Outputs="..\..\Source\WAMIT2_Types.f90"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\WAMIT2_Types.f90">
 			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
+				<Tool Name="VFFortranCompilerTool" WarnUnusedVariables="false"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\WAMIT_Types.f90">
 			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
+				<Tool Name="VFFortranCompilerTool" WarnUnusedVariables="false"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\RegistryFiles\Waves.txt">
 			<FileConfiguration Name="Debug|Win32">
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat Waves" Description="Running Registry for Waves" Outputs="..\..\Source\Waves_Types.f90"/></FileConfiguration>
@@ -118,146 +118,38 @@
 				<Tool Name="VFCustomBuildTool" CommandLine="CALL RunRegistry.bat Waves2" Description="Running Registry for Waves2" Outputs="..\..\Source\Waves2_Types.f90"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\Waves2_Types.f90">
 			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
+				<Tool Name="VFFortranCompilerTool" WarnUnusedVariables="false"/></FileConfiguration></File>
 		<File RelativePath="..\..\Source\Waves_Types.f90">
 			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File></Filter>
-		<File RelativePath="..\..\Source\Conv_Radiation.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\Current.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\FFTMod.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\fftpack.f">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" StandardWarnings="standardWarningsNone" DisableSpecificDiagnostics="5268" WarnDeclarations="false" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" StandardWarnings="standardWarningsNone" DisableSpecificDiagnostics="5268" WarnDeclarations="false" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" StandardWarnings="standardWarningsNone" DisableSpecificDiagnostics="5268" WarnDeclarations="false" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" StandardWarnings="standardWarningsNone" DisableSpecificDiagnostics="5268" WarnDeclarations="false" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\HydroDyn.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\HydroDyn_DriverCode.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\HydroDyn_Input.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\HydroDyn_Output.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\Morison.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\Morison_Output.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\SS_Radiation.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\WAMIT.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\WAMIT_Interp.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\WAMIT_Output.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File>
-		<File RelativePath="..\..\Source\Waves.f90">
-			<FileConfiguration Name="Debug|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Debug|x64">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration>
-			<FileConfiguration Name="Release|Win32">
-				<Tool Name="VFFortranCompilerTool" DisableSpecificDiagnostics="5268" WarnUnusedVariables="false"/></FileConfiguration></File></Filter>
+				<Tool Name="VFFortranCompilerTool" WarnUnusedVariables="false"/></FileConfiguration></File></Filter>
+		<File RelativePath="..\..\Source\Conv_Radiation.f90"/>
+		<File RelativePath="..\..\Source\Current.f90"/>
+		<File RelativePath="..\..\Source\HydroDyn.f90"/>
+		<File RelativePath="..\..\Source\HydroDyn_DriverCode.f90"/>
+		<File RelativePath="..\..\Source\HydroDyn_Input.f90"/>
+		<File RelativePath="..\..\Source\HydroDyn_Output.f90"/>
+		<File RelativePath="..\..\Source\Morison.f90"/>
+		<File RelativePath="..\..\Source\Morison_Output.f90"/>
+		<File RelativePath="..\..\Source\SS_Radiation.f90"/>
+		<File RelativePath="..\..\Source\WAMIT.f90"/>
+		<File RelativePath="..\..\Source\WAMIT2.f90"/>
+		<File RelativePath="..\..\Source\WAMIT2_Output.f90"/>
+		<File RelativePath="..\..\Source\WAMIT_Interp.f90"/>
+		<File RelativePath="..\..\Source\WAMIT_Output.f90"/>
+		<File RelativePath="..\..\Source\Waves.f90"/>
+		<File RelativePath="..\..\Source\Waves2.f90"/>
+		<File RelativePath="..\..\Source\Waves2_Output.f90"/></Filter>
 		<Filter Name="NetLib">
+		<File RelativePath="..\..\Source\dependencies\NetLib\fftpack4.1.f">
+			<FileConfiguration Name="Debug|Win32">
+				<Tool Name="VFFortranCompilerTool" StandardWarnings="standardWarningsNone" WarnDeclarations="false" WarnUnusedVariables="false"/></FileConfiguration>
+			<FileConfiguration Name="Release|x64">
+				<Tool Name="VFFortranCompilerTool" StandardWarnings="standardWarningsNone" WarnUnusedVariables="false"/></FileConfiguration>
+			<FileConfiguration Name="Debug|x64">
+				<Tool Name="VFFortranCompilerTool" StandardWarnings="standardWarningsNone" WarnDeclarations="false" WarnUnusedVariables="false"/></FileConfiguration>
+			<FileConfiguration Name="Release|Win32">
+				<Tool Name="VFFortranCompilerTool" StandardWarnings="standardWarningsNone" WarnUnusedVariables="false"/></FileConfiguration></File>
+		<File RelativePath="..\..\Source\dependencies\NetLib\NWTC_FFTPACK.f90"/>
 		<File RelativePath="..\..\Source\dependencies\NetLib\NWTC_LAPACK.f90"/></Filter>
 		<Filter Name="NWTC_Library">
 		<File RelativePath="..\..\Source\dependencies\NWTC_Library\DoubPrec.f90">

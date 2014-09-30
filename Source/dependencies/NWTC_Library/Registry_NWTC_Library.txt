@@ -5,8 +5,8 @@
 #
 #.............................................................
 # File last committed: $Date: 2014-01-31 10:37:54 -0700 (Fri, 31 Jan 2014) $
-# (File) Revision #: $Rev: 507 $
-# URL: $HeadURL: https://windsvn.nrel.gov/HydroDyn/trunk/Source/dependencies/NWTC_Library/Registry_NWTC_Library.txt $
+# (File) Revision #: $Rev: 218 $
+# URL: $HeadURL: https://windsvn.nrel.gov/NWTC_Library/trunk/source/Registry_NWTC_Library.txt $
 #.............................................................
 
 

@@ -24,12 +24,12 @@ SET Source_Loc=..\..\Source
 
 
 SET HD_Reg_Loc=%Source_Loc%\RegistryFiles
-SET NWTC_Lib_Loc=%HD_Reg_Loc%\include
+SET NWTC_Lib_Loc=%Source_Loc%\dependencies\NWTC_Library
 
 
 
 
-IF /I "%2"=="bjonkman" CALL ..\Set_FAST_paths.bat
+IF /I "%2"=="dev" CALL ..\Set_FAST_paths.bat
 
 SET ModuleName=%1
 
@@ -48,7 +48,7 @@ GOTO checkError
 :checkError
 ECHO.
 IF %ERRORLEVEL% NEQ 0 (
-ECHO Error running  Registry for SubDyn.
+ECHO Error running  Registry for HydroDyn.
 ) ELSE (
 ECHO %ModuleName%_Types.f90 was created.
 COPY /Y "%ModuleName%_Types.f90" "%Source_Loc%"

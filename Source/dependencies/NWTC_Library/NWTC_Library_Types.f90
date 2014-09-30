@@ -9,8 +9,8 @@
 !jm 2. Every routine after NWTC_Library_UnPackfileinfotype is commented out (or you can remove the lines)
 !**********************************************************************************************************************************
 ! File last committed: $Date: 2014-06-13 10:04:28 -0600 (Fri, 13 Jun 2014) $
-! (File) Revision #: $Rev: 507 $
-! URL: $HeadURL: https://windsvn.nrel.gov/HydroDyn/trunk/Source/dependencies/NWTC_Library/NWTC_Library_Types.f90 $
+! (File) Revision #: $Rev: 237 $
+! URL: $HeadURL: https://windsvn.nrel.gov/NWTC_Library/trunk/source/NWTC_Library_Types.f90 $
 !**********************************************************************************************************************************
 
 !
