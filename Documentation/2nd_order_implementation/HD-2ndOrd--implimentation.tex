@@ -1,0 +1,241 @@
+% ---------------
+% PREAMBLE
+% ---------------
+%\newif\iflatextortf
+%
+%\iflatextortf
+% % tell latex2tortf if this is an article or report
+% \documentclass[12pt,letterpaper]{report}
+% \input{NRELLatex2rtf.tex}
+%\else
+% \documentclass[report]{nrel} 
+%\fi
+%
+
+\documentclass[10pt,letterpaper,oneside]{book}
+
+
+
+
+%tikz
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,calc,positioning}
+\pgfrealjobname{HD-2ndOrd--implimentation}
+\renewcommand*\ttdefault{cmvtt}     % courier modern for the tt font
+\renewcommand*\ttdefault{lmvtt}     % latin modern
+
+
+
+%todo notes in margins
+\usepackage[textwidth=1in]{todonotes}
+
+%%%\newenvironment{changemargin}[2]{%
+%%%  \begin{list}{}{
+%%%      \setlength{\topsep}{0pt}%
+%%%      \setlength{\leftmargin}{#1}%
+%%%      \setlength{\rightmargin}{#2}%
+%%%      \setlength{\listparindent}{\parindent}%
+%%%      \setlength{\itemindent}{\parindent}%
+%%%      \setlength{\parsep}{\parskip}%
+%%%    }
+%%%  \item[]}{
+%%%\end{list}}
+
+
+%%%\usepackage{titlepic}
+\usepackage[nostamp]{draftwatermark}      %option nostamp turns off the watermark.
+\SetWatermarkAngle{60}
+\SetWatermarkLightness{0.90}
+\SetWatermarkFontSize{36pt}
+\SetWatermarkScale{5.5}
+
+
+
+\usepackage{setspace}
+\usepackage{xspace}
+%%%\usepackage{lscape}
+%%%\usepackage{rotating}
+\usepackage{subfigure}
+%%%\usepackage{appendix}
+\usepackage{framed}
+\usepackage{graphicx}
+\usepackage{cite}
+%%%\usepackage{float}
+\usepackage[lined,boxed,linesnumbered]{algorithm2e}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{nth}
+
+   % fancy verbatim stuff
+\usepackage{fancyvrb}
+\usepackage{listings} 
+\lstset{% 
+%  basicstyle=\ttfamily, 
+%  breaklines=true,
+%  columns=fullflexible,
+  escapeinside = ||,
+%  breakindent=100pt
+}
+
+   % better monotype font
+\edef\oldtt{\ttdefault}
+\usepackage[scaled]{beramono}
+\usepackage[T1]{fontenc}
+\renewcommand*\ttdefault{\oldtt}
+\newcommand{\bera}[1]{{\fontfamily{fvm}\selectfont #1}}  % now the old tt font is still there, use \bera for this one.
+
+%\usepackage{truncate}
+
+\usepackage{booktabs}
+\usepackage{multirow}   % multiple rows in a table
+
+\usepackage{array}
+\usepackage{caption}
+\usepackage[font={sf,it},labelfont={bf}]{caption}
+\usepackage[margin=1.2in]{geometry}
+\setlength{\marginparwidth}{1in}
+\usepackage{color}
+\usepackage{soul}
+
+\usepackage{minted}
+%%%% styles are contained in folder /usr/lib/python2.7/dist-packages/pygments/styles/
+%%%\usemintedstyle{custom}
+%%%\usepackage{fontspec}
+%%%%\setsansfont{DejaVuSansMono}
+%%%%\setmonofont{DejaVuSansMono}
+
+%\usepackage{titletoc}
+
+
+% List of questions to figure out:
+\usepackage[subfigure]{tocloft}
+\newcommand{\listQuestionname}{List of Questions}    % Name on the new listing
+\newlistof{Question}{question}{\listQuestionname}                    % definition for tocloft
+\newcommand{\Question}[1]{%
+   \refstepcounter{Question}
+   \vspace{5pt}
+   \par\noindent{\todo[inline,nolist,backgroundcolor=blue!10!white,bordercolor=red]
+                     {\textbf{Question \theQuestion:} #1}}
+   \addcontentsline{question}{Question}
+   {\protect\numberline{\theQuestion}#1}\par
+   \vspace{5pt}
+}
+\newcommand{\QuestionCap}[2]{%
+   \refstepcounter{Question}
+   \vspace{5pt}
+   \par\noindent{\todo[inline,nolist,caption={#1},backgroundcolor=blue!10!white,bordercolor=red]
+                     {\textbf{Question \theQuestion:} #2}}
+   \addcontentsline{question}{Question}
+   {\protect\numberline{\theQuestion}#1}\par
+   \vspace{5pt}
+}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks,
+  citecolor=red,
+  filecolor=green,
+  linkcolor=blue,
+  urlcolor=blue
+}
+\usepackage{cleveref}
+
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{4}
+
+%% Adjust the imemize spacing
+%\newenvironment{itemize*}%
+%  {\begin{itemize}%
+%    \setlength{\itemsep}{1pt}%
+%    \setlength{\parskip}{1pt}}%
+%  {\end{itemize}}
+
+\usepackage{enumitem}
+\setitemize{noitemsep,topsep=3pt,parsep=2pt,partopsep=3pt}
+\setenumerate{noitemsep,topsep=3pt,parsep=2pt,partopsep=3pt}
+
+\renewcommand{\topfraction}{0.9} % max fraction of floats at top
+\renewcommand{\bottomfraction}{0.8}   % max fraction of floats at bottom
+
+%% Redefine sqrt to have a closing hook
+%\LetLtxMacro{\oldsqrt}{\sqrt} % makes all sqrts closed
+%\renewcommand{\sqrt}[1][\ ]{%
+%  \def\DHLindex{#1}\mathpalette\DHLhksqrt}
+%\def\DHLhksqrt#1#2{%
+%  \setbox0=\hbox{$#1\oldsqrt[\DHLindex]{#2\,}$}\dimen0=\ht0
+%  \advance\dimen0-0.2\ht0
+%  \setbox2=\hbox{\vrule height\ht0 depth -\dimen0}%
+%  {\box0\lower0.71pt\box2}}
+
+
+
+
+
+
+% -----------------------------------
+% DOCUMENT PROPERTIES
+% -----------------------------------
+%\titlepic{\includegraphics[scale=.25]{figures/MAP_Logo.pdf}}
+\title{2nd-order Forces Within HydroDyn\\ {\large Implimentation}}
+\date{WAMIT2 version 0.01.00a-adp\\ \today}
+\author{A. Platt}
+\date{\today}
+
+% -------------------------------------
+% DOCUMENT STARTS HERE
+% -------------------------------------
+\begin{document}
+\newcommand{\HD}{HydroDyn\xspace}
+\newcommand{\iu}{{i\mkern1.5mu}}       % For the imaginary number i
+
+      % variables for the table
+\newcommand{\var}[8]{\texttt{#1} &{#2}&{#3}&{#4}&{#5}&{#6}&{#7}&\parbox{5cm}{\vskip 3pt \setlength\baselineskip{5pt}#8\vskip 3pt}}
+      % formatting for 
+\newcommand{\rname}[1]{\texttt{#1}}    % routinenames
+\newcommand{\fname}[1]{\emph{#1}}      % filenames
+\newcommand{\modname}[1]{\emph{#1}}      % modulenames
+\newcommand{\vname}[1]{\texttt{#1}}    % varnames
+\newcommand{\varname}[1]{\texttt{#1}}    % varnames
+
+      % load the figure template info:
+   \input{chaps/figures/code_diagram.nodetypes.tikz.tex}
+
+%\input{chaps/Chap.Multi-Directional_Waves.tex}
+%\end{document}
+
+
+
+\input{Frontmatter.tex}
+
+\input{chaps/Chap.Overview.tex}
+\input{chaps/Chap.Background.tex}
+
+   %\part{Multi-Directional Waves}
+\input{chaps/Chap.Multi-Directional_Waves.tex}
+
+   %\part{Second Order Force Calculations}
+\input{chaps/Chap.WamitOutput.tex}
+\input{chaps/Chap.Second_order_force_calculations.tex}
+\input{chaps/Chap.Algorithms.tex}
+
+   %\part{WAMIT2 Module}
+\input{chaps/Chap.WAMIT2_module_Integration.tex}
+\input{chaps/Chap.Waves2_module_Integration.tex}
+\input{chaps/Chap.WAMIT2_module_Architecture.tex}
+%\input{chaps/Chap.Development_schedule.tex}
+
+% bibliography
+\cleardoublepage
+%\bibliographystyle{nrel}
+\bibliographystyle{unsrt}
+%\bibintoc
+\label{sec:Bib}
+\bibliography{bibliography}
+
+
+%\appendix
+%\input{appendices/Appendix.2ndOrderDerivation.tex}
+%\input{appendices/Appendix.DataPrepSchemes.tex}
+
+\end{document}

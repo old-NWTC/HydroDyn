@@ -1,0 +1,27 @@
+%This	file	should	not	contain	any	spaces,	only	tabs	(tabstop=1)
+!----------------------		WAMIT	2nd	order	PLATFORM	forces		-------------------
+%%%	Platform	DOF	flags	removed.		Will	use	the	ones	from	First	order
+%True							PtfmSg2F									!	Compute	the	surge	second	order	forces	(flag)
+%True							PtfmSw2F									!	Compute	the	sway		second	order	forces	(flag)
+%True							PtfmHv2F									!	Compute	the	heave	second	order	forces	(flag)
+%True							PtfmR2F										!	Compute	the	roll		second	order	forces	(flag)
+%True							PtfmP2F										!	Compute	the	pitch	second	order	forces	(flag)
+%True							PtfmY2F										!	Compute	the	yaw			second	order	forces	(flag)
+	8									MnDrift										!	Mean	drift	forces	computed	from	WAMIT	file
+%:	{0:	No	mean	drift,	[7,	8,	9,	10,	11,	or	12]:	WAMIT	file	to	use}
+	0									NewmanApp								!	Slow	drift	forces	computed	with	Newman's	approximation	from	WAMIT	file
+%:	{0:	No	mean	drift,	[7,	8,	9,	10,	11,	or	12]:	WAMIT	file	to	use}
+	0									DiffQTF										!	Full	Difference-Frequency	forces	computed	with	full	QTF's	from	WAMIT	file
+%:	{0:	No	difference-frequency	forces,	[10,	11,	or	12]:	WAMIT	file	to	use}	--	Only	one	of	MnDrift,	NewmanApp,	or	DiffQYT	can	be	non-zero
+	0									SumQTF											!	Full	Sum-Frequency	forces	computed	with	full	QTF's	from	WAMIT	file
+%:	{0:	No	Sum-frequency	forces,	[10,	11,	or	12]:	WAMIT	file	to	use}
+%%%	The	cutoff	frequencies	are	removed.		Using	the	ones	from	the	Waves2
+%section
+%	0									WvLowCOffD							!	Low		frequency	cutoff	used	in	the	difference-frequencies	(rad/s)
+%					[Only	used	if	adifference	method	is	used]
+%	3.5							WvHiCOffD								!	High	frequency	cutoff	used	in	the	difference-frequencies	(rad/s)
+%					[Only	used	if	a	difference	method	is	used]
+%	0.1							WvLowCOffS							!	Low		frequency	cutoff	used	in	the		summation-frequencies	(rad/s)
+%					[Only	used	if		SumQTF	/=	0]
+%	3.5							WvHiCOffS								!	High	frequency	cutoff	used	in	the		summation-frequencies	(rad/s)
+%					[Only	used	if		SumQTF	/=	0]

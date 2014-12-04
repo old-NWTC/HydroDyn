@@ -1,0 +1,20 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Flowchart of how to find a suitable value of $\Theta $}}{5}{figure.caption.1}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Test case 001. The right plot shows the randomly selected directions for each frequency.\relax }}{8}{figure.caption.7}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Test case 002. The right plot shows the randomly selected directions for each frequency.\relax }}{9}{figure.caption.8}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Test case 003. The right plot shows the randomly selected directions for each frequency.\relax }}{9}{figure.caption.9}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Test case 004. The right plot shows the randomly selected directions for each frequency. This is the same as test case 002 with $\mathaccentV {bar}016\theta =135$ and $S=2.3$. Note that the ordering of the assigned frequencies is the same as in case 002.\relax }}{9}{figure.caption.10}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Test case 005. The right plot shows the randomly selected directions for each frequency.\relax }}{10}{figure.caption.11}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Test case 008. The right plot shows the randomly selected directions for each frequency.\relax }}{10}{figure.caption.12}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Overview of scheme for reading in 2nd order WAMIT files with two periods (.10, .11, .12). The algorithm for reading in 2nd order WAMIT files with only one period (.7, .8, .9) should be a simplified version of this algorithm. \relax }}{15}{figure.caption.16}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Generalized overview calculation of second order forces. Here $Z(\omega )$ is the combination complex wave as a function of frequency and $\Phi (\omega )$ is the associated wave direction heading for each frequency. The 3D and 4D arrays containing the wave force transfer function are interpolated at each step within the innermost summation containing the $F^\pm _k$ terms, or during assembly of the matrix for the FFT. \relax }}{20}{figure.caption.19}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Flow diagram for the mean drift calculation method. The mean drift equation only involves the diagonal terms where the frequencies $\omega _1 = \omega _2$, and the wave directions $\beta _1 = \beta _2$. The WAMIT output files are read in and arranged in either a 3D or 4D array and interpolated at each step in the summation. See text for how to solve the equation. See \Cref {chap:WamitOutput} for requirements on which WAMIT output files can be used. \relax }}{22}{figure.caption.21}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {9.1}{\ignorespaces Information flow to and from the WAMIT2 module. The green boxes indicate information or files passed into or out of the module.\relax }}{34}{figure.caption.25}

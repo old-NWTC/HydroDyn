@@ -1,0 +1,71 @@
+\tikzstyle{annotation}  = [
+      node distance=10mm,
+      anchor=center,
+      draw=gray!50,
+      fill=blue!55!red!25!gray!15,font=\scriptsize]
+\tikzstyle{call}    = [
+      node distance=10mm,
+      rectangle,minimum size=6mm,rounded corners=0.5mm,
+      text centered,anchor=center,
+      very thick,draw=blue!30!red!40!black!40,
+      top color=white,bottom color=blue!25!red!10,
+      font=CALL \ttfamily]
+\tikzstyle{info}        = [
+      node distance=10mm,
+      rectangle,minimum size=6mm,rounded corners=1mm,
+      very thick, draw=red!40!black!30,
+      top color=white,bottom color=gray!50!red!20,
+      font=\scriptsize\itshape]
+\tikzstyle{equation}    = [
+      node distance=10mm,
+      rectangle,minimum size=5mm,
+      very thick,draw=red!50!gray!50,
+      top color=white,bottom color=red!50!black!20,
+      ]
+\tikzstyle{process}     = [
+      node distance=10mm,
+      rectangle,minimum size=6mm,
+      very thick, draw=black!30!blue!30, text centered,
+      top color=white,bottom color=black!30!blue!20]
+\tikzstyle{processalt}  = [
+      node distance=10mm,
+      rectangle,minimum size=6mm,rounded corners=2mm,
+      very thick, draw=black!30!blue!30, text centered,
+      top color=white,bottom color=black!30!blue!20]
+\tikzstyle{decision}    = [
+      node distance=10mm,
+      diamond, aspect=2, inner sep=2pt,
+      thick, draw=black!30!blue!30, text badly centered,
+      top color=white,bottom color=black!30!blue!20]
+\tikzstyle{refnum}      = [
+      node distance=2mm,
+      rectangle,inner sep=2pt,rounded corners=.25\baselineskip,
+      thick, draw=black!30,
+      top color=gray!20,bottom color=gray!30]
+\tikzstyle{return}      = [
+      node distance=10mm,
+      text=red,draw=none]
+
+\tikzstyle{cl} = [->,very thick]  %connect line
+\tikzstyle{nl} = [ultra thick,black!40] %note line
+
+\tikzstyle{callgraph}    = [
+      rectangle,minimum height=6mm,minimum width=15mm,rounded corners=0.5mm,
+      text centered,anchor=center,
+      very thick,draw=blue!30!red!40!black!40,
+      top color=white,bottom color=blue!25!red!10,
+      font=\ttfamily]
+\tikzstyle{callprocess}  = [
+      node distance=10mm,
+      rectangle,minimum size=6mm,
+      very thick, draw=black!30!blue!30, text centered,
+      top color=white,bottom color=black!30!blue!20,
+      font=\ttfamily]
+
+\tikzstyle{tempnode}    = [
+      fill=none,draw=none,minimum size=3pt,inner sep=0pt]
+
+
+\pgfdeclarelayer{background}
+\pgfdeclarelayer{foreground}
+\pgfsetlayers{background,main,foreground}

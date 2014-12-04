@@ -1,0 +1,123 @@
+%%% This approach is not correct: we don't want to parse first.  We can do the parsing as part of the loop and interpolate within the loop.
+\begin{tikzpicture}
+
+% temporary node for the sectioning labels
+\node[tempnode]
+      (TmpNode) {};
+
+
+%WAMIT 2nd
+\node[info,right of=TmpNode,node distance=50mm,text width=21mm,text centered] 
+      (W2Data) {Read \nth{2}~order WAMIT~output (.10d~.11d~.12d)};
+
+\node[process,below of=W2Data,node distance=13mm]
+      (W2Sort) {Sort data};
+   \draw[cl] (W2Data) -- (W2Sort);
+
+\node[process,below of=W2Sort,node distance=12mm]
+      (W2Convert) {Convert $\tau \rightarrow \omega$};
+   \draw[cl] (W2Sort) -- (W2Convert);
+
+\node[info,below of=W2Convert,node distance=12mm]
+      (W2Info) {Raw \nth{2} order data};
+   \draw[cl] (W2Convert) -- (W2Info);
+
+% unidirectional
+   \node[process,text width=24mm,text centered]
+         (W2UniParse) at ($(W2Info)+(-15mm,-15mm)$) {$\beta_1=\beta_2$ terms};
+      \draw[cl] (W2Info) -- (W2UniParse);
+   
+% multidir
+   \node[process,text width=24mm,text centered]
+         (W2BiParse) at ($(W2Info)+(15mm,-15mm)$) {Full QTF};
+      \draw[cl] (W2Info) -- (W2BiParse);
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Interpolation step %
+
+% unidirectional
+\node[process,anchor=north]
+      (UniInterp1) at ($(W2Data)+(-20mm,-65mm)$) {Interpolate $\beta$};
+   \draw[cl] (W2UniParse) -- (UniInterp1);
+
+\node[process,below of=UniInterp1]
+      (UniInterp2) {Interpolate $\omega_1, \omega_2$};
+   \draw[cl] (UniInterp1) -- (UniInterp2);
+
+%set the background box of unidirectional
+\begin{pgfonlayer}{background}
+\filldraw[rounded corners=3mm,draw=blue!30!black!35,
+            fill=white!80!blue!20!red!20!black!10]
+      ($(UniInterp1.north west) +(-14mm,2mm)$) 
+         rectangle ($(UniInterp2.south east)+(2mm,-2mm)$);
+\end{pgfonlayer}
+\node[tempnode,anchor=north,font=\footnotesize,text centered,text width=20mm,rotate=90]
+      (UniDir) at ($(UniInterp1.west)!.5!(UniInterp2.west)+(-11.5mm,0mm)$) {\it{Uni-dir waves}\\(1D, 2D)};
+
+
+
+% multidirectional
+\coordinate (tmp) at ($(UniInterp1)!.5!(UniInterp2)$);
+\node[process,text width=21mm,text centered,anchor=center]
+      (BiInterp1) at ($(W2Data |-  tmp) +(25mm,0mm)$) {Interpolate 4D over $\omega_1, \omega_2, \beta_1, \beta_2$};
+   \draw[cl] (W2BiParse) -- (BiInterp1);
+
+%set the background box of Multidirectional
+\begin{pgfonlayer}{background}
+\filldraw[rounded corners=3mm,draw=blue!30!black!35,
+            fill=white!80!blue!20!red!20!black!10]
+      ($(BiInterp1.north west) +(-12mm,3mm)$) 
+         rectangle ($(BiInterp1.south east)+(2mm,-3mm)$);
+\end{pgfonlayer}
+\node[tempnode,anchor=north,font=\footnotesize,text centered,text width=18mm,rotate=90]
+      (MultDir) at ($(BiInterp1.west)+(-11mm,0mm)$) {\it{Multi-dir waves} (\Cref{sec:interp:4d})};
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Transfer function
+\node[info]
+      (TransFunc) at ($(W2Data) + (0mm,-95mm)$) {$F^{-}_k(\omega_m,\omega_n)$};
+   \draw[cl] (BiInterp1) -- (TransFunc);
+   \draw[cl] (UniInterp2) -- (TransFunc);
+
+% Equation
+\node[process,below of=TransFunc]
+      (EQ) {\Cref{eq:DiffQTF}};
+   \draw[cl] (TransFunc) -- (EQ);
+
+
+
+%output
+\node[info,below of=EQ,text width=21mm,text centered,node distance=14mm]
+      (Output) {Forces and moments to apply to point mesh};
+   \draw[cl] (EQ) -- (Output);
+
+
+
+
+
+%% draw some lines along the side for marking what parts do what
+\coordinate (tmp1) at ($(TmpNode |- W2Data)+(0mm,7mm)$);
+\coordinate (tmp2) at ($(TmpNode |- W2Info)+(0mm,-5mm)$);
+\draw[black]
+      ($(tmp1)+(3mm,0mm)$) -- (tmp1) -- (tmp2) 
+         node[midway,above,sloped,rotate=180,font=\small] {Data reading} -- +(3mm,0mm);
+
+\coordinate (tmp1) at ($(TmpNode |- W2UniParse)+(0mm,5mm)$);
+\coordinate (tmp2) at ($(TmpNode |- W2UniParse)+(0mm,-5mm)$);
+\draw[black]
+      ($(tmp1)+(3mm,0mm)$) -- (tmp1) -- (tmp2) 
+            node[midway,above,sloped,rotate=180,font=\small] {Parsing}-- +(3mm,0mm);
+
+\coordinate (tmp1) at ($(TmpNode |- UniInterp1)+(0mm,5mm)$);
+\coordinate (tmp2) at ($(TmpNode |- UniInterp2)+(0mm,-5mm)$);
+\draw[black,text width=21mm,text centered]
+      ($(tmp1)+(3mm,0mm)$) -- (tmp1) -- (tmp2) 
+            node[midway,above,sloped,rotate=180,font=\small] {Interpolation (\Cref{chap:Algorithm})}-- +(3mm,0mm);
+
+   
+\end{tikzpicture}
+\endinput
+

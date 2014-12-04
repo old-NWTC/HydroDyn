@@ -1,0 +1,55 @@
+\begin{table}
+   \centering
+   \caption[Matrix of possible calculation methods and data file combinations.]
+         {Matrix of possible calculation methods and data file combinations.
+         The names given in the column marked \emph{Variables} are the independent variables within the file.
+         The information used from each file type is given under each method.  Note that for the mean-drift calculation with multi-directional waves,
+         only the $\beta_1 = \beta_2$ terms are necessary with the equal-energy approach.  However, if a different multidirectional waves method is used,
+         then all the data would be necessary.
+      \label{tab:Wamit2MethodsByFileType}}
+   \small{
+   \begin{tabular}{ccccccc}
+      \toprule
+         Sea               &  File  &  Independent   &  \multicolumn{4}{c}{Method}                      \\ \cmidrule(lr){4-7}
+         Directionality    &  Ext.  &  Variables   & Mean Drift   &  Newman's &  Diff-QTF &  Sum-QTF  \\
+      \midrule
+         \multirow{6}{*}{\parbox[c]{18mm}{\centering Uni-Directional Seas}}
+            &  7  &  \multirow{3}{*}{\parbox[c]{15mm}{\centering $\omega$\\$\beta_1,\beta_2$}}
+                  &  \multirow{3}{*}{\parbox[c]{15mm}{\centering $\beta_1 = \beta_2$}}
+                     &  \multirow{3}{*}{\parbox[c]{15mm}{\centering $\beta_1 = \beta_2$}}
+                        &  \multirow{3}{*}{\parbox[c]{15mm}{\centering Not possible}}
+                           &  \multirow{3}{*}{\parbox[c]{15mm}{\centering Not possible}}
+                                 \\
+            &  8  &  &  &  &  &  \\
+            &  9  &  &  &  &  &  \\  \cmidrule(lr){2-7}
+            & 10  &  \multirow{3}{*}{\parbox[c]{15mm}{\centering $\omega_1,\omega_2$\\$\beta_1,\beta_2$}}
+                  &  \multirow{3}{*}{\parbox[c]{15mm}{\centering $\omega_1=\omega_2$\\$\beta_1=\beta_2$}}
+                     &  \multirow{3}{*}{\parbox[c]{15mm}{\centering $\omega_1=\omega_2$\\$\beta_1=\beta_2$}}
+                        &  \multirow{3}{*}{\parbox[c]{15mm}{\centering $\beta_1=\beta_2$}}
+                           &  \multirow{3}{*}{\parbox[c]{15mm}{\centering $\beta_1=\beta_2$}}
+                                 \\
+            & 11  &  &  &  &  &  \\
+            & 12  &  &  &  &  &  \\
+      \midrule
+         \multirow{6}{*}{\parbox[c]{18mm}{\centering Multi-Directional Seas}}
+            &  7  &  \multirow{3}{*}{\parbox[c]{15mm}{\centering $\omega$\\$\beta_1,\beta_2$}}
+                  &  \multirow{3}{*}{\parbox[c]{15mm}{\centering All Data}}   %$\omega_1 = \omega_2$}}
+                     &  \multirow{6}{*}{\parbox[c]{15mm}{\centering Not possible}}
+                        &  \multirow{3}{*}{\parbox[c]{15mm}{\centering Not possible}}
+                           &  \multirow{3}{*}{\parbox[c]{15mm}{\centering Not possible}}
+                                 \\
+            &  8  &  &  &  &  &  \\
+            &  9  &  &  &  &  &  \\ \cmidrule(lr){2-4} \cmidrule(lr){6-7}
+            & 10  &  \multirow{3}{*}{\parbox[c]{15mm}{\centering $\omega_1,\omega_2$\\$\beta_1,\beta_2$}}
+                  &  \multirow{3}{*}{\parbox[c]{15mm}{\centering $\omega_1=\omega_2$}}
+                     &  &  \multirow{3}{*}{\parbox[c]{15mm}{\centering All Data}}
+                           &  \multirow{3}{*}{\parbox[c]{15mm}{\centering All Data}}
+                                 \\
+            & 11  &  &  &  &  &  \\
+            & 12  &  &  &  &  &  \\
+      \bottomrule
+   \end{tabular}
+   }
+\end{table}
+
+

@@ -1,0 +1,9 @@
+%This	file	should	not	contain	any	spaces,	only	tabs	(tabstop=1)
+----------------------	2ND-ORDER	WAVES	-----------------------------------------
+	FALSE			WvMnDrift				-	Mean-drift																2nd-order	wave	kinematics	(switch)	[only	one	of	WvMnDrift	or	WvDiffQTF	can	be	TRUE]
+	FALSE			WvDiffQTF				-	Full	difference-frequency	2nd-order	wave	kinematics	(switch)	[only	one	of	WvMnDrift	or	WvDiffQTF	can	be	TRUE]
+	FALSE			WvSumQTF					-	Full	summation-frequency		2nd-order	wave	kinematics	(switch)
+	0							WvLowCOffD			-	Low		frequency	cutoff	used	in	the	difference-frequencies	(rad/s)	[Only	used	with	a	difference-frequency	method]
+	3.5					WvHiCOffD				-	High	frequency	cutoff	used	in	the	difference-frequencies	(rad/s)	[Only	used	with	a	difference-frequency	method]
+	0.1					WvLowCOffS			-	Low		frequency	cutoff	used	in	the	summation-frequencies		(rad/s)	[Only	used	with	a	summation-frequency		method]
+	3.5					WvHiCOffS				-	High	frequency	cutoff	used	in	the	summation-frequencies		(rad/s)	[Only	used	with	a	summation-frequency		method]

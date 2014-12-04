@@ -1,0 +1,18 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {3.1}{\ignorespaces New section for the HydroDyn\xspace input file for multi-directional waves. This section is inserted where \emph {WaveDir} is currently defined.\relax }}{3}{table.3.1}
+\contentsline {table}{\numberline {3.2}{\ignorespaces Notation for multi-directional wave equations}}{4}{table.caption.2}
+\contentsline {table}{\numberline {3.3}{\ignorespaces Multi-directional waves test cases}}{8}{table.caption.6}
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces Notation for WAMIT output files}}{12}{table.caption.13}
+\contentsline {table}{\numberline {4.2}{\ignorespaces Format of WAMIT output files}}{13}{table.caption.14}
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Matrix of possible calculation methods and data file combinations.}}{18}{table.caption.17}
+\contentsline {table}{\numberline {5.2}{\ignorespaces Notation used in the second order force equations. The variable name used in the fortran code is also listed where appropriate. \relax }}{19}{table.caption.18}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {7.1}{\ignorespaces New section for the HydroDyn\xspace input file for the second order forces calculated by the WAMIT2 module.\relax }}{32}{table.7.1}
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {8.1}{\ignorespaces New section for the HydroDyn\xspace input file for the second order forces calculated by the Waves2 module.\relax }}{33}{table.8.1}
+\addvspace {10\p@ }

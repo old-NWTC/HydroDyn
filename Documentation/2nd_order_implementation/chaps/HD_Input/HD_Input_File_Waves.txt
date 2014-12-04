@@ -1,0 +1,13 @@
+			0.0									WaveDir								!	Incident	wave	propagation	mean	heading	direction																					(degrees)	
+%[unused	when	WaveMod=0	or	4]
+			1											WaveDirMod				 !	Directional	spreading	function	{0:	unused,	1:	COS2S}																				(-)	
+%[Used	only	if	WaveMod=6]
+		15											WaveDirSpread		!	Wave	direction	spreading	coefficient	(	>	0	)																												(-)	
+%[only	used	if	WaveMod=6	and	WaveDirFunc=1]
+		11											WaveNDir							!	Number	of	wave	directions	[odd	number	only]																													(-)	
+%[unused	when	WaveMod=0	or	4]
+		90											WaveDirRange			!	Range	of	wave	directions	(full	range:	WaveDir	+/-	WaveDirRange/2)				(degrees)
+%		90											WaveDirMin					!	Minimum	wave	direction																																																		(-)	
+%[Used	only	if	WaveMod=6	and	WaveDirFunc=1]	--MAY	BE	ISSUE	HERE.
+%		90											WaveDirMax					!	Maximum	Wave	direction																																																		(-)	
+%[only	used	if	WaveMod=6	and	WaveDirFunc=1]

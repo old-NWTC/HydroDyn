@@ -1,0 +1,43 @@
+\newcommand{\pboxl}[1]{\footnotesize{\parbox[c]{1.35in}{#1}}}
+\begin{table}
+   \centering
+   \caption[Format of WAMIT output files]{WAMIT output files and format (version 6.4/6.1s)\cite{WAMIT}. In this table, $\tau$ is the period of the wave, $\beta_m$ and $\beta_n$ are the wave directions.  The second order complex force term is given by both the amplitude and phase pair ($\left|\bar{F}_m\right|$ and  $\theta_m$), and in terms of its real and imaginary parts ($\Re (\bar{F}_m)$ and $\Im (\bar{F}_m)$).  The index $k$ indicates the force ($k=1\ldots3$) or moment ($k=4\ldots6$) load components.  The indices $m$ and $n$ correspond to the period of the waves that are interacting (see pages 4-9 and 11-13 of Ref.~\citen{WAMIT}).\label{tab:WamitOutputFormat}}
+   \tabcolsep=1.75mm
+   \begin{tabular}{c>{\raggedright}p{1.35in}ccccccccc}
+      \toprule
+ File Ext.  &  Description    &  \multicolumn{9}{l}{Output Format} \\
+%         File  &                 & \multicolumn{2}{c}{Period}  & \multicolumn{2}{c}{Angle}            & DOF & Ampl.  & Phase  & Real   & Imag.  \\
+%         Ext.  &  Description    & \multicolumn{2}{c}{(s)} & \multicolumn{2}{c}{(deg)} & (-) & (-)    & (rad?) & (-)    & (-)    \\
+      \midrule
+   .7       &  {\pboxl{Mean drift based on momentum flux (WAMIT v. 7 only)}}
+            &  $\tau_m$ &                          &  $\beta_{m(1)}$    &  $\beta_{m(2)}$                &  $k$   
+            &  $\left|\bar{F}^{-}_{mm}\right|$     &  $\theta_{mm}$     &  $\Re (\bar{F}^{-}_{mm})$      &  $\Im (\bar{F}^{-}_{mm})$      \\[7pt]
+   .8       &  {\pboxl{Mean drift (modes 1, 2, and 6)}}
+            &  $\tau_m$ &                          &  $\beta_{m(1)}$    &  $\beta_{m(2)}$                &  $k$   
+            &  $\left|\bar{F}^{-}_{mm}\right|$     &  $\theta_{mm}$     &  $\Re (\bar{F}^{-}_{mm})$      &  $\Im (\bar{F}^{-}_{mm})$      \\[5pt]
+   .9       &  {\pboxl{Mean drift (all modes)}}
+            &  $\tau_m$ &                          &  $\beta_{m(1)}$    &  $\beta_{m(2)}$                &  $k$   
+            &  $\left|\bar{F}^{-}_{mm}\right|$     &  $\theta_{mm}$     &  $\Re (\bar{F}^{-}_{mm})$      &  $\Im (\bar{F}^{-}_{mm})$      \\[1pt] \midrule
+   .10s     &  {\pboxl{Quadratic \nth{2}-order sum forces}}
+            &  $\tau_m$ &  $\tau_n$                &  $\beta_{m}$       &  $\beta_n$                     &  $k$   
+            &  $\left|\bar{F}_{mn}^{+}\right|$     &  $\theta_{mn}^{+}$ &  $\Re (\bar{F}_{mn}^{+})$      &  $\Im (\bar{F}_{mn}^{+})$      \\[5pt]
+   .10d     &  {\pboxl{Quadratic \nth{2}-order difference forces}}
+            &  $\tau_m$ &  $\tau_n$                &  $\beta_{m}$       &  $\beta_n$                     &  $k$   
+            &  $\left|\bar{F}_{mn}^{-}\right|$     &  $\theta_{mn}^{-}$ &  $\Re (\bar{F}_{mn}^{-})$      &  $\Im (\bar{F}_{mn}^{-})$      \\[5pt]
+   .11s     &  {\pboxl{Total \nth{2}-order forces by indirect method (sum)}}
+            &  $\tau_m$ &  $\tau_n$                &  $\beta_{m}$       &  $\beta_n$                     &  $k$   
+            &  $\left|\bar{F}_{mn}^{+}\right|$     &  $\theta_{mn}^{+}$ &  $\Re (\bar{F}_{mn}^{+})$      &  $\Im (\bar{F}_{mn}^{+})$      \\[7pt]
+   .11d     &  {\pboxl{Total \nth{2}-order forces by indirect method (diff)}}
+            &  $\tau_m$ &  $\tau_n$                &  $\beta_{m}$       &  $\beta_n$                     &  $k$   
+            &  $\left|\bar{F}_{mn}^{-}\right|$     &  $\theta_{mn}^{-}$ &  $\Re (\bar{F}_{mn}^{-})$      &  $\Im (\bar{F}_{mn}^{-})$      \\[7pt]
+   .12s     &  {\pboxl{Total \nth{2}-order forces by direct method (sum)}}
+            &  $\tau_m$ &  $\tau_n$                &  $\beta_{m}$       &  $\beta_n$                     &  $k$   
+            &  $\left|\bar{F}_{mn}^{+}\right|$     &  $\theta_{mn}^{+}$ &  $\Re (\bar{F}_{mn}^{+})$      &  $\Im (\bar{F}_{mn}^{+})$      \\[7pt]
+   .12d     &  {\pboxl{Total \nth{2}-order forces by direct method (diff)}}
+            &  $\tau_m$ &  $\tau_n$                &  $\beta_{m}$       &  $\beta_n$                     &  $k$   
+            &  $\left|\bar{F}_{mn}^{-}\right|$     &  $\theta_{mn}^{-}$ &  $\Re (\bar{F}_{mn}^{-})$      &  $\Im (\bar{F}_{mn}^{-})$      \\
+      \bottomrule
+   \end{tabular}
+\end{table}
+
+

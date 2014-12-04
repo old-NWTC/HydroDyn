@@ -1,0 +1,110 @@
+\begin{tikzpicture}
+
+% Init
+\node[process,text width=35mm] 
+      (initialize)  {$\Theta_{init}=\Theta$\\ 
+                     $\Theta_\text{max}=1.25\times \Theta_\text{init}$};
+
+% odd?
+\node[decision,below of=initialize,node distance=20mm]
+      (odd) {Is $\Theta$ odd};
+   \draw[cl] (initialize.south) -- (odd);
+
+  % n branch
+   \node[process,right of=odd,node distance=35mm,text width=25mm]
+         (makeodd) { $\Theta=\Theta+1$\\
+                     $\Theta_{init} = \Theta$\\
+                     Warn user that it wasn't odd and new value.};
+      \draw[cl] (odd) -- (makeodd) node[midway,above] {n};
+
+
+% first check, continue
+\node[decision,below of=odd,node distance=20mm,text width=20mm,inner sep=0pt]
+      (CheckTheta1) {$(\frac{N}{2})/\Theta$\\integer};
+   \draw[cl] (odd) -- (CheckTheta1) node[midway,left] {y};
+   \draw[cl] (makeodd) -- (CheckTheta1);
+
+   %y branch, done
+   \node[process,text width=20mm]
+         (Done1) at ($(CheckTheta1 -| makeodd)$)  {No change to $\Theta$};
+      \draw[cl] (CheckTheta1) -- (Done1) node[midway,above] {y};
+   % return
+   \node[return,right of=Done1,node distance=25mm]
+         (Return1) {Return};
+      \draw[cl] (Done1) -- (Return1);
+
+% not done, search up for solution
+\node[process,below of=CheckTheta1,node distance=20mm]
+      (Increase) {$\Theta=\Theta+2$};
+   \draw[cl] (CheckTheta1) -- (Increase) node[midway,left] {n};
+
+\node[decision,below of=Increase,node distance=20mm,text width=20mm,inner sep=0pt,font=\footnotesize]
+      (ThetaLimitUpper) {$\Theta < \Theta_\text{max}$};
+   \draw[cl] (Increase) -- (ThetaLimitUpper);
+
+   % if still within range, check value
+   \node[decision,right of=ThetaLimitUpper,node distance=45mm,text width=20mm,inner sep=0pt]
+         (CheckTheta2) {$(\frac{N}{2})/\Theta$\\integer};
+      \draw[cl] (ThetaLimitUpper) -- (CheckTheta2) node[midway,above] {y};
+
+   % if we have an answer, done and return.  If not, loop again
+   \node[process,right of=CheckTheta2,node distance=40mm,text width=25mm]
+         (Finish) {Tell user what $\Theta$ is and why};
+      \draw[cl] (CheckTheta2) -- (Finish) node[midway,above] {y};
+      % Return
+      \node[return,right of=Finish,node distance=25mm]
+            (Return2) {Return};
+         \draw[cl] (Finish) -- (Return2);
+      % or loop again
+      \draw[cl] (CheckTheta2) |- (Increase) node[midway,below left] {n};
+
+%%% --- Don't go down.  We only want to increase resolution, not decrease it.
+%% didn't find solution before getting too big
+%\node[process,below of=ThetaLimitUpper,node distance=20mm]
+%      (Decrease) {$\Theta=\Theta_{init}-2$};
+%   \draw[cl] (ThetaLimitUpper) -- (Decrease) node[midway,left] {n};
+%
+%\node[decision,below of=Decrease,node distance=20mm,text width=20mm,inner sep=0pt,font=\footnotesize]
+%      (ThetaLimitLower) {$\Theta > \Theta_{init} \cdot (1.0-\Delta\Theta_\text{allow})$};
+%   \draw[cl] (Decrease) -- (ThetaLimitLower);
+%
+%   % if still within range, check value
+%   \node[decision,text width=20mm,inner sep=0pt]
+%         (CheckTheta3) at ($(ThetaLimitLower)!.5!(ThetaLimitLower -| CheckTheta2)$) {$(\frac{N}{2})/\Theta$\\integer};
+%      \draw[cl] (ThetaLimitLower) -- (CheckTheta3) node[midway,above] {y};
+%      % if we do have an answer, retun
+%      \draw[cl] (CheckTheta3) -| (Finish) node[midway,above left] {y};
+%      % if not, loop again
+%      \draw[cl] (CheckTheta3) |- (Decrease) node[midway,below left] {n};
+
+% exceeded limit before finding solution
+\node[process,below of=ThetaLimitUpper,node distance=27mm,text width=40mm]
+      (NoSolution) {No Solution in range:\\$\Theta_\text{init} \rightarrow \Theta_\text{max}$\\Try changing $\Theta$ or \varname{WaveTMax}};
+   \draw[cl] (ThetaLimitUpper) -- (NoSolution) node[midway,left] {n};
+
+\node[return,right of=NoSolution,node distance=60mm,text width=40mm]
+      (Return3) {Fatal Error: Return suggested value of WaveNDir if exists};
+   \draw[cl] (NoSolution) -- (Return3);
+
+
+
+
+\end{tikzpicture}
+\endinput
+
+
+
+\end{tikzpicture}
+\endinput
+
+%inputs from file
+\node[process,below of=p1]
+      (p2)  {Read input from file (and check)};
+   \draw[cl] (p1) -- (p2);
+   \draw[cl] (p2.south west) .. controls +(-4mm,-4mm) and +(-4mm,4mm) .. (p2.north west) node[midway,sloped,above,yshift=-1mm,font=\scriptsize] {NumCases};
+
+% return
+\node[return,below of=p2] (r1) {Return};
+   \draw[cl] (p2) -- (r1);
+
+\end{tikzpicture}

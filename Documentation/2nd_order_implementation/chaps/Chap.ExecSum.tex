@@ -1,0 +1,7 @@
+\chapter*{Executive Summary}
+\addcontentsline{toc}{chapter}{Executive Summary}
+This document reflects the planning and changes necessary to the HydroDyn codebase for the inclusion of second order forces and bi-directional waves. This document is a work in progress and will be continually updated until the second order forces and bi-directional waves have been included.  It also contains an overview of the architecture of the WAMIT2 code, and some specifics on the algorithm development.  In addition to this document, a set of documentation generated from the source code by Doxygen exists and provides more current information.   %FIXME: correct this once the document is completed
+
+Adding second order forces and bi-directional waves will be done in two phases. In the first phase, a new sub-module, {\tt WAMIT2}, will be developed for the calculation of second order forces. This will include bi-directional waves at the start. In the second phase, bi-directional waves will be incorporated into the existing \HD codebase. This will entail changes to the HydroDyn module, and to the {\tt HydroDyn\_Input}, {\tt HydroDyn\_Output}, {\tt Waves}, and {\tt WAMIT} sub-modules. There may also be some slight changes to other pieces (unsure about {\tt Morrison}).
+
+

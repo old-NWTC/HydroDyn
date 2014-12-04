@@ -1,0 +1,42 @@
+\BOOKMARK [0][-]{Doc-Start}{Todo list}{}% 1
+\BOOKMARK [0][-]{chapter.1}{Overview}{}% 2
+\BOOKMARK [0][-]{chapter.2}{Background information}{}% 3
+\BOOKMARK [1][-]{section.2.1}{Platform Displacement and Rotation}{chapter.2}% 4
+\BOOKMARK [0][-]{chapter.3}{Multi-directional Waves}{}% 5
+\BOOKMARK [1][-]{section.3.1}{Adjusting \040within the Waves module}{chapter.3}% 6
+\BOOKMARK [1][-]{section.3.2}{Equal Energy Approach}{chapter.3}% 7
+\BOOKMARK [2][-]{subsection.3.2.1}{A few notes}{section.3.2}% 8
+\BOOKMARK [2][-]{subsection.3.2.2}{Implimentation and Testing}{section.3.2}% 9
+\BOOKMARK [1][-]{section.3.3}{Changes during implimentation}{chapter.3}% 10
+\BOOKMARK [0][-]{chapter.4}{WAMIT: Output Files}{}% 11
+\BOOKMARK [1][-]{section.4.1}{WAMIT Output}{chapter.4}% 12
+\BOOKMARK [1][-]{section.4.2}{Reading WAMIT Data Files}{chapter.4}% 13
+\BOOKMARK [2][-]{subsection.4.2.1}{First order WAMIT output files \(.3\)}{section.4.2}% 14
+\BOOKMARK [2][-]{subsection.4.2.2}{Second order WAMIT output files}{section.4.2}% 15
+\BOOKMARK [1][-]{section.4.3}{WAMIT Data Integrity Checks}{chapter.4}% 16
+\BOOKMARK [0][-]{chapter.5}{Second Order Force Calculations}{}% 17
+\BOOKMARK [1][-]{section.5.1}{Overview}{chapter.5}% 18
+\BOOKMARK [1][-]{section.5.2}{Frequency range}{chapter.5}% 19
+\BOOKMARK [1][-]{section.5.3}{Wave Amplitude}{chapter.5}% 20
+\BOOKMARK [1][-]{section.5.4}{Difference Frequency Force}{chapter.5}% 21
+\BOOKMARK [2][-]{subsection.5.4.1}{Mean-Drift Method}{section.5.4}% 22
+\BOOKMARK [2][-]{subsection.5.4.2}{Newman's Approximation Method}{section.5.4}% 23
+\BOOKMARK [3][-]{subsubsection.5.4.2.1}{Mean drift and Newman's approximation}{subsection.5.4.2}% 24
+\BOOKMARK [3][-]{subsubsection.5.4.2.2}{Standing's equation}{subsection.5.4.2}% 25
+\BOOKMARK [2][-]{subsection.5.4.3}{Difference QTF Method}{section.5.4}% 26
+\BOOKMARK [1][-]{section.5.5}{Summation Frequency Force}{chapter.5}% 27
+\BOOKMARK [2][-]{subsection.5.5.1}{Summation QTF Method}{section.5.5}% 28
+\BOOKMARK [0][-]{chapter.6}{Algorithms}{}% 29
+\BOOKMARK [1][-]{section.6.1}{FFT and IFFT}{chapter.6}% 30
+\BOOKMARK [2][-]{subsection.6.1.1}{Numerical Evaluation of IFFT}{section.6.1}% 31
+\BOOKMARK [2][-]{subsection.6.1.2}{Z[k] in HydroDyn}{section.6.1}% 32
+\BOOKMARK [1][-]{section.6.2}{Interpolation}{chapter.6}% 33
+\BOOKMARK [2][-]{subsection.6.2.1}{3D Interpolation}{section.6.2}% 34
+\BOOKMARK [3][-]{subsubsection.6.2.1.1}{Full array interpolation}{subsection.6.2.1}% 35
+\BOOKMARK [3][-]{subsubsection.6.2.1.2}{Sparse array interpolation}{subsection.6.2.1}% 36
+\BOOKMARK [2][-]{subsection.6.2.2}{4D Interpolation}{section.6.2}% 37
+\BOOKMARK [3][-]{subsubsection.6.2.2.1}{Full array interpolation}{subsection.6.2.2}% 38
+\BOOKMARK [3][-]{subsubsection.6.2.2.2}{Sparse array interpolation}{subsection.6.2.2}% 39
+\BOOKMARK [0][-]{chapter.7}{Integration of the WAMIT2 module within HydroDyn}{}% 40
+\BOOKMARK [0][-]{chapter.8}{Integration of the Waves2 module within HydroDyn}{}% 41
+\BOOKMARK [0][-]{chapter.9}{WAMIT2 Module Architecture}{}% 42

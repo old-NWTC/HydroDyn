@@ -1,0 +1,68 @@
+\chapter{Programming Development Schedule}
+\label{chap:DevSched}
+
+This is a rough outline of the big pieces that need to be completed and tested, along with some rough time estimates.  This schedule is for a 32 hour work week to completion.  This leaves me with an extra day in the week to take care of anything that wasn't finished in the allotted time.
+
+\begin{itemize}
+   \item{1 day -- Fix error handling in Greg's code pieces I'm working with (Waves, HydroDyn\_Input)}
+   \item{2.5 days -- Impliment multi-directional waves in the waves module in my code base.  Include 2 test cases and resulting plots.  Merge to Greg's at later date.}
+   \item{3 days -- finish second order code structure (file reading, WAMIT data storage -- sparce capable, parsing, storage, data handling/passing, all I/O).  This includes all necessary subroutine infrasture with error handling and temporary subroutine placeholders.  Force component flags enabled on my pieces at this point.}
+   \item{1 day -- documentation cleanup (diagrams etc), doxygen documentation cleanup}
+   \item{2 days -- 3D interpolation (non-sparse) algorithm based on one in InflowWind.  Document and testdata set}
+   \item{2 days -- 4D interpolation (non-sparse) algorithm based on 3D above.  Document and testdata set}
+   \item{2 days -- Newman Approximation implimentation.  Includes documentation and test dataset}
+   \item{2 days -- Mean Drift implimentation.  Includes documentation and test dataset (also for 4D data)}
+   \item{1 day -- Diff QTF implimentation (some logic exists in Newman, first term is Mean Drift).  Includes documentation and test dataset (also for 4D)}
+   \item{1 day -- Sum QTF implimentation (should be simpler since been through the others).  Includes documentation and test dataset (also 4D test)}
+   \item{1 day -- Impliment new equations from Jason for analytic solution (first order)}
+   \item{2 days -- Stress test / debug, finalize documentatation}
+   \item{1 day -- merge into final release -- will break some of Greg's code with multidirectional waves at this point}
+   \item{2 days -- fix multidirectional waves in remaining pieces.  Fix other bugs that come up.}
+   \item{0.5 day -- Fix force component issue so that they are used in Greg's code if he hasn't fixed them by the time I get to it (I can proceed with them not implimented)}
+\end{itemize}
+
+
+
+\endinput
+
+
+All calculations of the second order forces will be handled by the WAMIT2 module. This module will take the input information including the wave information, files to use, and times the forces are needed at.
+
+\section{Generalized approach}
+\begin{enumerate}
+   \item{Develop top-level diagram showing information flow between modules (use Tiago's diagram from the bi-directional waves document).}
+   \item{{\st{Information flow diagram for development environment for the WAMIT2 sub-module}} (Figure~\ref{fig:W2Interface}).}
+   \item{{\st{Information flow diagram for second order forces in the WAMIT2 module}} (Figure~\ref{fig:InitInformationFlow}).}
+   \item{Sketch out flow diagram of the calculations. Identify subroutines.}
+   \item{\st{Sketch out data storage for second order with bi-directional waves. Create these structures for WAMIT2 in a registry file.}}
+   \item{\st{Create the registry using the above information.}}
+   \item{\st{HydroDyn Input}}
+      \begin{enumerate}
+         \item{\st{Add inputs to the HydroDyn file}}
+         \item{\st{Update the HydroDyn input file reading and parsing}}
+      \end{enumerate}
+   \item{Create basic architecture of WAMIT2\_Init subroutine (pseudo-code outline in the framework).}
+      \begin{enumerate}
+         \item{File reading}
+            \begin{enumerate}
+               \item{{Include logic for parsing the data files} (sparse files)}
+               \item{\st{Include logic for dealing with option combinations}}
+               \item{\st{Write out all the logic for reading the WAMIT files for the second order (see Table 3 and Appendix A of Tiago's writeup).}}
+            \end{enumerate}
+         \item{Data interpolation routines for input data}
+         \item{Calculations (eq's 38, 39, 41, 42)}
+      \end{enumerate}
+   \item{Create basic architecture of WAMIT2\_CalcOutput subroutine}
+      \begin{enumerate}
+         \item{Interpolation of resulting force timeseries for timesteps not in the original series.}
+      \end{enumerate}
+   \item{Get the basic skeleton working/compiling in the framework (just the structure and comments). This will include all the data structures and data passing.}
+   \item{Revisit and complete the program and data flow diagrams.}
+   \item{Finalize pseudo-code.}
+   \item{Replace the pseudo-code with real code.}
+   \item{Test. Develop test cases (occurs during previous step).}
+\end{enumerate}
+
+In addition to the above methodology, the calculations and data structures will be implemented in such a way so as to include the bi-directional waves.
+
+

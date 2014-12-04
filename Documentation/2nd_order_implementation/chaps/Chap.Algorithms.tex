@@ -1,0 +1,92 @@
+\chapter{Algorithms}
+\label{chap:Algorithm}
+
+This chapter will cover the various algorithms, including interpolation, that are required for either preparing data or in the evaluation of the equations outlined in \Cref{chap:2ndOrdCalc}.
+
+
+The reason for the interpolation is that the number of frequencies given in the WAMIT output files (on the order of tens of frequencies) is not likely going to correspond to the number of wave frequencies actually used by HydroDyn (on the order of hundreds to thousands), nor does the WAMIT output necessarily have to be equally discretized or even complete.  The WAMIT output files may be very sparcely populated.  So, it is necessary to interpolate in order to find the missing ones.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{FFT and IFFT}
+\label{sec:Algorithm:FFT}
+
+The FFT (or discrete Fourier transform -- DFT) and inverse FFT used in \HD are found in the FFTPACK version 4.1 from UCAR/NCAR.  For a given discretized function, for example the complex wave form $Z[k]$ in the frequency domain, the inverse fourier transform to the time domain can be written as:
+\begin{equation}
+   z(t_n) = \frac{1}{N} \sum\limits_{k=-\frac{N}{2}+1}^{\frac{N}{2}} Z[k] e^{i\omega_k t_n} = \Re\left\{\sum\limits_{k=1}^{N'}a_k e^{iw_k t_n}\right\},
+\label{eq:IFFTofZ}
+\end{equation}
+where $N$ is given in \Cref{eq:N} as
+\begin{equation}
+   N=\frac{2 \pi}{\Delta t \Delta \omega} = \frac{t_\text{max}}{\Delta t} = \frac{2 \omega_\text{max}}{\Delta \omega} = 2(N'+1).
+\label{eq:IFFT_N}
+\end{equation}
+In \Cref{eq:IFFTofZ}, the expression for the first summation is what is used within \HD and the second summation expression is used in some of Tiago's writings.  The relationship between $Z[k]$ and $a_k$ can be written as
+\begin{equation}
+   Z[k] =
+         \begin{dcases*}
+            \frac{N a_k}{2}            & $k=1 ~\ldots~ N/2-1$\\
+            0                          & $k=0$ and $k=N/2$\\
+            \frac{N a^*_{|k|}}{2}      & $k=-N/2+1 ~\ldots~ -1$\\
+         \end{dcases*}
+\label{eq:IFFT_Zk_ak}
+\end{equation}
+where $a^*$ is the complex conjugate of $a$. 
+
+
+\subsection{Numerical Evaluation of IFFT}
+In the evaulation of \Cref{eq:IFFTofZ} in \HD to yield the wave height as a function of time, the IFFT is evaluated as
+\begin{equation}
+   z(t_n) = \frac{1}{N} \sum\limits_{k=-\frac{N}{2}+1}^{\frac{N}{2}} Z[k] e^{i\omega_k t_n} = \operatorname{IFFT}\left(Z[k]\right) 
+\label{eq:IFFTofZ:eval}
+\end{equation}
+where the IFFT is only evaluated over $k = 0 \ldots N/2$ (the negative frequencies are evaluated internally following the relationships in \Cref{eq:IFFT_Zk_ak}).  The normalization constant of $1/N$ is also handled by the IFFT subroutines and is set by the initialization of the IFFT.
+
+There are some constraints imposed on what $N$ can be because of the IFFT solver used.  $N$ must be even, and preferably a product of small prime numbers for speed.  Additionally, $Z[k=0] = 0$ and $Z[k=N/2] = 0$ must be specified.
+
+
+\subsection{$Z[k]$ in \HD}
+In \HD the complex wave form in frequency space, $Z[k]$, is given as
+\begin{equation}
+   Z[k] = W[k]\sqrt{\frac{2\pi}{\Delta t} S^\text{2-sided}_\zeta (\omega_k)} = W[k]\sqrt{N \Delta \omega S^\text{2-sided}_\zeta (\omega_k)}
+\label{eq:Zk}
+\end{equation}
+where 
+\begin{equation}
+   W[k]  = \sqrt{\frac{N}{2}}\sqrt{-2 \ln \left( U_1[k]\right)}e^{i 2\pi U_2[k]},
+\label{eq:Wk}
+\end{equation}
+the DFT of gaussian white noise using the Box-Muller method, and $S^\text{2-sided}_\zeta(\omega_k)$ is the two sided power spectral density (PSD) of the wave elevation per unit time.\footnote{Note that Tiago uses $a_k = \sqrt{2\Delta \omega S^\text{1-sided}_\zeta(\omega_k)}e^{i 2\pi U_k}$ which is a simplification where $U_k = U_2[k]$ and $\sqrt{-2 \ln\left(U_1[k]\right)} = \sqrt{2}$.}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Interpolation}
+\label{sec:Algorithm:Interp}
+Four interpolation algorithms are required for the \modname{WAMIT2} module: two three-dimensional and two four-dimensional interpolations.
+For each set of 3D and 4D interpolation algorithms, a linear interpolation for full arrays and a linear interpolation for sparse arrays are needed.  Due to the complexity of implimenting an interpolation over sparse arrays and time constraints in the development schedule, a placeholder will be created for it with an error message stating that an interpolation scheme for sparse arrays is not implimented at this time.  The WAMIT output file reading algorithm is developed in such a way that an unordered sparse array can be read in and stored (see \Cref{sec:WamitOuput:Read}).
+
+The first order wave forces calculated within the \fname{WAMIT} module is interpolated with a linear method.  In light of this and considering time constraints on the development, we will use linear interpolation algorithms for now.  If time permits, we might investigate possibilities for other interpolation algorithms that will produce smooth surfaces is cubic interpolation (and smoothly continuous derivatives) or better allow for sparse data.  
+%The issue with this interpolation method is that it tends to produce overshoot which may be undesirable.  Algorithms which could minimize the effects of overshoot such as cosine fitting, radial basis function weighting, and hermite polynomial among others.  In the ideal world, one would choose an algorithm that will best fit the data.  In this case, this is not obvious considering that the general shape of the data will depend on what floating platform is used.
+
+\subsection{3D Interpolation}
+\label{sec:interp:3d}
+\subsubsection{Full array interpolation}
+A three-dimensional linear interpolation routine is available in the \modname{InflowWind} module.  This routine was written specifically for the full field wind files, so it will require some modification to generalize it.
+
+\subsubsection{Sparse array interpolation}
+\label{sec:interp:3d:sparse}
+Due to time constraints in the development schedule, a placeholder subroutine will be created that tells the user that this is a currently unavailable feature.  The user can then use an external data manipulation program to do the interpolation on their WAMIT output to create a full array (that can be unordered) that can be read in.  The WAMIT output file reading algorithm will accomodate the reading either a full array (both the upper and lower triangle of the QTF) or partial array (upper half only, or a mix of upper and lower).  This routine will expect a mask array (boolean?) of identical size to the sparse array that indicates which elements of the data array are missing.
+
+By creating this placeholder subroutine, we give ourselves the option of creating this interpolation scheme as time permits with the ability to handle a limited sparseness of the QTF array (\emph{i.e.} no more than a two step gap in any dimension).
+
+\subsection{4D Interpolation}
+\label{sec:interp:4d}
+\subsubsection{Full array interpolation}
+At present we do not have any four-dimensional interpolation routines.  A four-dimensional linear interpolation should be fairly simple to extend from the three-dimensional one.
+
+\subsubsection{Sparse array interpolation}
+\label{sec:interp:4d:sparse}
+See \Cref{sec:interp:3d:sparse}.

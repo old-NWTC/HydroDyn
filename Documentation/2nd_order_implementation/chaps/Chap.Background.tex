@@ -1,0 +1,35 @@
+\chapter{Background information}
+\label{chap:Background}
+HydroDyn is currently undergoing a conversion to the FAST modularization framework. During this conversion, some additional capabilities are being added to HydroDyn including jacket platforms. At present, HydroDyn does not account for second order wave forces: those forces that arise from the sum and difference of the frequencies of incident waves. HydroDyn also only includes uni-directional waves where all waves are incident from the same direction.
+
+At the start of a FAST simulation, HydroDyn is initialized and calculates the wave spectrum\footnote{
+      The wave spectrum is complex-valued and therefore includes all the phase information, so the time history of the wave can be found easily through an FFT.}
+and time history using the \emph{waves} sub-module.  This information is then used by the \emph{WAMIT} sub-module and a few other sub-modules to calculate the first order wave foreces on the platform.  Because the frequency, direction, and phase of each of the wave components is known at initialization, a time series of the second order forces can be calculated using the \emph{WAMIT2} sub-module before the simulations begins. This requires that the following assumptions are made:
+\begin{itemize}
+   \item{the wave information in frequency space is known before the start of the simulation (the time series can be found through an FFT),}
+   \item{the time series of second order forces will act on a single point at the origin (as the first order forces do),}
+   \item{wave forces and moments are fixed to a reference frame that translates (but does not rotate) with the platform,}
+   \item{Wavelengths are large compared to the motion of the platform.}
+\end{itemize}
+
+\section{Platform Displacement and Rotation}
+The complete timeseries for the forces and moments comprising the loads from the first and second order waves are calculated during the initialization of a FAST simulation.  These calculated loads are given at the platform origin in the platform rest reference frame and applied during the simulation.  During the simulation, the platform will translate and rotate as a result of these loads, aerodynamic loads, and other real time loads (mooring lines etc.).
+The calculation of the first and second order wave loads do not take into account this displacement.  
+
+During the simulation, the FAST glue code calls \HD to calculate the platform loads at each timestep.  Since the first- and second-order wave load timeseries were calculated during the initialization, these values are looked up at each timestep and reported back to the glue code on a point mesh (includes translation and rotation).
+
+
+
+\endinput
+
+The implication of this is that as the platform translates and rotates, the wave field and resulting loads are in effect translated and rotated with it.  For translation, this is not problematic since the translation is slow in comparison with the wave velocity.  However, it is not desirable to have the wave directionality also changing as the platform yaws, so an additional step is taken within \HD to compensate for the platform rotation before returning the forces and moments to the glue code.  This keeps the wave directionality and resulting moments in the inertial (non-rotated) reference frame of the platform.  This could potentially result in inaccuracies in response if the pitch and roll responses were dramatically different for waves incident along $x$ or $y$ respectively.
+
+
+
+
+\endinput
+FIXME: add figure from page 141 of notebook
+
+
+
+Effectively means that the wave field and resulting loads move with the platform.  This is not likely to cause problems for surge and sway translation since the platform surge response tends to be slow in comparison with the wave velocity. There may be potential for issues with large heave displacements since WAMIT assumes the translational motions are \emph{small} compared to the wavelength during response force calculations.

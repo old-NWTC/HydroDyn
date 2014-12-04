@@ -1,0 +1,15 @@
+\chapter{Overview}
+\label{chap:Overview}
+This document serves two functions: first, as a guide to how second order forces and bi-directional waves should be incorporated into HydroDyn, and second to document the actual changes as they are made. While Tiago Duarte was visiting NREL over a 6 month period in 2012 and 2013, he sketched out in detail how to incorporate both second order effects and bi-directional waves into HydroDyn. This document is primarily based on his paper for the \emph{AIAA} SciTech 2014 conference\cite{duarte:2014}.
+
+The second order forces can be developed in a standalone sub-module of HydroDyn called WAMIT2 following the FAST framework. This module will calculate the second order forces using information from the Waves sub-module, inputs from the HydroDyn module (including options from the input file), and data files produced by WAMIT. This module will be developed to use bi-directional waves, though testing will be somewhat limited due to the availability of a complete second order solution with bi-directional waves, in the form of a quadratic transfer function (QTF), produced by WAMIT.\footnote{Due to the complexity of the calculations, it has been estimated that a full QTF with 57 by 57 frequencies and 37 by 37 wave directions would take on the order of 52~years to calculate with our existing single threaded implimentation of WAMIT.}
+
+The addition of bi-directional waves to HydroDyn will require modification of existing code. Since HydroDyn is still being developed, this addition will take place in the latter stages of the WAMIT2 module development. The bi-directional waves implimentation will use the equal energy approach outlined by Tiago in his document titled ``Multi-Directional Waves: Comparison and Implimentation.''
+
+%FIXME:  Put in an explanation of the platform orientation constraints -- i.e.  it must be the same as calculated by WAMIT.
+%        Put in other assumptions that must be necessary for this module to work.
+
+
+%[Insert diagram of HydroDyn modifications from Tiago here -- from Multi- Directional Waves]
+
+

@@ -1,0 +1,17 @@
+\chapter{Integration of the Waves2 module within HydroDyn}
+\label{chap:Waves2:Integration}
+
+In order to integrate the {\tt Waves2} module into \HD, several changes need to be made to the \HD input file and to the file reading and parsing routines within the \fname{HydroDyn\_Input.f90} file.  Additional changes to the input file are required for multi-directional waves and the \modname{WAMIT2} module (see \Cref{chap:MultiDir,chap:WAMIT2:Integration}).
+
+\begin{center}
+   \begin{minipage}[t]{\linewidth}
+      \fvset{frame=single,fontsize=\scriptsize,numbers=left,numbersep=3pt,obeytabs,tabsize=1,fontfamily=fvm,commentchar=\%}
+      \VerbatimInput{chaps/HD_Input/HD_Input_File_Waves2.txt}
+   \end{minipage}
+   \captionof{table}{New section for the \HD input file for the second order forces calculated by the Waves2 module.}
+   \label{tab:HD_Waves2_InputMods}
+\end{center}
+
+Add in description of the inputs with more detail about when used etc.
+
+

@@ -1,0 +1,66 @@
+\chapter{Data preparation schemes for calculations}
+\label{app:DataPrepScheme}
+
+There are several ways to take the WAMIT data and prepare it for the calculations.  The first scheme (which Tiago described in one of his documents) is to parse out the relevent data, then interpolate to find the data necessary for the calcution.  Second scheme is to interpolate all the data first, then parse out the relevant parts.  These two schemes lend themselves to a matrix driven data processing such as might occur in MATLAB based code.
+
+The third schemes, which is used in this module of \HD is to interpolate the sorted WAMIT data during the calculations themselves. This scheme presents the lowest memory usage of the three schemes as only the sorted raw data must be stored.  The interpolation step is then performed within the loops of the calculation.  The interpolated data is not kept as it is not needed afterwards.
+
+%FIXME: add diagram from the notebook, p. 142
+
+\section{Parse then Interpolate}
+One method is to take the sorted data from the WAMIT file and parse out only the pieces of interest.  For example, a full second order QTF WAMIT file (.12d for example) might only be used in Newman's approximation.  In this case, only terms where $\omega_m = \omega_n$ and $\beta_1 = \beta_2$ are kept.  It would be possible to only keep these values and put them in a simplified matrix dependent on $\omega$ and $\beta$.  This could then be sent through two one dimensional interpolations (one interpolation on each dimension). In this manner, different interpolations would be done depending on which calculation method we were using.
+
+The advantage with this data preparation scheme is that we can keep a small set of data and we can use simpler interpolations for some of the calculation methods.  The disadvantage is that we end up imposing that the values of the $\omega_m$ terms must be identical to the values of the $\omega_n$ terms (otherwise there would be no $\omega_m = \omega_n$ terms to keep).  This would also be true for the $\beta$ terms.  
+
+\begin{figure}[ht]
+   \begin{center}
+      \beginpgfgraphicnamed{MeanDrift.Flowchart}
+         \input{chaps/figures/Flowcharts--parse_then_interp/MeanDrift.Flowchart.tikz.tex}
+      \endpgfgraphicnamed
+   \end{center}
+\caption{Flow diagram for the mean drift calculation method using the parse then interpolate scheme.  $\tau$ is the period, $\omega$ is the corresponding frequency, and $\beta$ is the wave direction.  The \nth{1} and \nth{2} order {\tt WAMIT} output files are read in and arranged in ascending order within the {\tt WAMIT2\_Init} routine (\Cref{sec:WAMIT2Init}).  See text for how to solve the equation. See \Cref{chap:WamitOutput} for requirements on which WAMIT output files can be used.
+   \label{fig:MeanDrift:Flowchart:ParseInterp}
+}
+\end{figure}
+
+\begin{figure}[ht]
+   \begin{center}
+      \beginpgfgraphicnamed{Newman.Flowchart}
+         \input{chaps/figures/Flowcharts--parse_then_interp/Newman.Flowchart.tikz.tex}
+      \endpgfgraphicnamed
+   \end{center}
+\caption{Flow diagram for the Newman's approximation method using the parse then interpolate scheme.  $\tau$ is the period, $\omega$ is the corresponding frequency, and $\beta$ is the wave direction.  The \nth{1} and \nth{2} order {\tt WAMIT} output files are read in and arranged in ascending order within the {\tt WAMIT2\_Init} routine (\Cref{sec:WAMIT2Init}).
+   \label{fig:Newman:Flowchart:ParseInterp}
+}
+\end{figure}
+
+\begin{figure}[ht]
+   \begin{center}
+      \beginpgfgraphicnamed{DiffQTF.Flowchart}
+         \input{chaps/figures/Flowcharts--parse_then_interp/DiffQTF.Flowchart.tikz.tex}
+      \endpgfgraphicnamed
+   \end{center}
+\caption{Flow diagram for the full difference QTF method using the parse then interpolate scheme.  $\tau$ is the period, $\omega$ is the corresponding frequency, and $\beta$ is the wave direction.  The \nth{1} and \nth{2} order {\tt WAMIT} output files are read in and arranged in ascending order within the {\tt WAMIT2\_Init} routine (\Cref{sec:WAMIT2Init}).
+   \label{fig:DiffQTF:Flowchart:ParseInterp}
+}
+\end{figure}
+
+\begin{figure}[ht]
+   \begin{center}
+      \beginpgfgraphicnamed{DiffQTF.Flowchart}
+         \input{chaps/figures/Flowcharts--parse_then_interp/SumQTF.Flowchart.tikz.tex}
+      \endpgfgraphicnamed
+   \end{center}
+\caption{Flow diagram for the full summation QTF method using the parse then interpolate scheme.  $\tau$ is the period, $\omega$ is the corresponding frequency, and $\beta$ is the wave direction.  The \nth{1} and \nth{2} order {\tt WAMIT} output files are read in and arranged in ascending order within the {\tt WAMIT2\_Init} routine (\Cref{sec:WAMIT2Init}).
+   \label{fig:SumQTF:Flowchart:ParseInterp}
+}
+\end{figure}
+
+\clearpage
+
+\section{Interpolate then parse}
+Another scheme is to take the sorted WAMIT data and interpolate for all possible values of $\omega_m, \omega_n, \beta_1,$ and $\beta_2$ before selecting out the specific values wanted for the calculation.  The parsing step would then be perfomed afterwards to select only the values needed for the calculation.  This scheme has a very large memory footprint and large amount of processing time spent on the interpolation.  This scheme would be appropriate if the fully interpolated data set was used a large number of times during a \HD simulation, or if a complicated interpolation scheme was used (such as a four dimensional FFT interpolation).  However, in our implimention of \HD, only a small portion of the data would be used, and only used once during initialization.  This scheme is therefore unecessarily complicated for our purposes.
+
+\section{Interpolate during calculation}
+This scheme is used in the \modname{WAMIT2} module to perform the interplation of the sorted WAMIT data at each step of the calculation.  The calculations each require summations over a range of frequencies, or inverse discrete Fourier transforms over a range of frequencies.  The WAMIT data can be categorized as either three-dimensional, or four-dimensional depending on what WAMIT output files were used.  At each step of a summation loop, a call can be made to a subroutine that will interpolate the sorted WAMIT data for the particular $F^\pm(\omega_m,\omega_n,\beta_m,\beta_n)$ value required.  There might be a slight computational penalty for calling the interpolation scheme multiple times for sequential points.  Overall this scheme has the advantage that the returned value could be stored in a temporary variable and immediately used.  This limits the memory usage since the complete interpolated multi-dimensional matrix is not stored.
+

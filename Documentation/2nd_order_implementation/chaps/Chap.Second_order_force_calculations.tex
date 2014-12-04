@@ -1,0 +1,452 @@
+\chapter{Second Order Force Calculations}
+\label{chap:2ndOrdCalc}
+
+In this chapter, the equations and algorithms used to find the second order hydrodynamic forces from the output of WAMIT are discussed.
+The forms of the equations presented here are what is used in the WAMIT2 module within HydroDyn.
+  Along with the equations, the methodology and processing necessary to take the WAMIT output file types and parse them for use in the equations is also covered in detail.
+The interpolation algorithms used are covered in \Cref{chap:Algorithm}.
+
+\Cref{tab:Wamit2MethodsByFileType} shows which calculations methods can be used depending on what WAMIT output files are available.  The criteria for downselecting information in the file for use in the calculations is given for each method and file type combination.
+\input{chaps/tables/Chap.WamitOutput.Options.tex}
+
+The notation used in this chapter is given in \Cref{tab:2ndOrdNotation} (note that this differs slightly from the notation in the WAMIT manual\cite{WAMIT} and in Tiago's writings\cite{duarte:2014}).
+\begin{table}[h!]
+   \centering
+   \caption{Notation used in the second order force equations.  
+            The variable name used in the fortran code is also listed where appropriate.
+            \label{tab:2ndOrdNotation}}
+   \begin{tabular}{ccl}
+      \toprule
+         Variable          & Fortran Variable      &  Description                                                       \\
+      \midrule
+      $A_m$                &                       &  \parbox[t]{3.5in}{Complex amplitude of the $m^\text{th}$ frequency
+                                                               given in $Z[m]$ array from the \emph{Waves} module.  This 
+                                                               includes a $N/2$ term in it.}                            \\[13pt]
+      $a_m$                &                       &  \parbox[t]{3.5in}{Complex amplitude of the $m^\text{th}$ frequency
+                                                               given in $Z[m]$ array from the \emph{Waves} module.  This 
+                                                               has the $N/2$ term removed.}                             \\[13pt]
+      $i$                  & \varname{ImagNmbr}    &  \parbox[t]{3.5in}{The imaginary number $i = \sqrt{-1}$ ($i$ and
+                                                               $j$ are not used as indices here to avoid confusion)}    \\[13pt]
+      $k$                  &                       &  Index to load component (translation: 1 -- 3; rotation: 4 -- 6)   \\
+      $m$                  &                       &  Index to first wave                                               \\
+      $n$                  &                       &  Index to second wave                                              \\
+      $\mu^\text{-}$       &                       &  Difference index of two waves frequencies ($= m-n$)               \\
+      $\mu^{+}$            &                       &  Summation  index of two wave frequencies ($= m+n$)                \\
+      $\tau$               & \varname{WAMITPer}    &  Period of wave in WAMIT file                                      \\
+      $\tau_1$             & \varname{WAMITPer1}   &  Period of first wave in pair read from WAMIT file                 \\
+      $\tau_2$             & \varname{WAMITPer2}   &  Period of second wave in pair read from WAMIT file                \\
+      $\omega$             & \varname{Omega}       &  Frequency (rad/s)                                                 \\
+      $N$                  & \varname{NStepWave}   &  Total number of timesteps (range 0:N)                             \\
+      $N/2$                & \varname{NStepWave2}  &  Total number of positive wave frequencies (range 0:N/2)           \\
+      $Z(\omega_m)$        & \varname{WaveElevC0}  &  The discretized complex wave form in the frequency domain         \\
+      $\Phi(\omega_m)$     & \varname{WaveDir}     &  Wave direction for each wave frequency                            \\
+      $t_\text{max}$       & \varname{WaveTMax}    &  The maximum time of the wave simulation                           \\
+      $\Delta t$           & \varname{WaveDT}      &  The timestep for the wave simulation                              \\
+      $\omega_\text{lo}$   & \varname{WvLowCOff}   &  The low frequency cutoff for first order waves                    \\
+      $\omega_\text{hi}$   & \varname{WvHiCOff}    &  The high frequency cutoff for first order waves                   \\
+      $\Delta\omega$       & \varname{WaveDOmega}  &  The frequency stepsize                                            \\
+      $\omega_\text{lo-d}$ & \varname{WvLowCOffD}  &  Difference frequency low-cutoff                                   \\
+      $\omega_\text{hi-d}$ & \varname{WvHiCOffD}   &  Difference frequency high-cutoff                                  \\
+      $\omega_\text{lo-s}$ & \varname{WvLowCOffS}  &  Sum frequency low-cutoff                                          \\
+      $\omega_\text{hi-s}$ & \varname{WvHiCOffS}   &  Sum frequency high-cutoff                                         \\
+      $\bar{F}^\text{-}_{k}$ &                     &  \parbox[t]{3.5in}{$k^\text{th}$ component of the non-dimensional difference 
+                                                                     frequency transfer matrix (data from WAMIT)}       \\[13pt]
+      $F^\text{-}_{k}$     &                       &  \parbox[t]{3.5in}{$k^\text{th}$ component of the dimensionalized difference
+                                                                     frequency transfer matrix}                         \\[13pt]
+      $\bar{F}^\text{+}_{k}$ &                     &  \parbox[t]{3.5in}{$k^\text{th}$ component of the non-dimensional sum 
+                                                                     frequency transfer matrix (data from WAMIT)}       \\[13pt]
+      $F^\text{+}_{k}$     &                       &  \parbox[t]{3.5in}{$k^\text{th}$ component of the dimensionalized sum
+                                                                     frequency transfer matrix}                         \\[13pt]
+      $\rho g$             & \varname{RhoXg}       &  Water density * gravity                                           \\
+      $L$                  & \varname{WAMITULEN}   &  WAMIT characteristic body length scale                            \\
+   \end{tabular}
+\end{table}
+
+
+\section{Overview}
+\label{sec:2ndOrdCalc:Overview}
+
+\begin{figure}[ht]
+   \begin{center}
+      \beginpgfgraphicnamed{General.Flowchart}
+         \input{chaps/figures/General.Flowchart.tikz.tex}
+      \endpgfgraphicnamed
+   \end{center}
+\caption{Generalized overview calculation of second order forces.  Here $Z(\omega)$ is the combination complex wave as a function of frequency and $\Phi(\omega)$ is the associated wave direction heading for each frequency.
+The 3D and 4D arrays containing the wave force transfer function are interpolated at each step within the innermost summation containing the $F^\pm_k$ terms, or during assembly of the matrix for the FFT.
+   \label{fig:General:Flowchart}
+}
+\end{figure}
+
+In order to simplify the data processing as much as possible, the WAMIT output data will sorted and stored in either a three-dimensional matrix for first order derived transfer matrices (.7, .8, and .9 files), or a four-dimensional for data derived by full QTF methods (.10, .11, and .12 files).  The values needed for each step in the calculation are interpolated from these arrays using either three- or four-dimensional linear interpolation subroutines (see \Cref{chap:Algorithm} for details on the interpolation). The interpolation of $F^\pm_k$ occurs within each step of the summation or during the assembly of the FFT array.  This minimizes the memory storage requirements somewhat.
+
+
+\clearpage
+
+
+\section{Frequency range}
+\todo[inline]{Add discussion of Nyquist frequency and its effects -- see e-mail and discussion within the code}
+The number of timesteps used in the \modname{Waves} module is determined by the total time, $t_\text{max}$, and timestep, $\Delta t$, specified for wave information (\varname{WaveTMax} and \varname{WaveDT} in the \HD input file and code).  The number of timesteps (\varname{NStepWave}) is then set to at least $N \geq  \left(\frac{t_\text{max}}{\Delta t}\right)$ such that $N$ is even and $N/2$ is a product of small numbers (this is advantageous in computing the FFT).
+The number of timesteps also limits the number of frequencies present in the wave information to $N/2+1$ frequencies with a maximum frequency of $1/(2 \Delta t)$ in Hz (the Nyquist frequency).
+The maximum wave frequency is therefore $\omega_\text{max} = N/2 \cdot \Delta\omega$ where $\omega$ is in radians.
+Due to the specifics of the FFT used (see \Cref{sec:Algorithm:FFT}, the number of frequencies stored in the wave information is $N/2+1$ where only positive frequencies are used (values for $\omega < 0$ are derived from the values for $\omega > 0$). 
+The full expression for $N$ in can be written as
+\begin{equation}
+   N = \dfrac{t_\text{max}}{\Delta t} = \dfrac{2 \omega_\text{max}}{\Delta \omega} = \frac{ 2 \pi}{\Delta t \Delta \omega}.
+\label{eq:N}
+\end{equation}
+
+Three sets of wave frequency cutoffs are applied to the wave conditions.  The first order frequency range is bounded by the limits $\omega_\text{lo}$ and $\omega_\text{hi}$ (set in the \HD input file by \varname{WvLowCOff} and \varname{WvHiCOff}).  These limits are imposed during generation of the wave frequencies in the \modname{Waves} module by setting the amplitudes of $Z(\omega)=0$ for all $\omega$ outside the limits.
+
+The second order wave frequency limits for all three difference methods are given by $\omega_\text{lo-d}$ and $\omega_\text{hi-d}$ (\varname{WvLoCoQTFd} and \varname{WvHiCoQTFd}).
+In the case of the mean-drift and Newman's approximation methods where only the diagonal elements (where $\omega_1 = \omega_2$) are considered, the low difference frequency cutoff will likely not have any impact since it will be rare that $\omega_\text{lo-d} > \omega_\text{lo}$ (a warning will be issued if this does occur).\footnote{The mean drift and Newman's approximation will automatically be zeroed for frequencies less than $\omega_\text{lo}$ since they contain $a_m$ terms for each $\omega_m = \omega_m$ diagonal term.}  The high frequency cutoff will likely be set so that $\omega_\text{hi-d} < \omega_\text{hi}$, so this will be important to impose (a warning will be issued if this is not true).
+
+%\todo[inline]{Add warning in code if $\omega_\text{lo-d} > \omega_\text{lo}$ for either mean drift or Newman's.  Did I do this already?}
+%\todo[inline]{Add warning in code if $\omega_\text{hi-d} > \omega_\text{hi}$ for either mean drift or Newman's.  Did I do this already?}
+
+The second order wave frequency limits for the full second order QTFs are then set for the difference QTF and sum QTF methods individually.
+For the difference QTF method these limits are given by  $\omega_\text{lo-d}$ and $\omega_\text{hi-d}$ (\varname{WvLowCOffD} and \varname{WvHiCOffD}).
+For the sum QTF method these limits are given by  $\omega_\text{lo-s}$ and $\omega_\text{hi-s}$ (\varname{WvLowCOffS} and \varname{WvHiCOffS}).
+These limits are applied during the summations of the $a_m a_m F(\omega_m,\omega_m)$ and $H_{\mu^\pm}$ terms.
+
+%\missingfigure{add in the figure from p. 145 of notebook}
+
+
+
+\section{Wave Amplitude}
+\label{sec:2ndOrdCalc:WaveAmp}
+
+The complex wave amplitude in frequency space, $Z(\omega)$, provided by the \modname{Waves} module contains an extra $N/2$ factor on the amplitude.  This factor is not present in the equations given in Ref.~\citen{duarte:2014}.  
+The relationship between the amplitude provided by the \modname{Waves} module, $A_m$ and the amplitude used in the paper, $a_m$, is
+\begin{equation}
+   A_m = \frac{N}{2} a_m.
+\label{eq:WaveAmp}
+\end{equation}
+In the initialization of the \modname{WAMIT2} module, the values stored for the wave elevation from the \modname{Waves} module are divided by $N/2$ before being stored in the \varname{aWaveElevC0} variable.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Difference Frequency Force}
+\label{sec:2ndOrdCalc:Diff}
+
+There are three methods for calculating the difference frequency force: mean drift, Newman's approximation, and through the full QTF.  Each method has its advantages, and has different data requirements.  In this section, we explore the simplified equations used in the \modname{WAMIT2} module, the data requirements, and the data processing steps for each of the three methods.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Mean-Drift Method}
+\label{sec:2ndOrdCalc:Diff:MeanDrift}
+This term arises from the quadratic interactions of the first order problem, and can therefore be calculated without requiring solutions to the second order potential.  This equation is identical to the first part of the difference QTF equation, \Cref{eq:DiffQTF}, where just the diagonal elements of the QTF are used.  This is the simplest of the three difference frequency methods presented here. The single summation equation is given by 
+\begin{equation}
+   {F_{\text{ex}~k}^{\text{-}(2)}} =
+            \Re \left( \sum\limits_{m=1}^{N/2}
+                  {a_m} {a_m^*} F_k^\text{-}(\omega_m, \beta_m)\right) \qquad
+      \text{for}\quad k=1,2,\ldots,6,
+\label{eq:MeanDrift}
+\end{equation}
+where $k$ indicates the index to the load component,  ${F_{\text{ex}~k}^{\text{-}(2)}}$ is the resulting time independent mean drift force, and $a_m$ and $a_m^*$ are the complex wave amplitude and its complex conjugate for the $m$\textsuperscript{th} frequency.  Note the lack of time dependence in this equation: the mean drift is the average drift force over the entire simulation.
+Note that $F_k^\text{-} (\omega_m, \beta_m)$ is the dimensionalized real valued diagonal of the QTF read from the WAMIT file and interpolated for the $m$\textsuperscript{th} wave frequency.  Note that the $\Delta\omega$ term is necessary since this is a numerical integral.
+Note also that the summation starts at $m=1$.  The value of $a_0$ is exactly 0, so it does not need to be included.
+
+
+\begin{figure}[ht]
+   \begin{center}
+      \beginpgfgraphicnamed{MeanDrift.Flowchart}
+         \input{chaps/figures/MeanDrift.Flowchart.tikz.tex}
+      \endpgfgraphicnamed
+   \end{center}
+\caption{Flow diagram for the mean drift calculation method.  The mean drift equation only involves the diagonal terms where the frequencies $\omega_1 = \omega_2$, and the wave directions $\beta_1 = \beta_2$. 
+The WAMIT output files are read in and arranged in either a 3D or 4D array and interpolated at each step in the summation.
+See text for how to solve the equation. See \Cref{chap:WamitOutput} for requirements on which WAMIT output files can be used.
+   \label{fig:MeanDrift:Flowchart}
+}
+\end{figure}
+
+
+\subsubsection*{Solving the Mean-Drift Equations}
+\label{sec:2ndOrdCalc:Diff:MeanDrift:solve}
+As shown in \Cref{fig:MeanDrift:Flowchart}, the data is stored in either 3D or 4D arrays depending on the file type used.  This is handled by the WAMIT output file reading subroutine, \rname{Read\_DataFiles}, within the \modname{WAMIT2} module.  At each step in the summation of the $m$\textsuperscript{th} term, a call is made to the 3D or 4D interpolation algorithm to find the value of $F^\text{-}_k (\omega_m, \beta_m)$ corresponding to the $Z (\omega_m)$ term in the complex wave amplitude $a_m$.  The limits of $\omega_\text{lo-d} \le \omega_m \le \omega_\text{hi-d}$ are imposed during the summation with values outside this range set to zero.
+
+For multi-directional waves where the equal energy discretization is used, each frequency has a single wave direction associated with it.  Since the mean drift force calculation only involves summing over terms involving only a single frequency at a time, only a single wave direction is involved at each step.  If all the diagonal elements where $\omega_1 = \omega_2$ and $\beta_1 = \beta_2$ were present in the $F^\text{-}_k$ arrays were present, it would be possible to simplify the interpolation required to two dimensional interpolation.  However, since this calculation is performed only at initialization, the calculation penalty for performing a full 3D or 4D interpolation is not as severe as it would be if it were performed at each timestep of the simulation.  Therefore we are choosing to ignore this in favor of simplifying the code implimentation.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Newman's Approximation Method}
+\label{sec:2ndOrdCalc:Diff:Newman}
+
+Newman's original approximation:
+\begin{align}
+   {F_{\text{ex}~k}^{- (2)}} &\approx 
+            \left.   \left[ \Re \left( \sum\limits_{m=1}^{N/2}
+                     {a_m} \sqrt{   2 F_k^{-}(\omega_m,\omega_m)}
+                     \cdot \mathrm{e}^{\iu \omega_m t} \right) \right]^2 \right|_{F_{k}^{-}(\omega_m,\omega_m) > 0} \nonumber\\
+         &-  \left.   \left[ \Re \left( \sum\limits_{m=1}^{N/2}
+                     {a_m} \sqrt{  -2 F_k^{-}(\omega_m,\omega_m)}
+                     \cdot \mathrm{e}^{\iu \omega_m t} \right) \right]^2 \right|_{F_{k}^{-}(\omega_m,\omega_m) < 0}
+      \quad\text{for}\quad k=1,2,\ldots,6,
+\label{eq:Newman}
+\end{align}
+where $k$ indicates the index to the load component, and $a_m$ is the complex wave amplitude for the $m$\textsuperscript{th} frequency.
+Note that $F_k^\text{-}$ is the complex valued transfer function read from the WAMIT file and interpolated.  This equation is only valid for uni-directional sea states.
+
+In evaluating the Newman approximation, it must be remembered that the purpose of it is to estimate the off-diagonal ($\omega_1 \ne \omega_2$) values from the diagonal values. If the QTF has large off diagonal components (where $\omega_m \ne \omega_n$), the results will not agree well with the full difference QTF calculations since these elements will be under estimated.
+
+A revised form of Newman's approximation is provided by Standing \emph{et. al.} that is valid for multidirectional sea states.  For multidirectional sea states where each frequency only has on direction assocatied with it, such as with the equal energy discretization, this is equivalent to
+\begin{align}
+   {F_{\text{ex}~k}^{- (2)}} &\approx 
+            \left.   \left| \sum\limits_{m=1}^{N/2}
+                     {a_m} \sqrt{   F_k^{-}(\omega_m,\omega_m)}
+                     \cdot \mathrm{e}^{\iu \omega_m t} \right|^2 \right|_{F_{k}^{-}(\omega_m,\omega_m) > 0} \nonumber\\
+         &-  \left.   \left| \sum\limits_{m=1}^{N/2}
+                     {a_m} \sqrt{  -F_k^{-}(\omega_m,\omega_m)}
+                     \cdot \mathrm{e}^{\iu \omega_m t} \right|^2 \right|_{F_{k}^{-}(\omega_m,\omega_m) < 0}
+      \quad\text{for}\quad k=1,2,\ldots,6,
+\label{eq:NewmanRevised}
+\end{align}
+This equation has been implimented as a Fourier sum rather than IFFT.  It turns out that this implimentation is exactly the same speed as doing the full DiffQTF (within 3\%).
+
+
+\subsubsection{Mean drift and Newman's approximation}
+The mean drift term is already included in the Newman's approximation, so there is no need to add it to the result.  This can be proven by expanding out the squares of the summations and collecting all terms where $m=n$ together.  These collected terms can be written as the mean drift term.  For this proof, it is helpful to remember that for a a given complex value, $C=a+\iu b$, we can write:
+\begin{equation}
+   \left(\left| C \right| \right)^2 = \left( \sqrt{a^2 + b^2} \right)^2 = a^2 + b^2 = ( a +\iu b ) ( a -\iu b ) = C\cdot C^*
+\label{eq:absComplexSquared}
+\end{equation}
+where $C^*$ is the complex conjugate of $C$.
+
+Taking \Cref{eq:NewmanRevised} and expanding out the terms using \Cref{eq:absComplexSquared}
+\begin{align}
+   {F_{\text{ex}~k}^{- (2)}} &\approx 
+            \left.   \left( \sum\limits_{m=1}^{N/2}
+                        {a_m} \sqrt{   F_k^{-}(\omega_m,\omega_m)}
+                        \cdot \mathrm{e}^{\iu \omega_m t} \right)
+                     \left( \sum\limits_{m=1}^{N/2}
+                        {a_m^*} \sqrt{   F_k^{-~*}(\omega_m,\omega_m)}
+                        \cdot \mathrm{e}^{- \iu \omega_m t} \right)
+              \right|_{F_{k}^{-}(\omega_m,\omega_m) > 0} \nonumber\\
+         &-  \left.  \left( \sum\limits_{m=1}^{N/2}
+                        {a_m} \sqrt{  -F_k^{-}(\omega_m,\omega_m)}
+                        \cdot \mathrm{e}^{\iu \omega_m t} \right)
+                     \left( \sum\limits_{m=1}^{N/2}
+                        {a_m^*} \sqrt{  -F_k^{-~*}(\omega_m,\omega_m)}
+                        \cdot \mathrm{e}^{- \iu \omega_m t} \right)
+              \right|_{F_{k}^{-~*}(\omega_m,\omega_m) < 0}.
+\label{eq:NewmanRevised2}
+\end{align}
+Looking at just the first term (${F_{k}^{-}(\omega_m,\omega_m) > 0}$) and remembering that $F_k^{-}(\omega_m,\omega_m) = F_k^{-~*}(\omega_m,\omega_m)$, we can expand all the crossmultiplied terms, collect the terms where $m=n$, and group the other terms where $m \ne n$.  This yields for the first term
+\begin{align}
+   \text{Term 1} &=  {a_1}{a_1^*} F_k^{-}(\omega_1,\omega_1) \mathrm{e}^{\iu (\omega_1 - \omega_1) t} +
+                     {a_2}{a_2^*} F_k^{-}(\omega_2,\omega_2) \mathrm{e}^{\iu (\omega_2 - \omega_2) t} + \ldots \nonumber\\
+                 &+  {a_{N/2}}{a_{N/2}^*} F_k^{-}(\omega_{N/2},\omega_{N/2}) \mathrm{e}^{\iu (\omega_{N/2} - \omega_{n/2}) t} \nonumber\\
+                 &+  O_{m \ne n}\left(
+                        \left(\sum\limits_{m=1}^{N/2}
+                        {a_m} \sqrt{   F_k^{-}(\omega_m,\omega_m)}
+                        \cdot \mathrm{e}^{\iu \omega_m t} \right)
+                     \left( \sum\limits_{m=1}^{N/2}
+                        {a_m^*} \sqrt{   F_k^{-~*}(\omega_m,\omega_m)}
+                        \cdot \mathrm{e}^{- \iu \omega_m t} \right)\right) \nonumber\\
+                 &= \sum\limits_{m=1}^{N/2} {a_m} {a_m^*} F_k^{-}(\omega_m,\omega_m) \nonumber\\
+                 &+  O_{m \ne n}\left(
+                        \left(\sum\limits_{m=1}^{N/2}
+                        {a_m} \sqrt{   F_k^{-}(\omega_m,\omega_m)}
+                        \cdot \mathrm{e}^{\iu \omega_m t} \right)
+                     \left( \sum\limits_{m=1}^{N/2}
+                        {a_m^*} \sqrt{   F_k^{-~*}(\omega_m,\omega_m)}
+                        \cdot \mathrm{e}^{- \iu \omega_m t} \right)\right).
+\label{eq:NewmanRevised2t1}
+\end{align}
+The second term is very similar to the first term.  Keeping the negative sign with the term, when expanded and multiplied together it yields
+\begin{align}
+   \text{Term 2} &= - {a_1}{a_1^*} (-F_k^{-}(\omega_1,\omega_1)) \mathrm{e}^{\iu (\omega_1 - \omega_1) t} +
+                    - {a_2}{a_2^*} (-F_k^{-}(\omega_2,\omega_2)) \mathrm{e}^{\iu (\omega_2 - \omega_2) t} + \ldots \nonumber\\
+                 &- {a_{N/2}}{a_{N/2}^*} (-F_k)^{-}(\omega_{N/2},\omega_{N/2}) \mathrm{e}^{\iu (\omega_{N/2} - \omega_{n/2}) t} \nonumber\\
+                 &-  O_{m \ne n}\left(
+                        \left(\sum\limits_{m=1}^{N/2}
+                        {a_m} \sqrt{ - F_k^{-}(\omega_m,\omega_m)}
+                        \cdot \mathrm{e}^{\iu \omega_m t} \right)
+                     \left( \sum\limits_{m=1}^{N/2}
+                        {a_m^*} \sqrt{ - F_k^{-~*}(\omega_m,\omega_m)}
+                        \cdot \mathrm{e}^{- \iu \omega_m t} \right)\right) \nonumber\\
+                 &= \sum\limits_{m=1}^{N/2} {a_m} {a_m^*} F_k^{-}(\omega_m,\omega_m) \nonumber\\
+                 &+  O_{m \ne n}\left(
+                        \left(\sum\limits_{m=1}^{N/2}
+                        {a_m} \sqrt{ - F_k^{-}(\omega_m,\omega_m)}
+                        \cdot \mathrm{e}^{\iu \omega_m t} \right)
+                     \left( \sum\limits_{m=1}^{N/2}
+                        {a_m^*} \sqrt{ - F_k^{-~*}(\omega_m,\omega_m)}
+                        \cdot \mathrm{e}^{- \iu \omega_m t} \right)\right).
+\label{eq:NewmanRevised2t2}
+\end{align}
+Combining the first terms from \Cref{eq:NewmanRevised2t1} and \Cref{eq:NewmanRevised2t2} where the first one contains all positive $F^-$ terms and the second contains all negative $F^-$ terms, we arrive at the equation for the mean drift given in \Cref{eq:MeanDrift}
+\begin{equation}
+        \left. \sum\limits_{m=1}^{N/2} {a_m} {a_m^*} F_k^{-}(\omega_m,\omega_m)\right|_{F_{k}^{-~*}(\omega_m,\omega_m) > 0}
+      + \left. \sum\limits_{m=1}^{N/2} {a_m} {a_m^*} F_k^{-}(\omega_m,\omega_m)\right|_{F_{k}^{-~*}(\omega_m,\omega_m) < 0}
+      =        \sum\limits_{m=1}^{N/2} {a_m} {a_m^*} F_k^{-}(\omega_m,\omega_m).
+\label{eq:NewmanMnDrift}
+\end{equation}
+
+\subsubsection{Standing's equation}
+Starting with \Cref{eq:NewmanRevised2}, we can substitute in for the $-F_k^- = \left| F_k^- \right|$ within the square root for when $F_{k}^{-~*}(\omega_m,\omega_m) < 0$ and $F_k^- = \left| F_k^- \right|$ within the square root for when $F_{k}^{-~*}(\omega_m,\omega_m) > 0$ to yield
+\begin{align}
+   {F_{\text{ex}~k}^{- (2)}} &\approx 
+            \left.   \left( \sum\limits_{m=1}^{N/2}
+                        {a_m}    \sqrt{  \left| F_k^{-}(\omega_m,\omega_m)    \right|}
+                        \cdot \mathrm{e}^{\iu \omega_m t} \right)
+                     \left( \sum\limits_{m=1}^{N/2}
+                        {a_m^*}  \sqrt{  \left| F_k^{-}(\omega_m,\omega_m)    \right|}
+                        \cdot \mathrm{e}^{- \iu \omega_m t} \right)
+              \right|_{F_{k}^{-}(\omega_m,\omega_m) > 0} \nonumber\\
+         &-  \left.  \left( \sum\limits_{m=1}^{N/2}
+                        {a_m}    \sqrt{  \left| F_k^{-}(\omega_m,\omega_m)    \right|}
+                        \cdot \mathrm{e}^{\iu \omega_m t} \right)
+                     \left( \sum\limits_{m=1}^{N/2}
+                        {a_m^*}  \sqrt{  \left| F_k^{-}(\omega_m,\omega_m)    \right|}
+                        \cdot \mathrm{e}^{- \iu \omega_m t} \right)
+              \right|_{F_{k}^{-~*}(\omega_m,\omega_m) < 0}.
+\label{eq:NewmanRevised3}
+\end{align}
+Now that $F_k^-$ is treated in such a way that the sign of it is not kept within the square root, we can collect the first and second term together in \Cref{eq:NewmanRevised3} by introducing the $\mathrm{sgn}$ function as
+\begin{align}
+   {F_{\text{ex}~k}^{- (2)}} &\approx 
+            \left.   \left( \sum\limits_{m=1}^{N/2} \mathrm{sgn}\left(F_k^-\right)
+                        {a_m}    \sqrt{  \left| F_k^{-}(\omega_m,\omega_m)    \right|}
+                        \cdot \mathrm{e}^{\iu \omega_m t} \right)
+                     \left( \sum\limits_{m=1}^{N/2}
+                        {a_m^*}  \sqrt{  \left| F_k^{-}(\omega_m,\omega_m)    \right|}
+                        \cdot \mathrm{e}^{- \iu \omega_m t} \right)
+              \right|_{F_{k}^{-}(\omega_m,\omega_m) > 0}    \nonumber\\
+         &+ \left.  \left( \sum\limits_{m=1}^{N/2} \mathrm{sgn}\left(F_k^-\right)
+                        {a_m}    \sqrt{  \left| F_k^{-}(\omega_m,\omega_m)    \right|}
+                        \cdot \mathrm{e}^{\iu \omega_m t} \right)
+                     \left( \sum\limits_{m=1}^{N/2}
+                        {a_m^*}  \sqrt{  \left| F_k^{-}(\omega_m,\omega_m)    \right|}
+                        \cdot \mathrm{e}^{- \iu \omega_m t} \right)
+              \right|_{F_{k}^{-~*}(\omega_m,\omega_m) < 0}  \nonumber\\
+         &=          \left( \sum\limits_{m=1}^{N/2} \mathrm{sgn}\left(F_k^-\right)
+                        {a_m}    \sqrt{  \left| F_k^{-}(\omega_m,\omega_m)    \right|}
+                        \cdot \mathrm{e}^{\iu \omega_m t} \right)
+                     \left( \sum\limits_{m=1}^{N/2}
+                        {a_m^*}  \sqrt{  \left| F_k^{-}(\omega_m,\omega_m)    \right|}
+                        \cdot \mathrm{e}^{- \iu \omega_m t} \right)\nonumber\\
+         &=          \left( \sum\limits_{m=1}^{N/2} \mathrm{sgn}\left(F_k^-\right)
+                        \widetilde{a_m}    \sqrt{  \left| F_k^{-}(\omega_m,\omega_m)    \right|}
+                        \cdot \mathrm{e}^{\iu \omega_m t - \phi_m} \right)
+                     \left( \sum\limits_{m=1}^{N/2}
+                        \widetilde{a_m}  \sqrt{  \left| F_k^{-}(\omega_m,\omega_m)    \right|}
+                        \cdot \mathrm{e}^{- \iu \omega_m t + \phi_m} \right)
+\label{eq:NewmanRevised4}
+\end{align}
+which is Standings version of the equation with $\widetilde{a_m} ~ e^{- \phi_m} = a_m$ (Standing carries the phase term of the wave amplitude within the exponential).
+
+
+%\todo[inline]{add algorithm figure -- page 151 in notebook}
+
+%\begin{figure}[ht]
+%   \begin{center}
+%      \beginpgfgraphicnamed{Newman.Flowchart}
+%         \input{chaps/figures/Newman.Flowchart.tikz.tex}
+%      \endpgfgraphicnamed
+%   \end{center}
+%\caption{Flow diagram for the Newman's approximation method.  $\tau$ is the period, $\omega$ is the corresponding frequency, and $\beta$ is the wave direction.  The \nth{1} and \nth{2} order {\tt WAMIT} output files are read in and arranged in ascending order within the {\tt WAMIT2\_Init} routine (\Cref{sec:WAMIT2Init}).
+%   \label{fig:Newman:Flowchart}
+%}
+%\end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\subsection{Difference QTF Method}
+\label{sec:2ndOrdCalc:Diff:DiffQTF}
+
+\begin{align}
+   {F_{\text{ex}~k}^{(-)(2)}} &= \Re 
+      \left(
+         \sum\limits_{m=1}^{N/2}   a_m a_m^* F_k^{-}(\omega_m,\omega_m) + 
+         2 \cdot \sum\limits_{\mu^\text{-}=1}^{N/2-1} H_{\mu^\text{-}} \mathrm{e}^{\iu(\omega_{\mu^\text{-}})t}
+      \right)  ,\quad&\text{for}\quad k=1,2,\ldots,6 \label{eq:DiffQTF}\\
+   &\text{where}\quad
+   H_{\mu^\text{-}} = \dfrac{1}{2} \sum\limits_{n=0}^{N/2-\mu^\text{-}} a_{\mu^\text{-}+n} a_n^* F_k^{-}(\omega_{\mu^\text{-}+n},\omega_n),
+      \quad&\text{for}\quad 1\le\mu^\text{-}\le N-1
+\label{eq:DiffQTF:H}
+\end{align}
+
+In the first term, the summation starts at $m=1$.  The value of $a_0$ is exactly 0, so it does not need to be included.
+
+%\todo[inline]{Add algorithm figure -- p. 153 in notebook}
+
+%\begin{figure}[ht]
+%   \begin{center}
+%      \beginpgfgraphicnamed{DiffQTF.Flowchart}
+%         \input{chaps/figures/DiffQTF.Flowchart.tikz.tex}
+%      \endpgfgraphicnamed
+%   \end{center}
+%\caption{Flow diagram for the full difference QTF method.  $\tau$ is the period, $\omega$ is the corresponding frequency, and $\beta$ is the wave direction.  The \nth{1} and \nth{2} order {\tt WAMIT} output files are read in and arranged in ascending order within the {\tt WAMIT2\_Init} routine (\Cref{sec:WAMIT2Init}).
+%   \label{fig:DiffQTF:Flowchart}
+%}
+%\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\clearpage
+\section{Summation Frequency Force}
+\label{sec:2ndOrdCalc:Sum}
+There is only one method for calculating the second-order forces from the sum frequency.
+
+\subsection{Summation QTF Method}
+\label{sec:2ndOrdCalc:SumQTF}
+
+\begin{align}
+   {F_{\text{ex}~k}^{(+)(2)}} &= \Re 
+      \left(
+         \sum\limits_{m=1}^{\lfloor N/4 \rfloor}   a_m a_m F_k^{+}(\omega_m,\omega_m) \mathrm{e}^{2\cdot\iu\omega_m t} +
+         2 \sum\limits_{\mu^{+}=2}^{N} H_{\mu^{+}}\mathrm{e}^{\iu(\omega_{\mu^{+}-1})t}
+      \right)  ,\quad\text{for}\quad k=1,2,\ldots,6 \label{eq:SumQTF}\\[1.5em]
+   &\text{where}\quad\left\{
+   \begin{array}{lr}
+      H_{\mu^{+}} = \displaystyle\sum\limits_{n=1}^{\left\lfloor\frac{\mu^{+}-1}{2}\right\rfloor}
+               a_n a_{\mu^{+}-n} F_k^{+}(\omega_n,\omega_{\mu^{+}-n}),
+         \qquad\qquad&\text{for}\quad 2\le \mu^{+}\le N/2+1
+            \\[1.5em]
+      H_{\mu^{+}} = \displaystyle\sum\limits_{n=\mu^{+}-N}^{\left\lfloor\frac{\mu^{+}-1}{2}\right\rfloor}
+               a_n a_{\mu^{+}-n} F_k^{+}(\omega_n,\omega_{\mu^{+}-n}),
+         \qquad\qquad&\text{for}\quad N/2+2\le\mu^{+}\le N
+   \end{array}\right.
+\end{align}
+where $\mu^{+} = m + n$, $\lfloor x \rfloor$ represents the floor function given by
+\begin{equation*}
+   \lfloor x \rfloor \equiv \max \left\{ m \in \mathbb{Z} \middle| m\le x \right\}.
+\end{equation*}
+
+
+In the first term of \Cref{eq:SumQTF}, the exponential term is $2\cdot \iu \omega_m t$.  This means that in populating the array that the IFFT uses for calculating the time series of this term, the frequency of the $m$\textsuperscript{th} term is $2 \cdot \omega_m$.  So in the numerical implimentation, every other frequency is populated in the frequency domain data.
+
+The second term is an IFFT over the full range of sum frequencies from $\omega = 0$ to $\omega = 2 \omega_\text{max}$.  The IFFT contains twice as many terms as any of the IFFTs used in the other methods.  This results in a finer resolution in the resulting time series with timesteps of $1/2 \Delta t$.  While this in and of itself is not problematic, it is a problem when considering that the highest frequencies in this IFFT are above the Nyquist frequency.  The Nyquist frequency, as given in \Cref{sec:Algorithm:FFT}, is the highest frequency from the sampling theorem that is possible for a given timestep.  Any higher frequencies will be lost when we report the force time series back to the calling code (assuming we keep only every other).  So, rather than calculate the full IFFT over the extended range, we will only calculate the second term for the first $N/2$ terms up to the Nyquist frequency.  This simplifies the second term so that \Cref{eq:SumQTF} becomes
+\begin{align}
+   {F_{\text{ex}~k}^{(+)(2)}} &= \Re 
+      \left(
+         \sum\limits_{m=1}^{\lfloor N/4 \rfloor}   a_m a_m F_k^{+}(\omega_m,\omega_m) \mathrm{e}^{2\cdot\iu\omega_m t} +
+         2 \sum\limits_{\mu^{+}=2}^{N/2} H_{\mu^{+}}\mathrm{e}^{\iu(\omega_{\mu^{+}-1})t}
+      \right)  ,\quad\text{for}\quad k=1,2,\ldots,6 \label{eq:SumQTFsimple}\\[1.5em]
+   &\text{where}\quad\left\{
+   \begin{array}{lr}
+      H_{\mu^{+}} = \displaystyle\sum\limits_{n=1}^{\left\lfloor\frac{\mu^{+}-1}{2}\right\rfloor}
+               a_n a_{\mu^{+}-n} F_k^{+}(\omega_n,\omega_{\mu^{+}-n}),
+         \qquad\qquad&\text{for}\quad 2\le \mu^{+}\le N/2
+   \end{array}\right.
+\end{align}
+
+
+%\todo[inline]{Add algorithm figure }
+
+
+
+
+
+
+\endinput

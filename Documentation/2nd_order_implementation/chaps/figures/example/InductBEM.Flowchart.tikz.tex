@@ -1,0 +1,231 @@
+\begin{tikzpicture}
+
+% USE
+\node[info,text width=19mm] 
+      (use) {use~\texttt{Parameters} use~\texttt{ProgGen} use~\texttt{WTP\_Data}};
+
+% Declarations
+\node[process,below of=use,node distance=13mm]
+      (p1) {Declarations};
+   \draw[cl] (use) -- (p1);
+
+% intialize induction vars
+\node[process,below of=p1]
+      (p2) {Initialize induction vars};
+   \draw[cl] (p1) -- (p2);
+
+% Initial guess
+\node[process,below of=p2]
+      (p3) {Initial guess (\vname{AxInd}~/~\vname{TanInd})};
+   \draw[cl] (p2) -- (p3);
+
+% Newt Raph call
+\node[call,below of=p3]
+      (p4) {NewtRaph};
+   \draw[cl] (p3) -- (p4);
+   \draw[cl] (p4.south west) .. controls +(-4mm,-4mm) and +(-4mm,4mm) .. (p4.north west)
+         node[midway,sloped,above,yshift=-1mm,font=\scriptsize,
+            text width=14mm,text centered]
+         {!\vname{Converg}~\& <~\vname{MaxIter}};
+
+%%%% shift the rest up to the right... more clear.
+% converge?
+\node[decision,right of=use,node distance=42mm]
+      (p5) {\vname{Converg}};
+   \draw[cl] (p4.east) -- +(12mm,0mm) |- (p5);
+
+  % y branch
+   \node[process,right of=p5,node distance=35mm]
+         (p5a) {Skew correction};
+      \draw[cl] (p5) -- (p5a) node[midway,above] {y};
+
+   \node[call,below of=p5a]
+         (p5b) {GetCoefs};
+      \draw[cl] (p5a) -- (p5b);
+
+   \node[return,below of=p5b]
+         (p5r) {Return};
+      \draw[cl] (p5b) -- (p5r);
+
+  % n branch, continue
+
+\node[process,below of=p5,node distance=15mm]
+      (p5x1) {reset induction};
+   \draw[cl] (p5) -- (p5x1) node[midway,left] {n};
+
+% FindZC
+\node[call,below of=p5x1,node distance=15mm]
+      (p6) {FindZC};
+   \draw[cl] (p5x1) -- (p6);
+
+% zfound
+\node[decision,below of=p6,node distance=15mm]
+         (p7) {\vname{ZFound}};
+   \draw[cl] (p6) -- (p7);
+
+  % y branch
+   % Newt Raph call
+   \node[call,right of=p7,node distance=35mm,yshift=15mm]
+         (p7a) {NewtRaph};
+      \draw[cl] (p7) -- (p7a) node[midway,below] {y};
+      \draw[cl] (p7a.south west) .. controls +(-4mm,-4mm) and +(-4mm,4mm) .. (p7a.north west)
+            node[near end,above,yshift=0mm,font=\scriptsize,
+               text width=14mm,text centered]
+            {!\vname{Converg}~\& <~\vname{MaxIter}};
+
+   % Did that converge?
+   \node[decision,below of=p7a,node distance=15mm]
+         (p7b) {\vname{Converg}};
+      \draw[cl] (p7a) -- (p7b);
+
+     % y branch
+      % since not converged, do binary search
+      \node[process,right of=p7b,node distance=35mm,yshift=15mm]
+            (p7bx1) {reset induction};
+         \draw[cl] (p7b) -- (p7bx1) node[midway,above] {n};
+      \node[call,below of=p7bx1,node distance=15mm]
+            (p7c) {BinSearch};
+         \draw[cl] (p7bx1) -- (p7c);
+         \node[annotation,below of=p7c,node distance=13mm,text width=27mm]
+               (a7c)
+                  {\vname{AxIndLo}~=~\vname{AxInd}~-~1 \vname{AxIndHi}~=~\vname{AxInd}~+~1};
+            \draw[nl] (p7c) -- (a7c);
+
+     % n branch
+      % converged yet?
+      \node[decision,left of=p7c,node distance=35mm,yshift=-18mm]
+            (p7d) {\vname{Converg}};
+         \draw[cl] (p7b) -- (p7d) node[midway,left] {y};
+         \draw[cl] (p7c) -- (p7d);
+
+        % y branch
+         % skewed wake
+         \node[process,right of=p7d,node distance=35mm,yshift=-15mm]
+               (p7e) {Skew correction};
+            \draw[cl] (p7d) -- (p7e) node[midway,above] {y};
+
+         \node[call,below of=p7e]
+               (p7f) {GetCoefs};
+            \draw[cl] (p7e) -- (p7f);
+
+         \node[return,below of=p7f]
+               (p7er) {Return};
+            \draw[cl] (p7f) -- (p7er);
+
+% bring all no branches back together
+\node[tempnode]
+         (no-branches-collect) at (p7d -| p7) {};
+      
+% binary search again
+\node[call]
+      (p8) at (p7d -| p7) {BinSearch};
+   \draw[cl] (p7) -- (p8) node[midway,left] {n};
+   \draw[cl] (p7d) -- (p8) node[midway,above] {n};
+   \node[annotation,left of=p8,node distance=35mm,text width=20mm]
+         (a8) {\vname{AxIndLo}~=~-0.5 \vname{AxIndHi}~=~0.6};
+      \draw[nl] (p8) -- (a8);
+
+%%%%% Move things to the left by 35mm
+% did this converge?
+\node[decision]
+      (p9) at ($(p8)+(-35mm,-19mm)$) {\vname{Converg}};
+   \draw[cl] (p8) -- +(0mm,-8mm) -| (p9);
+
+  % n branch
+   % do another BinSearch
+   \node[call,right of=p9,node distance=35mm]
+         (p9a) {BinSearch};
+      \draw[cl] (p9) -- (p9a) node[midway,above] {n};
+   \node[annotation,right of=p9a,node distance=35mm,text width=20mm]
+         (a9a) {\vname{AxIndLo}~=~-1.0 \vname{AxIndHi}~=~-0.4};
+      \draw[nl] (p9a) -- (a9a);
+
+% did the above test converge?
+\node[decision,below of=p9,node distance=15mm]
+      (p10) {\vname{Converg}};
+   \draw[cl] (p9) -- (p10) node[midway,left] {y};
+   \draw[cl] (p9a) -- (p10);  % connect the last BinSearch result.
+
+  % n branch
+   % do another BinSearch
+   \node[call,right of=p10,node distance=35mm]
+         (p10a) {BinSearch};
+      \draw[cl] (p10) -- (p10a) node[midway,above] {n};
+   \node[annotation,right of=p10a,node distance=35mm,text width=20mm]
+         (a10a) {\vname{AxIndLo}~=~0.59 \vname{AxIndHi}~=~2.5};
+      \draw[nl] (p10a) -- (a10a);
+
+% did the above converge?
+\node[decision,below of=p10,node distance=15mm]
+      (p11) {\vname{Converg}};
+   \draw[cl] (p10) -- (p11) node[midway,left] {y};
+   \draw[cl] (p10a) -- (p11);  % connect the last BinSearch result.
+
+  % y branch
+   %skew correction
+   \node[process,right of=p11,node distance=35mm]
+         (p11a) {Skew correction};
+      \draw[cl] (p11) -- (p11a) node[midway,above] {y};
+
+   \node[call,right of=p11a,node distance=35mm]
+         (p11b) {GetCoefs};
+      \draw[cl] (p11a) -- (p11b);
+
+   \node[return,right of=p11b,node distance=25mm]
+         (p11r) {Return};
+      \draw[cl] (p11b) -- (p11r);
+
+% continue with no
+% BinSearch yet again
+\node[call,below of=p11,node distance=15mm]
+      (p12) {BinSearch};
+   \draw[cl] (p11) -- (p12) node[midway,left] {n};
+   \node[annotation,right of=p12,node distance=35mm,text width=20mm]
+         (a12) {\vname{AxIndLo}~=~-1.0 \vname{AxIndHi}~=~2.5};
+      \draw[nl] (p12) -- (a12);
+
+% did the above converge?
+\node[decision,below of=p12,node distance=15mm]
+      (p13) {\vname{Converg}};
+   \draw[cl] (p12) -- (p13);
+
+  % y branch
+   %skew correction
+   \node[process,right of=p13,node distance=35mm]
+         (p13a) {Skew correction};
+      \draw[cl] (p13) -- (p13a) node[midway,above] {y};
+
+   \node[call,right of=p13a,node distance=35mm]
+         (p13b) {GetCoefs};
+      \draw[cl] (p13a) -- (p13b);
+
+   \node[return,right of=p13b,node distance=25mm]
+         (p13r) {Return};
+      \draw[cl] (p13b) -- (p13r);
+
+% continue with no
+\node[return,below of=p13,node distance=15mm]
+      (p13r) {Return};
+   \draw[cl] (p13) -- (p13r) node[midway,left] {n};
+
+
+
+\end{tikzpicture}
+\endinput
+
+
+
+\end{tikzpicture}
+\endinput
+
+%inputs from file
+\node[process,below of=p1]
+      (p2)  {Read input from file (and check)};
+   \draw[cl] (p1) -- (p2);
+   \draw[cl] (p2.south west) .. controls +(-4mm,-4mm) and +(-4mm,4mm) .. (p2.north west) node[midway,sloped,above,yshift=-1mm,font=\scriptsize] {NumCases};
+
+% return
+\node[return,below of=p2] (r1) {Return};
+   \draw[cl] (p2) -- (r1);
+
+\end{tikzpicture}

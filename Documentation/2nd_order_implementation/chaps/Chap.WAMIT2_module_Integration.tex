@@ -1,0 +1,21 @@
+\chapter{Integration of the WAMIT2 module within HydroDyn}
+\label{chap:WAMIT2:Integration}
+
+In order to integrate the {\tt WAMIT2} module into \HD, several changes need to be made to the \HD input file and to the file reading and parsing routines within the \fname{HydroDyn\_Input.f90} file.  Additional changes to the input file are required for multi-directional waves (see \Cref{chap:MultiDir,chap:Waves2:Integration}).
+
+\begin{center}
+   \begin{minipage}[t]{\linewidth}
+      \fvset{frame=single,fontsize=\scriptsize,numbers=left,numbersep=3pt,obeytabs,tabsize=1,fontfamily=fvm,commentchar=\%}
+      \VerbatimInput{chaps/HD_Input/HD_Input_File_WAMIT2.txt}
+   \end{minipage}
+   \captionof{table}{New section for the \HD input file for the second order forces calculated by the WAMIT2 module.}
+   \label{tab:HD_WAMIT2_InputMods}
+\end{center}
+
+The additional second order waves information that needs to be added into the \HD input file is give in \Cref{tab:HD_WAMIT2_InputMods}.  This is inserted between the sections marked {\tt FLOATING PLATFORM} and {\tt FLOATING PLATFORM FORCE FLAGS}.  To decide which force components are calculated, the \rname{HydroDyn\_Input} copies the component direction information from the {\tt FLOATING PLATFORM FORCE FLAGS} section to the \rname{WAMIT2\%InitInput}.  The \rname{WAMIT2\_Init} subroutine decides which of the force components can be calculated based on the information available within the WAMIT output file and method chosen.
+
+Add in section here describing what combinations of MnDrift, NewmanApp, DiffQTF, and SumQTF are allowed -- table perhaps?
+
+Add in description of the inputs with more detail about when used etc.
+
+

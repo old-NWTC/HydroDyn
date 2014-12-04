@@ -1,0 +1,42 @@
+\contentsline {chapter}{Todo list}{1}{Doc-Start}
+\contentsline {chapter}{\numberline {1}Overview}{1}{chapter.1}
+\contentsline {chapter}{\numberline {2}Background information}{2}{chapter.2}
+\contentsline {section}{\numberline {2.1}Platform Displacement and Rotation}{2}{section.2.1}
+\contentsline {chapter}{\numberline {3}Multi-directional Waves}{3}{chapter.3}
+\contentsline {section}{\numberline {3.1}Adjusting $\Theta $ within the \emph {Waves} module}{3}{section.3.1}
+\contentsline {section}{\numberline {3.2}Equal Energy Approach}{4}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}A few notes}{6}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Implimentation and Testing}{6}{subsection.3.2.2}
+\contentsline {section}{\numberline {3.3}Changes during implimentation}{11}{section.3.3}
+\contentsline {chapter}{\numberline {4}WAMIT: Output Files}{12}{chapter.4}
+\contentsline {section}{\numberline {4.1}WAMIT Output}{12}{section.4.1}
+\contentsline {section}{\numberline {4.2}Reading WAMIT Data Files}{13}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}First order WAMIT output files (.3)}{13}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Second order WAMIT output files}{14}{subsection.4.2.2}
+\contentsline {section}{\numberline {4.3}WAMIT Data Integrity Checks}{17}{section.4.3}
+\contentsline {chapter}{\numberline {5}Second Order Force Calculations}{18}{chapter.5}
+\contentsline {section}{\numberline {5.1}Overview}{19}{section.5.1}
+\contentsline {section}{\numberline {5.2}Frequency range}{21}{section.5.2}
+\contentsline {section}{\numberline {5.3}Wave Amplitude}{21}{section.5.3}
+\contentsline {section}{\numberline {5.4}Difference Frequency Force}{21}{section.5.4}
+\contentsline {subsection}{\numberline {5.4.1}Mean-Drift Method}{22}{subsection.5.4.1}
+\contentsline {subsection}{\numberline {5.4.2}Newman's Approximation Method}{24}{subsection.5.4.2}
+\contentsline {subsubsection}{\numberline {5.4.2.1}Mean drift and Newman's approximation}{24}{subsubsection.5.4.2.1}
+\contentsline {subsubsection}{\numberline {5.4.2.2}Standing's equation}{26}{subsubsection.5.4.2.2}
+\contentsline {subsection}{\numberline {5.4.3}Difference QTF Method}{27}{subsection.5.4.3}
+\contentsline {section}{\numberline {5.5}Summation Frequency Force}{28}{section.5.5}
+\contentsline {subsection}{\numberline {5.5.1}Summation QTF Method}{28}{subsection.5.5.1}
+\contentsline {chapter}{\numberline {6}Algorithms}{29}{chapter.6}
+\contentsline {section}{\numberline {6.1}FFT and IFFT}{29}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}Numerical Evaluation of IFFT}{30}{subsection.6.1.1}
+\contentsline {subsection}{\numberline {6.1.2}$Z[k]$ in HydroDyn\xspace }{30}{subsection.6.1.2}
+\contentsline {section}{\numberline {6.2}Interpolation}{30}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}3D Interpolation}{30}{subsection.6.2.1}
+\contentsline {subsubsection}{\numberline {6.2.1.1}Full array interpolation}{30}{subsubsection.6.2.1.1}
+\contentsline {subsubsection}{\numberline {6.2.1.2}Sparse array interpolation}{31}{subsubsection.6.2.1.2}
+\contentsline {subsection}{\numberline {6.2.2}4D Interpolation}{31}{subsection.6.2.2}
+\contentsline {subsubsection}{\numberline {6.2.2.1}Full array interpolation}{31}{subsubsection.6.2.2.1}
+\contentsline {subsubsection}{\numberline {6.2.2.2}Sparse array interpolation}{31}{subsubsection.6.2.2.2}
+\contentsline {chapter}{\numberline {7}Integration of the WAMIT2 module within HydroDyn}{32}{chapter.7}
+\contentsline {chapter}{\numberline {8}Integration of the Waves2 module within HydroDyn}{33}{chapter.8}
+\contentsline {chapter}{\numberline {9}WAMIT2 Module Architecture}{34}{chapter.9}

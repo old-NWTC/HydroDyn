@@ -1,0 +1,90 @@
+\begin{tikzpicture}
+
+% temporary node for the sectioning labels
+\node[tempnode]
+      (TmpNode) {};
+
+% WAMIT 1st order
+\node[process,right of=TmpNode,node distance=30mm,text width=25mm,text centered] 
+      (W1Get) {Read \nth{1}~order WAMIT~output (.7~.8~.9) (\Cref{sec:WamitOuput:Read})};
+
+\node[info,below of=W1Get,node distance=20mm,text width=25mm,text centered]
+      (W1Data) {3D matrix\\(possibly sparse)\\$F^\text{-}_k(\omega,\beta_1,\beta_2)$};
+   \draw[cl] (W1Get) -- (W1Data);
+
+
+
+%WAMIT 2nd
+\node[process,right of=W1Get,node distance=60mm,text width=25mm,text centered] 
+      (W2Get) {Read \nth{2}~order WAMIT~output (.10d~.11d~.12d) (\Cref{sec:WamitOuput:Read})};
+
+\node[info,below of=W2Get,node distance=20mm,text width=25mm,text centered]
+      (W2Data) {4D matrix\\(possibly sparse)\\$F^\pm_k(\omega_1,\omega_2,\beta_1,\beta_2)$};
+   \draw[cl] (W2Get) -- (W2Data);
+
+%Equation
+\node[anchor=center,process]
+      (Equation)  at ($(W1Data)!.5!(W2Data)+(0mm,-55mm)$) {$F^\pm_k(\omega_{m},\omega_{n},\beta_{m},\beta_{n})$};
+
+\draw[red] ($(Equation)+(0mm,0mm)$) ellipse [x radius=17mm, y radius=5mm];
+
+%Solver
+\begin{pgfonlayer}{background}
+   \filldraw[rounded corners=3mm,draw=blue!30!black!35,
+            fill=white!80!blue!20!red!20!black!10]
+                        ($(Equation.north west) +(-15mm,34mm)$) coordinate (SolverBoxNW)
+            rectangle   ($(Equation.south east)+(5mm,-8mm)$)   coordinate (SolverBoxSE);
+   %put box around the equation set
+   \draw[rounded corners=1mm,draw=black,thin]
+                        ($(Equation.north west) +(-13mm,5mm)$)
+            rectangle   ($(Equation.south east)+(2mm,-5mm)$);
+
+   \node[anchor=north west] at ($(SolverBoxNW.north west) +(1mm,-1mm)$) {Solver};
+   \node[anchor=east,font=\Huge] (tmp) at ($(Equation.west)+(0mm,0mm)$) {$\sum$};
+   \node[anchor=north,font=\scriptsize] at ($(tmp.south)+(0mm,2.3mm)$) {Inner sum};
+\end{pgfonlayer}
+
+%Solver inputs
+\node[info,text width=15mm,text centered] (SolveInput) at ($(SolverBoxNW |- Equation)+(-20mm,0mm)$) {$Z(\omega)$\\$\Phi(\omega)$\\Limits};
+   \draw[cl] (SolveInput) -- ($(SolverBoxNW |- Equation)$);
+
+%Solver results
+\node[info,text width=15mm,text centered] (SolveResults) at ($(SolverBoxSE |- Equation)+(20mm,0mm)$) {$F^{\pm (2)}_{\text{ex}~k}$};
+   \draw[cl] ($(SolverBoxSE |- Equation)$) -- (SolveResults);
+
+
+
+%Interpolation
+\node[process,text width=25mm,text centered] (Interpolate) at ($(Equation.north)+(0mm,21mm)$) {3D / 4D Interpolation at each $m$th summation step (\Cref{sec:Algorithm:Interp})};
+   \draw[cl] (Interpolate.south) -- ($(Equation)+(0mm,5mm)$);
+   \draw[cl] (W1Data) -- (Interpolate);
+   \draw[cl] (W2Data) -- (Interpolate);
+
+
+\end{tikzpicture}
+\endinput
+
+
+%% draw some lines along the side for marking what parts do what
+\coordinate (tmp1) at ($(TmpNode |- W1Data)+(0mm,7mm)$);
+\coordinate (tmp2) at ($(TmpNode |- W1Info)+(0mm,-5mm)$);
+\draw[black]
+      ($(tmp1)+(3mm,0mm)$) -- (tmp1) -- (tmp2) 
+         node[midway,above,sloped,rotate=180,font=\small] {Data reading} -- +(3mm,0mm);
+
+\coordinate (tmp1) at ($(TmpNode |- W1UniParse)+(0mm,5mm)$);
+\coordinate (tmp2) at ($(TmpNode |- W1UniParse)+(0mm,-5mm)$);
+\draw[black]
+      ($(tmp1)+(3mm,0mm)$) -- (tmp1) -- (tmp2) 
+            node[midway,above,sloped,rotate=180,font=\small] {Parsing}-- +(3mm,0mm);
+
+\coordinate (tmp1) at ($(TmpNode |- UniInterp1)+(0mm,5mm)$);
+\coordinate (tmp2) at ($(TmpNode |- UniInterp2)+(0mm,-5mm)$);
+\draw[black,text width=21mm,text centered]
+      ($(tmp1)+(3mm,0mm)$) -- (tmp1) -- (tmp2) 
+            node[midway,above,sloped,rotate=180,font=\small] {Interpolation (\Cref{chap:Algorithm})}-- +(3mm,0mm);
+
+   
+\end{tikzpicture}
+\endinput
+
