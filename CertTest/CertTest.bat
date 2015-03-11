@@ -45,12 +45,12 @@ goto CertTest
 
 :devBuild
 @SET EXE_VER=Using HydroDynDriver compiled with Visual Studio Project, release mode (IVF/VS)
-@SET HydroDyn=..\bin\HydroDynDriver_dev_win32.exe
+@SET HydroDyn=..\bin\HydroDynDriver_dev_Release_win32.exe
 goto CertTest
 
 :devDebugBuild
 @SET EXE_VER=Using HydroDynDriver compiled with Visual Studio Project, debug mode (IVF/VS)
-@SET HydroDyn=..\bin\HydroDynDriver_dev_debug_win32.exe
+@SET HydroDyn=..\bin\HydroDynDriver_dev_Debug_win32.exe
 goto CertTest
 
 ::=======================================================================================================
