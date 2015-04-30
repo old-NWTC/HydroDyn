@@ -3,7 +3,7 @@
 ! WARNING This file is generated automatically by the FAST registry
 ! Do not edit.  Your changes to this file will be lost.
 !
-! FAST Registry (v2.06.00, 14-Apr-2015)
+! FAST Registry (v2.07.00, 28-Apr-2015)
 !*********************************************************************************************************************************
 ! Waves_Types
 !.................................................................................................................................
@@ -299,28 +299,28 @@ ENDIF
   ErrStat = ErrID_None
   ErrMsg  = ""
 IF (ALLOCATED(InitInputData%WaveElevxi)) THEN
-   DEALLOCATE(InitInputData%WaveElevxi)
+  DEALLOCATE(InitInputData%WaveElevxi)
 ENDIF
 IF (ALLOCATED(InitInputData%WaveElevyi)) THEN
-   DEALLOCATE(InitInputData%WaveElevyi)
+  DEALLOCATE(InitInputData%WaveElevyi)
 ENDIF
 IF (ALLOCATED(InitInputData%WaveElevXY)) THEN
-   DEALLOCATE(InitInputData%WaveElevXY)
+  DEALLOCATE(InitInputData%WaveElevXY)
 ENDIF
 IF (ALLOCATED(InitInputData%WaveKinxi0)) THEN
-   DEALLOCATE(InitInputData%WaveKinxi0)
+  DEALLOCATE(InitInputData%WaveKinxi0)
 ENDIF
 IF (ALLOCATED(InitInputData%WaveKinyi0)) THEN
-   DEALLOCATE(InitInputData%WaveKinyi0)
+  DEALLOCATE(InitInputData%WaveKinyi0)
 ENDIF
 IF (ALLOCATED(InitInputData%WaveKinzi0)) THEN
-   DEALLOCATE(InitInputData%WaveKinzi0)
+  DEALLOCATE(InitInputData%WaveKinzi0)
 ENDIF
 IF (ALLOCATED(InitInputData%CurrVxi)) THEN
-   DEALLOCATE(InitInputData%CurrVxi)
+  DEALLOCATE(InitInputData%CurrVxi)
 ENDIF
 IF (ALLOCATED(InitInputData%CurrVyi)) THEN
-   DEALLOCATE(InitInputData%CurrVyi)
+  DEALLOCATE(InitInputData%CurrVyi)
 ENDIF
  END SUBROUTINE Waves_DestroyInitInput
 
@@ -339,7 +339,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -470,61 +470,61 @@ ENDIF
           IntKiBuf(Int_Xferred) = ICHAR(InData%GHWvFile(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%UnSum
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%UnSum
       Int_Xferred   = Int_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%Gravity
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%Gravity
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%MSL2SWL
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%MSL2SWL
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WvLowCOff
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WvLowCOff
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WvHiCOff
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WvHiCOff
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDir
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDir
       Re_Xferred   = Re_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%WaveNDir
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%WaveNDir
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%WaveMultiDir , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%WaveMultiDir , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%WaveDirMod
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%WaveDirMod
       Int_Xferred   = Int_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDirSpread
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDirSpread
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDirRange
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDirRange
       Re_Xferred   = Re_Xferred   + 1
-       DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%WaveDT
+      DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%WaveDT
       Db_Xferred   = Db_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveHs
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveHs
       Re_Xferred   = Re_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%WaveMod
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%WaveMod
       Int_Xferred   = Int_Xferred   + 1
         DO I = 1, LEN(InData%WaveModChr)
           IntKiBuf(Int_Xferred) = ICHAR(InData%WaveModChr(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%WaveNDAmp , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%WaveNDAmp , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WavePhase
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WavePhase
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WavePkShp
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WavePkShp
       Re_Xferred   = Re_Xferred   + 1
         DO I = 1, LEN(InData%WavePkShpChr)
           IntKiBuf(Int_Xferred) = ICHAR(InData%WavePkShpChr(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       IntKiBuf ( Int_Xferred:Int_Xferred+(SIZE(InData%WaveSeed))-1 ) = PACK(InData%WaveSeed,.TRUE.)
+      IntKiBuf ( Int_Xferred:Int_Xferred+(SIZE(InData%WaveSeed))-1 ) = PACK(InData%WaveSeed,.TRUE.)
       Int_Xferred   = Int_Xferred   + SIZE(InData%WaveSeed)
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%WaveStMod
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%WaveStMod
       Int_Xferred   = Int_Xferred   + 1
-       DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%WaveTMax
+      DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%WaveTMax
       Db_Xferred   = Db_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveTp
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveTp
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WtrDens
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WtrDens
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WtrDpth
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WtrDpth
       Re_Xferred   = Re_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NWaveElev
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NWaveElev
       Int_Xferred   = Int_Xferred   + 1
   IF ( .NOT. ALLOCATED(InData%WaveElevxi) ) THEN
     IntKiBuf( Int_Xferred ) = 0
@@ -568,7 +568,7 @@ ENDIF
       IF (SIZE(InData%WaveElevXY)>0) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%WaveElevXY))-1 ) = PACK(InData%WaveElevXY,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%WaveElevXY)
   END IF
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NWaveKin0
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NWaveKin0
       Int_Xferred   = Int_Xferred   + 1
   IF ( .NOT. ALLOCATED(InData%WaveKinxi0) ) THEN
     IntKiBuf( Int_Xferred ) = 0
@@ -635,9 +635,9 @@ ENDIF
       IF (SIZE(InData%CurrVyi)>0) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%CurrVyi))-1 ) = PACK(InData%CurrVyi,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%CurrVyi)
   END IF
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%PCurrVxiPz0
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%PCurrVxiPz0
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%PCurrVyiPz0
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%PCurrVyiPz0
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE Waves_PackInitInput
 
@@ -738,7 +738,7 @@ ENDIF
        RETURN
     END IF
     mask1 = .TRUE. 
-       OutData%WaveSeed = UNPACK( IntKiBuf ( Int_Xferred:Int_Xferred+(SIZE(OutData%WaveSeed))-1 ), mask1, 0_IntKi )
+      OutData%WaveSeed = UNPACK( IntKiBuf ( Int_Xferred:Int_Xferred+(SIZE(OutData%WaveSeed))-1 ), mask1, 0_IntKi )
       Int_Xferred   = Int_Xferred   + SIZE(OutData%WaveSeed)
     DEALLOCATE(mask1)
       OutData%WaveStMod = IntKiBuf( Int_Xferred ) 
@@ -1111,31 +1111,31 @@ ENDIF
   ErrStat = ErrID_None
   ErrMsg  = ""
 IF (ALLOCATED(InitOutputData%WaveElevC0)) THEN
-   DEALLOCATE(InitOutputData%WaveElevC0)
+  DEALLOCATE(InitOutputData%WaveElevC0)
 ENDIF
 IF (ALLOCATED(InitOutputData%WaveDirArr)) THEN
-   DEALLOCATE(InitOutputData%WaveDirArr)
+  DEALLOCATE(InitOutputData%WaveDirArr)
 ENDIF
 IF (ALLOCATED(InitOutputData%WaveAcc0)) THEN
-   DEALLOCATE(InitOutputData%WaveAcc0)
+  DEALLOCATE(InitOutputData%WaveAcc0)
 ENDIF
 IF (ALLOCATED(InitOutputData%WaveDynP0)) THEN
-   DEALLOCATE(InitOutputData%WaveDynP0)
+  DEALLOCATE(InitOutputData%WaveDynP0)
 ENDIF
 IF (ALLOCATED(InitOutputData%WaveElev)) THEN
-   DEALLOCATE(InitOutputData%WaveElev)
+  DEALLOCATE(InitOutputData%WaveElev)
 ENDIF
 IF (ALLOCATED(InitOutputData%WaveElevSeries)) THEN
-   DEALLOCATE(InitOutputData%WaveElevSeries)
+  DEALLOCATE(InitOutputData%WaveElevSeries)
 ENDIF
 IF (ALLOCATED(InitOutputData%WaveVel0)) THEN
-   DEALLOCATE(InitOutputData%WaveVel0)
+  DEALLOCATE(InitOutputData%WaveVel0)
 ENDIF
 IF (ALLOCATED(InitOutputData%WaveKinzi0)) THEN
-   DEALLOCATE(InitOutputData%WaveKinzi0)
+  DEALLOCATE(InitOutputData%WaveKinzi0)
 ENDIF
 IF (ALLOCATED(InitOutputData%WaveTime)) THEN
-   DEALLOCATE(InitOutputData%WaveTime)
+  DEALLOCATE(InitOutputData%WaveTime)
 ENDIF
  END SUBROUTINE Waves_DestroyInitOutput
 
@@ -1154,7 +1154,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -1285,9 +1285,9 @@ ENDIF
       IF (SIZE(InData%WaveDirArr)>0) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%WaveDirArr))-1 ) = PACK(InData%WaveDirArr,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%WaveDirArr)
   END IF
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDirMin
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDirMin
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDirMax
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDirMax
       Re_Xferred   = Re_Xferred   + 1
   IF ( .NOT. ALLOCATED(InData%WaveAcc0) ) THEN
     IntKiBuf( Int_Xferred ) = 0
@@ -1308,13 +1308,13 @@ ENDIF
       IF (SIZE(InData%WaveAcc0)>0) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%WaveAcc0))-1 ) = PACK(InData%WaveAcc0,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%WaveAcc0)
   END IF
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDir
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDir
       Re_Xferred   = Re_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%WaveNDir
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%WaveNDir
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%WaveMultiDir , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%WaveMultiDir , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDOmega
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WaveDOmega
       Re_Xferred   = Re_Xferred   + 1
   IF ( .NOT. ALLOCATED(InData%WaveDynP0) ) THEN
     IntKiBuf( Int_Xferred ) = 0
@@ -1409,13 +1409,13 @@ ENDIF
       IF (SIZE(InData%WaveTime)>0) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%WaveTime))-1 ) = PACK(InData%WaveTime,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%WaveTime)
   END IF
-       DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%WaveTMax
+      DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%WaveTMax
       Db_Xferred   = Db_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%RhoXg
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%RhoXg
       Re_Xferred   = Re_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NStepWave
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NStepWave
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NStepWave2
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NStepWave2
       Int_Xferred   = Int_Xferred   + 1
  END SUBROUTINE Waves_PackInitOutput
 
@@ -1750,7 +1750,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -1798,7 +1798,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyContState
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyContState
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE Waves_PackContState
 
@@ -1881,7 +1881,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -1929,7 +1929,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyDiscState
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyDiscState
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE Waves_PackDiscState
 
@@ -2012,7 +2012,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -2060,7 +2060,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyConstrState
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyConstrState
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE Waves_PackConstrState
 
@@ -2143,7 +2143,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -2191,7 +2191,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%DummyOtherState
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%DummyOtherState
       Int_Xferred   = Int_Xferred   + 1
  END SUBROUTINE Waves_PackOtherState
 
@@ -2278,7 +2278,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -2330,15 +2330,15 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%DT
+      DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%DT
       Db_Xferred   = Db_Xferred   + 1
-       DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%WaveTMax
+      DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%WaveTMax
       Db_Xferred   = Db_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NStepWave
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NStepWave
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%WaveNDir
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%WaveNDir
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%WaveMultiDir , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%WaveMultiDir , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
  END SUBROUTINE Waves_PackParam
 
@@ -2429,7 +2429,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -2477,7 +2477,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyInput
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyInput
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE Waves_PackInput
 
@@ -2560,7 +2560,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -2608,7 +2608,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyOutput
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyOutput
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE Waves_PackOutput
 
@@ -2649,9 +2649,9 @@ ENDIF
  END SUBROUTINE Waves_UnPackOutput
 
 
- SUBROUTINE Waves_Input_ExtrapInterp(u, tin, u_out, tin_out, ErrStat, ErrMsg )
+ SUBROUTINE Waves_Input_ExtrapInterp(u, t, u_out, t_out, ErrStat, ErrMsg )
 !
-! This subroutine calculates a extrapolated (or interpolated) input u_out at time t_out, from previous/future time
+! This subroutine calculates a extrapolated (or interpolated) Input u_out at time t_out, from previous/future time
 ! values of u (which has values associated with times in t).  Order of the interpolation is given by the size of u
 !
 !  expressions below based on either
@@ -2665,104 +2665,64 @@ ENDIF
 !
 !..................................................................................................................................
 
- TYPE(Waves_inputtype), INTENT(INOUT)  :: u(:)      ! Input at t1 > t2 > t3
- REAL(DbKi),         INTENT(IN   )  :: tin(:)      ! Times associated with the Inputs
- TYPE(Waves_inputtype), INTENT(INOUT)  :: u_out     ! Input at tin_out
- REAL(DbKi),         INTENT(IN   )  :: tin_out     ! time to be extrap/interp'd to
- INTEGER(IntKi),     INTENT(  OUT)  :: ErrStat   ! Error status of the operation
- CHARACTER(*),       INTENT(  OUT)  :: ErrMsg    ! Error message if ErrStat /= ErrID_None
+ TYPE(Waves_InputType), INTENT(INOUT)  :: u(:) ! Input at t1 > t2 > t3
+ REAL(DbKi),                 INTENT(IN   )  :: t(:)           ! Times associated with the Inputs
+ TYPE(Waves_InputType), INTENT(INOUT)  :: u_out ! Input at tin_out
+ REAL(DbKi),                 INTENT(IN   )  :: t_out           ! time to be extrap/interp'd to
+ INTEGER(IntKi),             INTENT(  OUT)  :: ErrStat         ! Error status of the operation
+ CHARACTER(*),               INTENT(  OUT)  :: ErrMsg          ! Error message if ErrStat /= ErrID_None
    ! local variables
- REAL(DbKi) :: t(SIZE(tin))    ! Times associated with the Inputs
- REAL(DbKi) :: t_out           ! Time to which to be extrap/interpd
- INTEGER(IntKi)                 :: order    ! order of polynomial fit (max 2)
- CHARACTER(*),    PARAMETER :: RoutineName = 'Waves_Input_ExtrapInterp'
- REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
- REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
- INTEGER(IntKi)                             :: ErrStat2 ! local errors
- CHARACTER(1024)                            :: ErrMsg2  ! local errors
+ INTEGER(IntKi)                             :: order           ! order of polynomial fit (max 2)
+ INTEGER(IntKi)                             :: ErrStat2        ! local errors
+ CHARACTER(1024)                            :: ErrMsg2         ! local errors
+ CHARACTER(*),    PARAMETER                 :: RoutineName = 'Waves_Input_ExtrapInterp'
     ! Initialize ErrStat
  ErrStat = ErrID_None
  ErrMsg  = ""
-    ! we'll subtract a constant from the times to resolve some 
-    ! numerical issues when t gets large (and to simplify the equations)
- t = tin - tin(1)
- t_out = tin_out - tin(1)
-
  if ( size(t) .ne. size(u)) then
-    ErrStat = ErrID_Fatal
-    ErrMsg = ' Error in Waves_Input_ExtrapInterp: size(t) must equal size(u) '
-    RETURN
- endif
- if (size(u) .gt. 3) then
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Waves_Input_ExtrapInterp: size(u) must be less than 4 '
+    CALL SetErrStat(ErrID_Fatal,'size(t) must equal size(u)',ErrStat,ErrMsg,RoutineName)
     RETURN
  endif
  order = SIZE(u) - 1
  IF ( order .eq. 0 ) THEN
-  u_out%DummyInput = u(1)%DummyInput
+   CALL Waves_CopyInput(u(1), u_out, MESH_UPDATECOPY, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
  ELSE IF ( order .eq. 1 ) THEN
-  IF ( EqualRealNos( t(1), t(2) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Waves_Input_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  b0 = -(u(1)%DummyInput - u(2)%DummyInput)/t(2)
-  u_out%DummyInput = u(1)%DummyInput + b0 * t_out
+   CALL Waves_Input_ExtrapInterp1(u(1), u(2), t, u_out, t_out, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
  ELSE IF ( order .eq. 2 ) THEN
-  IF ( EqualRealNos( t(1), t(2) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Waves_Input_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  IF ( EqualRealNos( t(2), t(3) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Waves_Input_ExtrapInterp: t(2) must not equal t(3) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  IF ( EqualRealNos( t(1), t(3) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Waves_Input_ExtrapInterp: t(1) must not equal t(3) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  b0 = (t(3)**2*(u(1)%DummyInput - u(2)%DummyInput) + t(2)**2*(-u(1)%DummyInput + u(3)%DummyInput))/(t(2)*t(3)*(t(2) - t(3)))
-  c0 = ( (t(2)-t(3))*u(1)%DummyInput + t(3)*u(2)%DummyInput - t(2)*u(3)%DummyInput ) / (t(2)*t(3)*(t(2) - t(3)))
-  u_out%DummyInput = u(1)%DummyInput + b0 * t_out + c0 * t_out**2
+   CALL Waves_Input_ExtrapInterp2(u(1), u(2), u(3), t, u_out, t_out, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
  ELSE 
-   ErrStat = ErrID_Fatal
-   ErrMsg = ' order must be less than 3 in Waves_Input_ExtrapInterp '
+   CALL SetErrStat(ErrID_Fatal,'size(u) must be less than 4 (order must be less than 3).',ErrStat,ErrMsg,RoutineName)
    RETURN
  ENDIF 
  END SUBROUTINE Waves_Input_ExtrapInterp
 
 
- SUBROUTINE Waves_Output_ExtrapInterp(u, tin, u_out, tin_out, ErrStat, ErrMsg )
+ SUBROUTINE Waves_Input_ExtrapInterp1(u1, u2, tin, u_out, tin_out, ErrStat, ErrMsg )
 !
-! This subroutine calculates a extrapolated (or interpolated) input u_out at time t_out, from previous/future time
-! values of u (which has values associated with times in t).  Order of the interpolation is given by the size of u
+! This subroutine calculates a extrapolated (or interpolated) Input u_out at time t_out, from previous/future time
+! values of u (which has values associated with times in t).  Order of the interpolation is 1.
 !
-!  expressions below based on either
-!
-!  f(t) = a
 !  f(t) = a + b * t, or
-!  f(t) = a + b * t + c * t**2
 !
-!  where a, b and c are determined as the solution to
-!  f(t1) = u1, f(t2) = u2, f(t3) = u3  (as appropriate)
+!  where a and b are determined as the solution to
+!  f(t1) = u1, f(t2) = u2
 !
 !..................................................................................................................................
 
- TYPE(Waves_outputtype), INTENT(INOUT)  :: u(:)      ! Output at t1 > t2 > t3
- REAL(DbKi),         INTENT(IN   )  :: tin(:)      ! Times associated with the Outputs
- TYPE(Waves_outputtype), INTENT(INOUT)  :: u_out     ! Output at tin_out
- REAL(DbKi),         INTENT(IN   )  :: tin_out     ! time to be extrap/interp'd to
- INTEGER(IntKi),     INTENT(  OUT)  :: ErrStat   ! Error status of the operation
- CHARACTER(*),       INTENT(  OUT)  :: ErrMsg    ! Error message if ErrStat /= ErrID_None
+ TYPE(Waves_InputType), INTENT(INOUT)  :: u1    ! Input at t1 > t2
+ TYPE(Waves_InputType), INTENT(INOUT)  :: u2    ! Input at t2 
+ REAL(DbKi),         INTENT(IN   )          :: tin(2)   ! Times associated with the Inputs
+ TYPE(Waves_InputType), INTENT(INOUT)  :: u_out ! Input at tin_out
+ REAL(DbKi),         INTENT(IN   )          :: tin_out  ! time to be extrap/interp'd to
+ INTEGER(IntKi),     INTENT(  OUT)          :: ErrStat  ! Error status of the operation
+ CHARACTER(*),       INTENT(  OUT)          :: ErrMsg   ! Error message if ErrStat /= ErrID_None
    ! local variables
- REAL(DbKi) :: t(SIZE(tin))    ! Times associated with the Outputs
- REAL(DbKi) :: t_out           ! Time to which to be extrap/interpd
- INTEGER(IntKi)                 :: order    ! order of polynomial fit (max 2)
- CHARACTER(*),    PARAMETER :: RoutineName = 'Waves_Output_ExtrapInterp'
+ REAL(DbKi)                                 :: t(2)     ! Times associated with the Inputs
+ REAL(DbKi)                                 :: t_out    ! Time to which to be extrap/interpd
+ CHARACTER(*),                    PARAMETER :: RoutineName = 'Waves_Input_ExtrapInterp1'
  REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
  REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
  INTEGER(IntKi)                             :: ErrStat2 ! local errors
@@ -2775,52 +2735,218 @@ ENDIF
  t = tin - tin(1)
  t_out = tin_out - tin(1)
 
- if ( size(t) .ne. size(u)) then
-    ErrStat = ErrID_Fatal
-    ErrMsg = ' Error in Waves_Output_ExtrapInterp: size(t) must equal size(u) '
+   IF ( EqualRealNos( t(1), t(2) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(2) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   END IF
+  b0 = -(u1%DummyInput - u2%DummyInput)/t(2)
+  u_out%DummyInput = u1%DummyInput + b0 * t_out
+ END SUBROUTINE Waves_Input_ExtrapInterp1
+
+
+ SUBROUTINE Waves_Input_ExtrapInterp2(u1, u2, u3, tin, u_out, tin_out, ErrStat, ErrMsg )
+!
+! This subroutine calculates a extrapolated (or interpolated) Input u_out at time t_out, from previous/future time
+! values of u (which has values associated with times in t).  Order of the interpolation is 2.
+!
+!  expressions below based on either
+!
+!  f(t) = a + b * t + c * t**2
+!
+!  where a, b and c are determined as the solution to
+!  f(t1) = u1, f(t2) = u2, f(t3) = u3
+!
+!..................................................................................................................................
+
+ TYPE(Waves_InputType), INTENT(INOUT)  :: u1      ! Input at t1 > t2 > t3
+ TYPE(Waves_InputType), INTENT(INOUT)  :: u2      ! Input at t2 > t3
+ TYPE(Waves_InputType), INTENT(INOUT)  :: u3      ! Input at t3
+ REAL(DbKi),                 INTENT(IN   )  :: tin(3)    ! Times associated with the Inputs
+ TYPE(Waves_InputType), INTENT(INOUT)  :: u_out     ! Input at tin_out
+ REAL(DbKi),                 INTENT(IN   )  :: tin_out   ! time to be extrap/interp'd to
+ INTEGER(IntKi),             INTENT(  OUT)  :: ErrStat   ! Error status of the operation
+ CHARACTER(*),               INTENT(  OUT)  :: ErrMsg    ! Error message if ErrStat /= ErrID_None
+   ! local variables
+ REAL(DbKi)                                 :: t(3)      ! Times associated with the Inputs
+ REAL(DbKi)                                 :: t_out     ! Time to which to be extrap/interpd
+ INTEGER(IntKi)                             :: order     ! order of polynomial fit (max 2)
+ REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
+ REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
+ INTEGER(IntKi)                             :: ErrStat2 ! local errors
+ CHARACTER(1024)                            :: ErrMsg2  ! local errors
+ CHARACTER(*),            PARAMETER         :: RoutineName = 'Waves_Input_ExtrapInterp2'
+    ! Initialize ErrStat
+ ErrStat = ErrID_None
+ ErrMsg  = ""
+    ! we'll subtract a constant from the times to resolve some 
+    ! numerical issues when t gets large (and to simplify the equations)
+ t = tin - tin(1)
+ t_out = tin_out - tin(1)
+
+   IF ( EqualRealNos( t(1), t(2) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(2) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   ELSE IF ( EqualRealNos( t(2), t(3) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(2) must not equal t(3) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   ELSE IF ( EqualRealNos( t(1), t(3) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(3) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   END IF
+  b0 = (t(3)**2*(u1%DummyInput - u2%DummyInput) + t(2)**2*(-u1%DummyInput + u3%DummyInput))/(t(2)*t(3)*(t(2) - t(3)))
+  c0 = ( (t(2)-t(3))*u1%DummyInput + t(3)*u2%DummyInput - t(2)*u3%DummyInput ) / (t(2)*t(3)*(t(2) - t(3)))
+  u_out%DummyInput = u1%DummyInput + b0 * t_out + c0 * t_out**2
+ END SUBROUTINE Waves_Input_ExtrapInterp2
+
+
+ SUBROUTINE Waves_Output_ExtrapInterp(y, t, y_out, t_out, ErrStat, ErrMsg )
+!
+! This subroutine calculates a extrapolated (or interpolated) Output y_out at time t_out, from previous/future time
+! values of y (which has values associated with times in t).  Order of the interpolation is given by the size of y
+!
+!  expressions below based on either
+!
+!  f(t) = a
+!  f(t) = a + b * t, or
+!  f(t) = a + b * t + c * t**2
+!
+!  where a, b and c are determined as the solution to
+!  f(t1) = y1, f(t2) = y2, f(t3) = y3  (as appropriate)
+!
+!..................................................................................................................................
+
+ TYPE(Waves_OutputType), INTENT(INOUT)  :: y(:) ! Output at t1 > t2 > t3
+ REAL(DbKi),                 INTENT(IN   )  :: t(:)           ! Times associated with the Outputs
+ TYPE(Waves_OutputType), INTENT(INOUT)  :: y_out ! Output at tin_out
+ REAL(DbKi),                 INTENT(IN   )  :: t_out           ! time to be extrap/interp'd to
+ INTEGER(IntKi),             INTENT(  OUT)  :: ErrStat         ! Error status of the operation
+ CHARACTER(*),               INTENT(  OUT)  :: ErrMsg          ! Error message if ErrStat /= ErrID_None
+   ! local variables
+ INTEGER(IntKi)                             :: order           ! order of polynomial fit (max 2)
+ INTEGER(IntKi)                             :: ErrStat2        ! local errors
+ CHARACTER(1024)                            :: ErrMsg2         ! local errors
+ CHARACTER(*),    PARAMETER                 :: RoutineName = 'Waves_Output_ExtrapInterp'
+    ! Initialize ErrStat
+ ErrStat = ErrID_None
+ ErrMsg  = ""
+ if ( size(t) .ne. size(y)) then
+    CALL SetErrStat(ErrID_Fatal,'size(t) must equal size(y)',ErrStat,ErrMsg,RoutineName)
     RETURN
  endif
- if (size(u) .gt. 3) then
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Waves_Output_ExtrapInterp: size(u) must be less than 4 '
-    RETURN
- endif
- order = SIZE(u) - 1
+ order = SIZE(y) - 1
  IF ( order .eq. 0 ) THEN
-  u_out%DummyOutput = u(1)%DummyOutput
+   CALL Waves_CopyOutput(y(1), y_out, MESH_UPDATECOPY, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
  ELSE IF ( order .eq. 1 ) THEN
-  IF ( EqualRealNos( t(1), t(2) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Waves_Output_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  b0 = -(u(1)%DummyOutput - u(2)%DummyOutput)/t(2)
-  u_out%DummyOutput = u(1)%DummyOutput + b0 * t_out
+   CALL Waves_Output_ExtrapInterp1(y(1), y(2), t, y_out, t_out, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
  ELSE IF ( order .eq. 2 ) THEN
-  IF ( EqualRealNos( t(1), t(2) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Waves_Output_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  IF ( EqualRealNos( t(2), t(3) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Waves_Output_ExtrapInterp: t(2) must not equal t(3) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  IF ( EqualRealNos( t(1), t(3) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Waves_Output_ExtrapInterp: t(1) must not equal t(3) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  b0 = (t(3)**2*(u(1)%DummyOutput - u(2)%DummyOutput) + t(2)**2*(-u(1)%DummyOutput + u(3)%DummyOutput))/(t(2)*t(3)*(t(2) - t(3)))
-  c0 = ( (t(2)-t(3))*u(1)%DummyOutput + t(3)*u(2)%DummyOutput - t(2)*u(3)%DummyOutput ) / (t(2)*t(3)*(t(2) - t(3)))
-  u_out%DummyOutput = u(1)%DummyOutput + b0 * t_out + c0 * t_out**2
+   CALL Waves_Output_ExtrapInterp2(y(1), y(2), y(3), t, y_out, t_out, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
  ELSE 
-   ErrStat = ErrID_Fatal
-   ErrMsg = ' order must be less than 3 in Waves_Output_ExtrapInterp '
+   CALL SetErrStat(ErrID_Fatal,'size(y) must be less than 4 (order must be less than 3).',ErrStat,ErrMsg,RoutineName)
    RETURN
  ENDIF 
  END SUBROUTINE Waves_Output_ExtrapInterp
+
+
+ SUBROUTINE Waves_Output_ExtrapInterp1(y1, y2, tin, y_out, tin_out, ErrStat, ErrMsg )
+!
+! This subroutine calculates a extrapolated (or interpolated) Output y_out at time t_out, from previous/future time
+! values of y (which has values associated with times in t).  Order of the interpolation is 1.
+!
+!  f(t) = a + b * t, or
+!
+!  where a and b are determined as the solution to
+!  f(t1) = y1, f(t2) = y2
+!
+!..................................................................................................................................
+
+ TYPE(Waves_OutputType), INTENT(INOUT)  :: y1    ! Output at t1 > t2
+ TYPE(Waves_OutputType), INTENT(INOUT)  :: y2    ! Output at t2 
+ REAL(DbKi),         INTENT(IN   )          :: tin(2)   ! Times associated with the Outputs
+ TYPE(Waves_OutputType), INTENT(INOUT)  :: y_out ! Output at tin_out
+ REAL(DbKi),         INTENT(IN   )          :: tin_out  ! time to be extrap/interp'd to
+ INTEGER(IntKi),     INTENT(  OUT)          :: ErrStat  ! Error status of the operation
+ CHARACTER(*),       INTENT(  OUT)          :: ErrMsg   ! Error message if ErrStat /= ErrID_None
+   ! local variables
+ REAL(DbKi)                                 :: t(2)     ! Times associated with the Outputs
+ REAL(DbKi)                                 :: t_out    ! Time to which to be extrap/interpd
+ CHARACTER(*),                    PARAMETER :: RoutineName = 'Waves_Output_ExtrapInterp1'
+ REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
+ REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
+ INTEGER(IntKi)                             :: ErrStat2 ! local errors
+ CHARACTER(1024)                            :: ErrMsg2  ! local errors
+    ! Initialize ErrStat
+ ErrStat = ErrID_None
+ ErrMsg  = ""
+    ! we'll subtract a constant from the times to resolve some 
+    ! numerical issues when t gets large (and to simplify the equations)
+ t = tin - tin(1)
+ t_out = tin_out - tin(1)
+
+   IF ( EqualRealNos( t(1), t(2) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(2) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   END IF
+  b0 = -(y1%DummyOutput - y2%DummyOutput)/t(2)
+  y_out%DummyOutput = y1%DummyOutput + b0 * t_out
+ END SUBROUTINE Waves_Output_ExtrapInterp1
+
+
+ SUBROUTINE Waves_Output_ExtrapInterp2(y1, y2, y3, tin, y_out, tin_out, ErrStat, ErrMsg )
+!
+! This subroutine calculates a extrapolated (or interpolated) Output y_out at time t_out, from previous/future time
+! values of y (which has values associated with times in t).  Order of the interpolation is 2.
+!
+!  expressions below based on either
+!
+!  f(t) = a + b * t + c * t**2
+!
+!  where a, b and c are determined as the solution to
+!  f(t1) = y1, f(t2) = y2, f(t3) = y3
+!
+!..................................................................................................................................
+
+ TYPE(Waves_OutputType), INTENT(INOUT)  :: y1      ! Output at t1 > t2 > t3
+ TYPE(Waves_OutputType), INTENT(INOUT)  :: y2      ! Output at t2 > t3
+ TYPE(Waves_OutputType), INTENT(INOUT)  :: y3      ! Output at t3
+ REAL(DbKi),                 INTENT(IN   )  :: tin(3)    ! Times associated with the Outputs
+ TYPE(Waves_OutputType), INTENT(INOUT)  :: y_out     ! Output at tin_out
+ REAL(DbKi),                 INTENT(IN   )  :: tin_out   ! time to be extrap/interp'd to
+ INTEGER(IntKi),             INTENT(  OUT)  :: ErrStat   ! Error status of the operation
+ CHARACTER(*),               INTENT(  OUT)  :: ErrMsg    ! Error message if ErrStat /= ErrID_None
+   ! local variables
+ REAL(DbKi)                                 :: t(3)      ! Times associated with the Outputs
+ REAL(DbKi)                                 :: t_out     ! Time to which to be extrap/interpd
+ INTEGER(IntKi)                             :: order     ! order of polynomial fit (max 2)
+ REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
+ REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
+ INTEGER(IntKi)                             :: ErrStat2 ! local errors
+ CHARACTER(1024)                            :: ErrMsg2  ! local errors
+ CHARACTER(*),            PARAMETER         :: RoutineName = 'Waves_Output_ExtrapInterp2'
+    ! Initialize ErrStat
+ ErrStat = ErrID_None
+ ErrMsg  = ""
+    ! we'll subtract a constant from the times to resolve some 
+    ! numerical issues when t gets large (and to simplify the equations)
+ t = tin - tin(1)
+ t_out = tin_out - tin(1)
+
+   IF ( EqualRealNos( t(1), t(2) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(2) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   ELSE IF ( EqualRealNos( t(2), t(3) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(2) must not equal t(3) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   ELSE IF ( EqualRealNos( t(1), t(3) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(3) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   END IF
+  b0 = (t(3)**2*(y1%DummyOutput - y2%DummyOutput) + t(2)**2*(-y1%DummyOutput + y3%DummyOutput))/(t(2)*t(3)*(t(2) - t(3)))
+  c0 = ( (t(2)-t(3))*y1%DummyOutput + t(3)*y2%DummyOutput - t(2)*y3%DummyOutput ) / (t(2)*t(3)*(t(2) - t(3)))
+  y_out%DummyOutput = y1%DummyOutput + b0 * t_out + c0 * t_out**2
+ END SUBROUTINE Waves_Output_ExtrapInterp2
 
 END MODULE Waves_Types
 !ENDOFREGISTRYGENERATEDFILE

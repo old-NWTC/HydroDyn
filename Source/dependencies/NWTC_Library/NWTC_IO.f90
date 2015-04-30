@@ -1,6 +1,6 @@
 !**********************************************************************************************************************************
 ! LICENSING
-! Copyright (C) 2013-2014  National Renewable Energy Laboratory
+! Copyright (C) 2013-2015  National Renewable Energy Laboratory
 !
 !    This file is part of the NWTC Subroutine Library.
 !
@@ -17,8 +17,8 @@
 ! limitations under the License.
 !
 !**********************************************************************************************************************************
-! File last committed: $Date: 2015-02-25 13:31:30 -0700 (Wed, 25 Feb 2015) $
-! (File) Revision #: $Rev: 292 $
+! File last committed: $Date: 2015-04-30 12:53:04 -0600 (Thu, 30 Apr 2015) $
+! (File) Revision #: $Rev: 300 $
 ! URL: $HeadURL: https://windsvn.nrel.gov/NWTC_Library/trunk/source/NWTC_IO.f90 $
 !**********************************************************************************************************************************
 MODULE NWTC_IO
@@ -35,7 +35,7 @@ MODULE NWTC_IO
 !=======================================================================
 
    TYPE(ProgDesc), PARAMETER    :: NWTC_Ver = &                               ! The name, version, and date of the NWTC Subroutine Library.
-                                    ProgDesc( 'NWTC Subroutine Library', 'v2.05.02a-bjj', '25-Feb-2015')
+                                    ProgDesc( 'NWTC Subroutine Library', 'v2.05.04a-bjj', '30-Apr-2015')
 
    TYPE, PUBLIC                 :: FNlist_Type                                ! This type stores a linked list of file names.
       CHARACTER(1024)                        :: FileName                      ! A file name.
@@ -1416,7 +1416,7 @@ CONTAINS
    RETURN
    END SUBROUTINE AllRAry5 ! (  Ary, AryDim1, AryDim2, AryDim3, AryDim4, AryDim5, Descr [, ErrStat] [, ErrMsg] )
 !=======================================================================
-   SUBROUTINE CheckArgs ( InputFile, ErrStat, Arg2 )
+   SUBROUTINE CheckArgs ( InputFile, ErrStat, Arg2, Flag )
 
 
       ! This subroutine is used to check for command-line arguments.
@@ -1427,6 +1427,7 @@ CONTAINS
 
    CHARACTER(*), INTENT(INOUT)          :: InputFile                                    ! The name of the input file specified on the command line.
    CHARACTER(*), INTENT(  OUT),OPTIONAL :: Arg2                                         ! an optional 2nd argument
+   CHARACTER(*), INTENT(  OUT),OPTIONAL :: Flag                                         ! an optional flag argument (e.g., restart)
 
       ! Local declarations:
 
@@ -1446,7 +1447,8 @@ CONTAINS
    FirstArg = .TRUE.
 
    IF ( PRESENT(Arg2) ) Arg2 = ""
-   
+   IF ( PRESENT(flag) ) flag = ""
+
       ! Parse them.
 
    IF ( NumArg .GT. 0 )  THEN
@@ -1463,8 +1465,14 @@ CONTAINS
             END IF
          END IF
 
-         IF ( Arg(1:1) == SwChar )  THEN
+         IF ( Arg(1:1) == SwChar .OR. Arg(1:1) == '-' )  THEN
+            IF (PRESENT(flag)) THEN
+               CALL Conv2UC( Arg )
+               Flag = Arg(2:) !this results in only the last flag
+               IF ( TRIM(Flag) == 'RESTART' )  CYCLE         ! Get next argument (which will be input [checkpoint] file name)
 
+            END IF
+                                                
             CALL NWTC_DisplaySyntax( InputFile, ProgName )
 
             IF ( INDEX( 'Hh?', Arg(2:2)  ) > 0 )  THEN
@@ -1904,11 +1912,12 @@ CONTAINS
    RETURN
    END FUNCTION CurTime ! ()
 !=======================================================================
-   SUBROUTINE DispCopyrightLicense( ProgInfo )
+   SUBROUTINE DispCopyrightLicense( ProgInfo, AdditionalComment )
 
       ! This routine displays some text about copyright and license.
 
-   TYPE( ProgDesc ), INTENT(IN)        :: ProgInfo    ! Contains the name and version info
+   TYPE( ProgDesc ), INTENT(IN)           :: ProgInfo    ! Contains the name and version info
+   CHARACTER(*),     INTENT(IN), optional :: AdditionalComment
 
       ! local variable
    INTEGER(IntKi)         :: DateLen   ! the trim length of the ProgInfo date field
@@ -1937,7 +1946,15 @@ CONTAINS
    CALL WrScr( 'Copyright (C) '//TRIM(year)//' National Renewable Energy Laboratory' )
    CALL WrScr('')
    CALL WrScr( 'This program comes with ABSOLUTELY NO WARRANTY. '//&
-               'See the "license.txt" file distributed with this software for details.')
+               'See the "license.txt" file distributed with this software for details.')   
+
+   IF (PRESENT(AdditionalComment)) THEN
+      CALL WrScr(Stars)
+      CALL WrScr(Stars)
+      CALL WrScr( AdditionalComment )
+      CALL WrScr('')       
+   END IF
+   
    CALL WrScr(Stars)
    CALL WrScr('')
 
@@ -1963,7 +1980,8 @@ CONTAINS
       ErrStat = ErrID_None
       ErrMsg  = ""
 
-      Int_BufSz = LEN(InData%FileName) + LEN(InData%ProcName)
+         ! get size of buffer:
+      Int_BufSz = LEN(InData%FileName) + LEN(InData%ProcName) + 1
       
       ALLOCATE( IntKiBuf(Int_BufSz), STAT=ErrStat )
       IF (ErrStat /= 0 ) THEN
@@ -1976,14 +1994,26 @@ CONTAINS
          IF ( SizeOnly ) RETURN
       ENDIF      
       
+      !..............
+      ! Fill buffer
+      !..............
+      
+         ! has the DLL procedure been loaded?
+      IF ( C_ASSOCIATED(InData%ProcAddr)) THEN
+         IntKiBuf(1) = 1
+      ELSE
+         IntKiBuf(1) = 0         
+      END IF
+      
          ! Put an ascii representation of the strings in the integer array
-      CALL Str2IntAry( InData%FileName, IntKiBuf, ErrStat, ErrMsg )
-      CALL Str2IntAry( InData%ProcName, IntKiBuf((LEN(InData%FileName)+1):) , ErrStat, ErrMsg )
+      CALL Str2IntAry( InData%FileName, IntKiBuf(2:), ErrStat, ErrMsg )
+      CALL Str2IntAry( InData%ProcName, IntKiBuf((LEN(InData%FileName)+2):) , ErrStat, ErrMsg )
+      
       
    END SUBROUTINE DLLTypePack
    
 !=======================================================================
-   SUBROUTINE DLLTypeUnPack( InData, ReKiBuf, DbKiBuf, IntKiBuf, ErrStat, ErrMsg )
+   SUBROUTINE DLLTypeUnPack( OutData, ReKiBuf, DbKiBuf, IntKiBuf, ErrStat, ErrMsg )
    
       ! This routine unpacks the DLL_Type data from an integer buffer.
       ! It is required for the FAST Registry.
@@ -1991,7 +2021,7 @@ CONTAINS
       REAL(ReKi),       ALLOCATABLE, INTENT(IN   ) :: ReKiBuf(:)
       REAL(DbKi),       ALLOCATABLE, INTENT(IN   ) :: DbKiBuf(:)
       INTEGER(IntKi),   ALLOCATABLE, INTENT(IN   ) :: IntKiBuf(:)
-      TYPE(DLL_Type),                INTENT(  OUT) :: InData
+      TYPE(DLL_Type),                INTENT(  OUT) :: OutData
       INTEGER(IntKi),                INTENT(  OUT) :: ErrStat
       CHARACTER(*),                  INTENT(  OUT) :: ErrMsg
       
@@ -2005,19 +2035,18 @@ CONTAINS
          ErrStat = ErrID_Fatal
          ErrMsg  = ' DLLTypeUnPack: invalid buffer.'
       END IF
-      
-      Int_BufSz = LEN(InData%FileName) + LEN(InData%ProcName)
-               
-         ! Get an ascii representation of the strings from the integer array
-      Int_BufSz = LEN(InData%FileName)
-      CALL IntAry2Str( IntKiBuf(1:Int_BufSz), InData%FileName, ErrStat, ErrMsg )
+                     
+         ! Get an ascii representation of the strings from the integer array                           
+      Int_BufSz = LEN(OutData%FileName) + 1
+      CALL IntAry2Str( IntKiBuf(2:(Int_BufSz)), OutData%FileName, ErrStat, ErrMsg )
       IF (ErrStat >= AbortErrLev) RETURN
       Int_BufSz = Int_BufSz + 1
-      CALL IntAry2Str( IntKiBuf(Int_BufSz: ), InData%ProcName, ErrStat, ErrMsg )
+      CALL IntAry2Str( IntKiBuf(Int_BufSz: ), OutData%ProcName, ErrStat, ErrMsg )
       IF (ErrStat >= AbortErrLev) RETURN
 
-      IF ( LEN_TRIM(InData%FileName) > 0 .AND. LEN_TRIM(InData%ProcName) > 0 ) THEN
-         CALL LoadDynamicLib( InData, ErrStat, ErrMsg )
+      
+      IF ( IntKiBuf(1) == 1 .AND. LEN_TRIM(OutData%FileName) > 0 .AND. LEN_TRIM(OutData%ProcName) > 0 ) THEN
+         CALL LoadDynamicLib( OutData, ErrStat, ErrMsg )
       END IF
       
    END SUBROUTINE DLLTypeUnPack   
@@ -2805,7 +2834,7 @@ CONTAINS
       ! local variables
 
    INTEGER(IntKi)                        :: ErrStat2                                   ! Temporary Error status
-   CHARACTER(LEN(ErrMsg))                :: ErrMsg2                                    ! Temporary Error message
+   CHARACTER(ErrMsgLen)                  :: ErrMsg2                                    ! Temporary Error message
 
 
    ErrStat = ErrID_None
@@ -6593,7 +6622,7 @@ SUBROUTINE ReadLine ( UnIn, CommChars, Line, LineLen, ErrStat )
 
 
          ! Get the size of the arrays:
-      LStr = LEN_TRIM(Str)
+      LStr = LEN(Str)
       LAry = SIZE(IntAry)
 
 
@@ -6610,7 +6639,7 @@ SUBROUTINE ReadLine ( UnIn, CommChars, Line, LineLen, ErrStat )
 
          ! Convert the string to an ASCII array:
       DO I=1,LStr
-         IntAry(I) = ICHAR(Str(I:I), B1Ki)
+         IntAry(I) = ICHAR(Str(I:I), IntKi)
       END DO
 
    END SUBROUTINE Str2IntAry   
@@ -6723,7 +6752,7 @@ SUBROUTINE WrBinFAST(FileName, FileID, DescStr, ChanName, ChanUnit, TimeData, Al
    INTEGER(B1Ki), ALLOCATABLE    :: ChanNameASCII(:)                 ! The ASCII equivalent of ChanName
    INTEGER(B1Ki), ALLOCATABLE    :: ChanUnitASCII(:)                 ! The ASCII equivalent of ChanUnit
 
-   CHARACTER(LEN(ErrMsg))        :: ErrMsg2                          ! temporary error message
+   CHARACTER(ErrMsgLen)          :: ErrMsg2                          ! temporary error message
 
 
    !...............................................................................................................................

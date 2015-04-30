@@ -3,7 +3,7 @@
 ! WARNING This file is generated automatically by the FAST registry
 ! Do not edit.  Your changes to this file will be lost.
 !
-! FAST Registry (v2.06.00, 14-Apr-2015)
+! FAST Registry (v2.07.00, 28-Apr-2015)
 !*********************************************************************************************************************************
 ! HydroDyn_Types
 !.................................................................................................................................
@@ -306,7 +306,7 @@ ENDIF
   ErrStat = ErrID_None
   ErrMsg  = ""
 IF (ALLOCATED(InitInputData%WaveElevXY)) THEN
-   DEALLOCATE(InitInputData%WaveElevXY)
+  DEALLOCATE(InitInputData%WaveElevXY)
 ENDIF
   CALL Waves_DestroyInitInput( InitInputData%Waves, ErrStat, ErrMsg )
   CALL Waves2_DestroyInitInput( InitInputData%Waves2, ErrStat, ErrMsg )
@@ -315,7 +315,7 @@ ENDIF
   CALL WAMIT2_DestroyInitInput( InitInputData%WAMIT2, ErrStat, ErrMsg )
   CALL Morison_DestroyInitInput( InitInputData%Morison, ErrStat, ErrMsg )
 IF (ALLOCATED(InitInputData%UserOutputs)) THEN
-   DEALLOCATE(InitInputData%UserOutputs)
+  DEALLOCATE(InitInputData%UserOutputs)
 ENDIF
  END SUBROUTINE HydroDyn_DestroyInitInput
 
@@ -334,7 +334,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -534,19 +534,19 @@ ENDIF
           IntKiBuf(Int_Xferred) = ICHAR(InData%InputFile(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%UseInputFile , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%UseInputFile , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
         DO I = 1, LEN(InData%OutRootName)
           IntKiBuf(Int_Xferred) = ICHAR(InData%OutRootName(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%DT
+      DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%DT
       Db_Xferred   = Db_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%Gravity
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%Gravity
       Re_Xferred   = Re_Xferred   + 1
-       DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%TMax
+      DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%TMax
       Db_Xferred   = Db_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%HasIce , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%HasIce , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
   IF ( .NOT. ALLOCATED(InData%WaveElevXY) ) THEN
     IntKiBuf( Int_Xferred ) = 0
@@ -564,53 +564,53 @@ ENDIF
       IF (SIZE(InData%WaveElevXY)>0) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%WaveElevXY))-1 ) = PACK(InData%WaveElevXY,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%WaveElevXY)
   END IF
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%PtfmLocationX
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%PtfmLocationX
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%PtfmLocationY
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%PtfmLocationY
       Re_Xferred   = Re_Xferred   + 1
         DO I = 1, LEN(InData%PtfmSgFChr)
           IntKiBuf(Int_Xferred) = ICHAR(InData%PtfmSgFChr(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%PtfmSgF , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%PtfmSgF , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
         DO I = 1, LEN(InData%PtfmSwFChr)
           IntKiBuf(Int_Xferred) = ICHAR(InData%PtfmSwFChr(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%PtfmSwF , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%PtfmSwF , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
         DO I = 1, LEN(InData%PtfmHvFChr)
           IntKiBuf(Int_Xferred) = ICHAR(InData%PtfmHvFChr(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%PtfmHvF , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%PtfmHvF , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
         DO I = 1, LEN(InData%PtfmRFChr)
           IntKiBuf(Int_Xferred) = ICHAR(InData%PtfmRFChr(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%PtfmRF , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%PtfmRF , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
         DO I = 1, LEN(InData%PtfmPFChr)
           IntKiBuf(Int_Xferred) = ICHAR(InData%PtfmPFChr(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%PtfmPF , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%PtfmPF , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
         DO I = 1, LEN(InData%PtfmYFChr)
           IntKiBuf(Int_Xferred) = ICHAR(InData%PtfmYFChr(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%PtfmYF , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%PtfmYF , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddF0))-1 ) = PACK(InData%AddF0,.TRUE.)
+      ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddF0))-1 ) = PACK(InData%AddF0,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%AddF0)
-       ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddCLin))-1 ) = PACK(InData%AddCLin,.TRUE.)
+      ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddCLin))-1 ) = PACK(InData%AddCLin,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%AddCLin)
-       ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddBLin))-1 ) = PACK(InData%AddBLin,.TRUE.)
+      ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddBLin))-1 ) = PACK(InData%AddBLin,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%AddBLin)
-       ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddBQuad))-1 ) = PACK(InData%AddBQuad,.TRUE.)
+      ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddBQuad))-1 ) = PACK(InData%AddBQuad,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%AddBQuad)
       CALL Waves_PackInitInput( Re_Buf, Db_Buf, Int_Buf, InData%Waves, ErrStat2, ErrMsg2, OnlySize ) ! Waves 
         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg, RoutineName)
@@ -780,11 +780,11 @@ ENDIF
       ELSE
         IntKiBuf( Int_Xferred ) = 0; Int_Xferred = Int_Xferred + 1
       ENDIF
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%Echo , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%Echo , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%HasWAMIT , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%HasWAMIT , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NUserOutputs
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NUserOutputs
       Int_Xferred   = Int_Xferred   + 1
   IF ( .NOT. ALLOCATED(InData%UserOutputs) ) THEN
     IntKiBuf( Int_Xferred ) = 0
@@ -803,11 +803,11 @@ ENDIF
         END DO ! I
     END DO !i1
   END IF
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%OutSwtch
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%OutSwtch
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%OutAll , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%OutAll , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NumOuts
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NumOuts
       Int_Xferred   = Int_Xferred   + 1
     DO i1 = LBOUND(InData%OutList,1), UBOUND(InData%OutList,1)
         DO I = 1, LEN(InData%OutList)
@@ -815,9 +815,9 @@ ENDIF
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
     END DO !i1
-       IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%HDSum , IntKiBuf(1), 1)
+      IntKiBuf ( Int_Xferred:Int_Xferred+1-1 ) = TRANSFER( InData%HDSum , IntKiBuf(1), 1)
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%UnSum
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%UnSum
       Int_Xferred   = Int_Xferred   + 1
         DO I = 1, LEN(InData%OutFmt)
           IntKiBuf(Int_Xferred) = ICHAR(InData%OutFmt(I:I), IntKi)
@@ -955,7 +955,7 @@ ENDIF
        RETURN
     END IF
     mask1 = .TRUE. 
-       OutData%AddF0 = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddF0))-1 ), mask1, 0.0_ReKi )
+      OutData%AddF0 = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddF0))-1 ), mask1, 0.0_ReKi )
       Re_Xferred   = Re_Xferred   + SIZE(OutData%AddF0)
     DEALLOCATE(mask1)
     i1_l = LBOUND(OutData%AddCLin,1)
@@ -968,7 +968,7 @@ ENDIF
        RETURN
     END IF
     mask2 = .TRUE. 
-       OutData%AddCLin = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddCLin))-1 ), mask2, 0.0_ReKi )
+      OutData%AddCLin = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddCLin))-1 ), mask2, 0.0_ReKi )
       Re_Xferred   = Re_Xferred   + SIZE(OutData%AddCLin)
     DEALLOCATE(mask2)
     i1_l = LBOUND(OutData%AddBLin,1)
@@ -981,7 +981,7 @@ ENDIF
        RETURN
     END IF
     mask2 = .TRUE. 
-       OutData%AddBLin = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddBLin))-1 ), mask2, 0.0_ReKi )
+      OutData%AddBLin = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddBLin))-1 ), mask2, 0.0_ReKi )
       Re_Xferred   = Re_Xferred   + SIZE(OutData%AddBLin)
     DEALLOCATE(mask2)
     i1_l = LBOUND(OutData%AddBQuad,1)
@@ -994,7 +994,7 @@ ENDIF
        RETURN
     END IF
     mask2 = .TRUE. 
-       OutData%AddBQuad = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddBQuad))-1 ), mask2, 0.0_ReKi )
+      OutData%AddBQuad = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddBQuad))-1 ), mask2, 0.0_ReKi )
       Re_Xferred   = Re_Xferred   + SIZE(OutData%AddBQuad)
     DEALLOCATE(mask2)
       Buf_size=IntKiBuf( Int_Xferred )
@@ -1393,13 +1393,13 @@ ENDIF
   CALL Waves2_DestroyInitOutput( InitOutputData%Waves2, ErrStat, ErrMsg )
   CALL Morison_DestroyInitOutput( InitOutputData%Morison, ErrStat, ErrMsg )
 IF (ALLOCATED(InitOutputData%WriteOutputHdr)) THEN
-   DEALLOCATE(InitOutputData%WriteOutputHdr)
+  DEALLOCATE(InitOutputData%WriteOutputHdr)
 ENDIF
 IF (ALLOCATED(InitOutputData%WriteOutputUnt)) THEN
-   DEALLOCATE(InitOutputData%WriteOutputUnt)
+  DEALLOCATE(InitOutputData%WriteOutputUnt)
 ENDIF
 IF (ALLOCATED(InitOutputData%WaveElevSeries)) THEN
-   DEALLOCATE(InitOutputData%WaveElevSeries)
+  DEALLOCATE(InitOutputData%WaveElevSeries)
 ENDIF
   CALL NWTC_Library_Destroyprogdesc( InitOutputData%Ver, ErrStat, ErrMsg )
  END SUBROUTINE HydroDyn_DestroyInitOutput
@@ -1419,7 +1419,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -1760,11 +1760,11 @@ ENDIF
       ELSE
         IntKiBuf( Int_Xferred ) = 0; Int_Xferred = Int_Xferred + 1
       ENDIF
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WtrDens
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WtrDens
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WtrDpth
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WtrDpth
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%MSL2SWL
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%MSL2SWL
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE HydroDyn_PackInitOutput
 
@@ -2144,7 +2144,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -2537,7 +2537,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -2930,7 +2930,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -3312,7 +3312,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -3360,7 +3360,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyConstrState
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyConstrState
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE HydroDyn_PackConstrState
 
@@ -3485,7 +3485,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -3804,13 +3804,13 @@ ENDIF
       ELSE
         IntKiBuf( Int_Xferred ) = 0; Int_Xferred = Int_Xferred + 1
       ENDIF
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%LastIndWave
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%LastIndWave
       Int_Xferred   = Int_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%F_PtfmAdd))-1 ) = PACK(InData%F_PtfmAdd,.TRUE.)
+      ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%F_PtfmAdd))-1 ) = PACK(InData%F_PtfmAdd,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%F_PtfmAdd)
-       ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%F_Hydro))-1 ) = PACK(InData%F_Hydro,.TRUE.)
+      ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%F_Hydro))-1 ) = PACK(InData%F_Hydro,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%F_Hydro)
-       ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%F_Waves))-1 ) = PACK(InData%F_Waves,.TRUE.)
+      ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%F_Waves))-1 ) = PACK(InData%F_Waves,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%F_Waves)
       CALL MeshPack( InData%y_mapped, Re_Buf, Db_Buf, Int_Buf, ErrStat2, ErrMsg2, OnlySize ) ! y_mapped 
         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg, RoutineName)
@@ -3952,9 +3952,9 @@ ENDIF
       ELSE
         IntKiBuf( Int_Xferred ) = 0; Int_Xferred = Int_Xferred + 1
       ENDIF
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%Decimate
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%Decimate
       Int_Xferred   = Int_Xferred   + 1
-       DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%LastOutTime
+      DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%LastOutTime
       Db_Xferred   = Db_Xferred   + 1
  END SUBROUTINE HydroDyn_PackOtherState
 
@@ -4161,7 +4161,7 @@ ENDIF
        RETURN
     END IF
     mask1 = .TRUE. 
-       OutData%F_PtfmAdd = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%F_PtfmAdd))-1 ), mask1, 0.0_ReKi )
+      OutData%F_PtfmAdd = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%F_PtfmAdd))-1 ), mask1, 0.0_ReKi )
       Re_Xferred   = Re_Xferred   + SIZE(OutData%F_PtfmAdd)
     DEALLOCATE(mask1)
     i1_l = LBOUND(OutData%F_Hydro,1)
@@ -4172,7 +4172,7 @@ ENDIF
        RETURN
     END IF
     mask1 = .TRUE. 
-       OutData%F_Hydro = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%F_Hydro))-1 ), mask1, 0.0_ReKi )
+      OutData%F_Hydro = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%F_Hydro))-1 ), mask1, 0.0_ReKi )
       Re_Xferred   = Re_Xferred   + SIZE(OutData%F_Hydro)
     DEALLOCATE(mask1)
     i1_l = LBOUND(OutData%F_Waves,1)
@@ -4183,7 +4183,7 @@ ENDIF
        RETURN
     END IF
     mask1 = .TRUE. 
-       OutData%F_Waves = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%F_Waves))-1 ), mask1, 0.0_ReKi )
+      OutData%F_Waves = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%F_Waves))-1 ), mask1, 0.0_ReKi )
       Re_Xferred   = Re_Xferred   + SIZE(OutData%F_Waves)
     DEALLOCATE(mask1)
       Buf_size=IntKiBuf( Int_Xferred )
@@ -4507,19 +4507,19 @@ ENDIF
   CALL Waves2_DestroyParam( ParamData%Waves2, ErrStat, ErrMsg )
   CALL Morison_DestroyParam( ParamData%Morison, ErrStat, ErrMsg )
 IF (ALLOCATED(ParamData%WaveTime)) THEN
-   DEALLOCATE(ParamData%WaveTime)
+  DEALLOCATE(ParamData%WaveTime)
 ENDIF
 IF (ALLOCATED(ParamData%WaveElev)) THEN
-   DEALLOCATE(ParamData%WaveElev)
+  DEALLOCATE(ParamData%WaveElev)
 ENDIF
 IF (ALLOCATED(ParamData%WaveElev1)) THEN
-   DEALLOCATE(ParamData%WaveElev1)
+  DEALLOCATE(ParamData%WaveElev1)
 ENDIF
 IF (ALLOCATED(ParamData%OutParam)) THEN
 DO i1 = LBOUND(ParamData%OutParam,1), UBOUND(ParamData%OutParam,1)
   CALL NWTC_Library_Destroyoutparmtype( ParamData%OutParam(i1), ErrStat, ErrMsg )
 ENDDO
-   DEALLOCATE(ParamData%OutParam)
+  DEALLOCATE(ParamData%OutParam)
 ENDIF
  END SUBROUTINE HydroDyn_DestroyParam
 
@@ -4538,7 +4538,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -4832,9 +4832,9 @@ ENDIF
       IF (SIZE(InData%WaveTime)>0) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%WaveTime))-1 ) = PACK(InData%WaveTime,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%WaveTime)
   END IF
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NStepWave
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NStepWave
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NWaveElev
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NWaveElev
       Int_Xferred   = Int_Xferred   + 1
   IF ( .NOT. ALLOCATED(InData%WaveElev) ) THEN
     IntKiBuf( Int_Xferred ) = 0
@@ -4868,15 +4868,15 @@ ENDIF
       IF (SIZE(InData%WaveElev1)>0) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%WaveElev1))-1 ) = PACK(InData%WaveElev1,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%WaveElev1)
   END IF
-       ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddF0))-1 ) = PACK(InData%AddF0,.TRUE.)
+      ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddF0))-1 ) = PACK(InData%AddF0,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%AddF0)
-       ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddCLin))-1 ) = PACK(InData%AddCLin,.TRUE.)
+      ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddCLin))-1 ) = PACK(InData%AddCLin,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%AddCLin)
-       ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddBLin))-1 ) = PACK(InData%AddBLin,.TRUE.)
+      ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddBLin))-1 ) = PACK(InData%AddBLin,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%AddBLin)
-       ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddBQuad))-1 ) = PACK(InData%AddBQuad,.TRUE.)
+      ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%AddBQuad))-1 ) = PACK(InData%AddBQuad,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%AddBQuad)
-       DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%DT
+      DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%DT
       Db_Xferred   = Db_Xferred   + 1
   IF ( .NOT. ALLOCATED(InData%OutParam) ) THEN
     IntKiBuf( Int_Xferred ) = 0
@@ -4919,11 +4919,11 @@ ENDIF
       ENDIF
     END DO
   END IF
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NumOuts
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NumOuts
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NumTotalOuts
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NumTotalOuts
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%OutSwtch
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%OutSwtch
       Int_Xferred   = Int_Xferred   + 1
         DO I = 1, LEN(InData%OutFmt)
           IntKiBuf(Int_Xferred) = ICHAR(InData%OutFmt(I:I), IntKi)
@@ -4937,9 +4937,9 @@ ENDIF
           IntKiBuf(Int_Xferred) = ICHAR(InData%Delim(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%UnOutFile
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%UnOutFile
       Int_Xferred   = Int_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%OutDec
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%OutDec
       Int_Xferred   = Int_Xferred   + 1
  END SUBROUTINE HydroDyn_PackParam
 
@@ -5224,7 +5224,7 @@ ENDIF
        RETURN
     END IF
     mask1 = .TRUE. 
-       OutData%AddF0 = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddF0))-1 ), mask1, 0.0_ReKi )
+      OutData%AddF0 = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddF0))-1 ), mask1, 0.0_ReKi )
       Re_Xferred   = Re_Xferred   + SIZE(OutData%AddF0)
     DEALLOCATE(mask1)
     i1_l = LBOUND(OutData%AddCLin,1)
@@ -5237,7 +5237,7 @@ ENDIF
        RETURN
     END IF
     mask2 = .TRUE. 
-       OutData%AddCLin = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddCLin))-1 ), mask2, 0.0_ReKi )
+      OutData%AddCLin = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddCLin))-1 ), mask2, 0.0_ReKi )
       Re_Xferred   = Re_Xferred   + SIZE(OutData%AddCLin)
     DEALLOCATE(mask2)
     i1_l = LBOUND(OutData%AddBLin,1)
@@ -5250,7 +5250,7 @@ ENDIF
        RETURN
     END IF
     mask2 = .TRUE. 
-       OutData%AddBLin = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddBLin))-1 ), mask2, 0.0_ReKi )
+      OutData%AddBLin = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddBLin))-1 ), mask2, 0.0_ReKi )
       Re_Xferred   = Re_Xferred   + SIZE(OutData%AddBLin)
     DEALLOCATE(mask2)
     i1_l = LBOUND(OutData%AddBQuad,1)
@@ -5263,7 +5263,7 @@ ENDIF
        RETURN
     END IF
     mask2 = .TRUE. 
-       OutData%AddBQuad = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddBQuad))-1 ), mask2, 0.0_ReKi )
+      OutData%AddBQuad = UNPACK(ReKiBuf( Re_Xferred:Re_Xferred+(SIZE(OutData%AddBQuad))-1 ), mask2, 0.0_ReKi )
       Re_Xferred   = Re_Xferred   + SIZE(OutData%AddBQuad)
     DEALLOCATE(mask2)
       OutData%DT = DbKiBuf( Db_Xferred ) 
@@ -5410,7 +5410,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -5982,7 +5982,7 @@ ENDIF
   CALL MeshDestroy( OutputData%Mesh, ErrStat, ErrMsg )
   CALL MeshDestroy( OutputData%AllHdroOrigin, ErrStat, ErrMsg )
 IF (ALLOCATED(OutputData%WriteOutput)) THEN
-   DEALLOCATE(OutputData%WriteOutput)
+  DEALLOCATE(OutputData%WriteOutput)
 ENDIF
  END SUBROUTINE HydroDyn_DestroyOutput
 
@@ -6001,7 +6001,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -6638,9 +6638,9 @@ ENDIF
  END SUBROUTINE HydroDyn_UnPackOutput
 
 
- SUBROUTINE HydroDyn_Input_ExtrapInterp(u, tin, u_out, tin_out, ErrStat, ErrMsg )
+ SUBROUTINE HydroDyn_Input_ExtrapInterp(u, t, u_out, t_out, ErrStat, ErrMsg )
 !
-! This subroutine calculates a extrapolated (or interpolated) input u_out at time t_out, from previous/future time
+! This subroutine calculates a extrapolated (or interpolated) Input u_out at time t_out, from previous/future time
 ! values of u (which has values associated with times in t).  Order of the interpolation is given by the size of u
 !
 !  expressions below based on either
@@ -6654,17 +6654,64 @@ ENDIF
 !
 !..................................................................................................................................
 
- TYPE(HydroDyn_inputtype), INTENT(INOUT)  :: u(:)      ! Input at t1 > t2 > t3
- REAL(DbKi),         INTENT(IN   )  :: tin(:)      ! Times associated with the Inputs
- TYPE(HydroDyn_inputtype), INTENT(INOUT)  :: u_out     ! Input at tin_out
- REAL(DbKi),         INTENT(IN   )  :: tin_out     ! time to be extrap/interp'd to
- INTEGER(IntKi),     INTENT(  OUT)  :: ErrStat   ! Error status of the operation
- CHARACTER(*),       INTENT(  OUT)  :: ErrMsg    ! Error message if ErrStat /= ErrID_None
+ TYPE(HydroDyn_InputType), INTENT(INOUT)  :: u(:) ! Input at t1 > t2 > t3
+ REAL(DbKi),                 INTENT(IN   )  :: t(:)           ! Times associated with the Inputs
+ TYPE(HydroDyn_InputType), INTENT(INOUT)  :: u_out ! Input at tin_out
+ REAL(DbKi),                 INTENT(IN   )  :: t_out           ! time to be extrap/interp'd to
+ INTEGER(IntKi),             INTENT(  OUT)  :: ErrStat         ! Error status of the operation
+ CHARACTER(*),               INTENT(  OUT)  :: ErrMsg          ! Error message if ErrStat /= ErrID_None
    ! local variables
- REAL(DbKi) :: t(SIZE(tin))    ! Times associated with the Inputs
- REAL(DbKi) :: t_out           ! Time to which to be extrap/interpd
- INTEGER(IntKi)                 :: order    ! order of polynomial fit (max 2)
- CHARACTER(*),    PARAMETER :: RoutineName = 'HydroDyn_Input_ExtrapInterp'
+ INTEGER(IntKi)                             :: order           ! order of polynomial fit (max 2)
+ INTEGER(IntKi)                             :: ErrStat2        ! local errors
+ CHARACTER(1024)                            :: ErrMsg2         ! local errors
+ CHARACTER(*),    PARAMETER                 :: RoutineName = 'HydroDyn_Input_ExtrapInterp'
+    ! Initialize ErrStat
+ ErrStat = ErrID_None
+ ErrMsg  = ""
+ if ( size(t) .ne. size(u)) then
+    CALL SetErrStat(ErrID_Fatal,'size(t) must equal size(u)',ErrStat,ErrMsg,RoutineName)
+    RETURN
+ endif
+ order = SIZE(u) - 1
+ IF ( order .eq. 0 ) THEN
+   CALL HydroDyn_CopyInput(u(1), u_out, MESH_UPDATECOPY, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+ ELSE IF ( order .eq. 1 ) THEN
+   CALL HydroDyn_Input_ExtrapInterp1(u(1), u(2), t, u_out, t_out, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+ ELSE IF ( order .eq. 2 ) THEN
+   CALL HydroDyn_Input_ExtrapInterp2(u(1), u(2), u(3), t, u_out, t_out, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+ ELSE 
+   CALL SetErrStat(ErrID_Fatal,'size(u) must be less than 4 (order must be less than 3).',ErrStat,ErrMsg,RoutineName)
+   RETURN
+ ENDIF 
+ END SUBROUTINE HydroDyn_Input_ExtrapInterp
+
+
+ SUBROUTINE HydroDyn_Input_ExtrapInterp1(u1, u2, tin, u_out, tin_out, ErrStat, ErrMsg )
+!
+! This subroutine calculates a extrapolated (or interpolated) Input u_out at time t_out, from previous/future time
+! values of u (which has values associated with times in t).  Order of the interpolation is 1.
+!
+!  f(t) = a + b * t, or
+!
+!  where a and b are determined as the solution to
+!  f(t1) = u1, f(t2) = u2
+!
+!..................................................................................................................................
+
+ TYPE(HydroDyn_InputType), INTENT(INOUT)  :: u1    ! Input at t1 > t2
+ TYPE(HydroDyn_InputType), INTENT(INOUT)  :: u2    ! Input at t2 
+ REAL(DbKi),         INTENT(IN   )          :: tin(2)   ! Times associated with the Inputs
+ TYPE(HydroDyn_InputType), INTENT(INOUT)  :: u_out ! Input at tin_out
+ REAL(DbKi),         INTENT(IN   )          :: tin_out  ! time to be extrap/interp'd to
+ INTEGER(IntKi),     INTENT(  OUT)          :: ErrStat  ! Error status of the operation
+ CHARACTER(*),       INTENT(  OUT)          :: ErrMsg   ! Error message if ErrStat /= ErrID_None
+   ! local variables
+ REAL(DbKi)                                 :: t(2)     ! Times associated with the Inputs
+ REAL(DbKi)                                 :: t_out    ! Time to which to be extrap/interpd
+ CHARACTER(*),                    PARAMETER :: RoutineName = 'HydroDyn_Input_ExtrapInterp1'
  REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
  REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
  INTEGER(IntKi)                             :: ErrStat2 ! local errors
@@ -6677,97 +6724,89 @@ ENDIF
  t = tin - tin(1)
  t_out = tin_out - tin(1)
 
- if ( size(t) .ne. size(u)) then
-    ErrStat = ErrID_Fatal
-    ErrMsg = ' Error in HydroDyn_Input_ExtrapInterp: size(t) must equal size(u) '
-    RETURN
- endif
- if (size(u) .gt. 3) then
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in HydroDyn_Input_ExtrapInterp: size(u) must be less than 4 '
-    RETURN
- endif
- order = SIZE(u) - 1
- IF ( order .eq. 0 ) THEN
-      CALL WAMIT_Input_ExtrapInterp( u%WAMIT, tin, u_out%WAMIT, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL WAMIT2_Input_ExtrapInterp( u%WAMIT2, tin, u_out%WAMIT2, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL Waves2_Input_ExtrapInterp( u%Waves2, tin, u_out%Waves2, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL Morison_Input_ExtrapInterp( u%Morison, tin, u_out%Morison, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-  CALL MeshCopy(u(1)%Mesh, u_out%Mesh, MESH_UPDATECOPY, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
- ELSE IF ( order .eq. 1 ) THEN
-  IF ( EqualRealNos( t(1), t(2) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in HydroDyn_Input_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-      CALL WAMIT_Input_ExtrapInterp( u%WAMIT, tin, u_out%WAMIT, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL WAMIT2_Input_ExtrapInterp( u%WAMIT2, tin, u_out%WAMIT2, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL Waves2_Input_ExtrapInterp( u%Waves2, tin, u_out%Waves2, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL Morison_Input_ExtrapInterp( u%Morison, tin, u_out%Morison, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-  CALL MeshExtrapInterp1(u(1)%Mesh, u(2)%Mesh, tin, u_out%Mesh, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
- ELSE IF ( order .eq. 2 ) THEN
-  IF ( EqualRealNos( t(1), t(2) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in HydroDyn_Input_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  IF ( EqualRealNos( t(2), t(3) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in HydroDyn_Input_ExtrapInterp: t(2) must not equal t(3) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  IF ( EqualRealNos( t(1), t(3) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in HydroDyn_Input_ExtrapInterp: t(1) must not equal t(3) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-      CALL WAMIT_Input_ExtrapInterp( u%WAMIT, tin, u_out%WAMIT, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL WAMIT2_Input_ExtrapInterp( u%WAMIT2, tin, u_out%WAMIT2, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL Waves2_Input_ExtrapInterp( u%Waves2, tin, u_out%Waves2, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL Morison_Input_ExtrapInterp( u%Morison, tin, u_out%Morison, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-  CALL MeshExtrapInterp2(u(1)%Mesh, u(2)%Mesh, u(3)%Mesh, tin, u_out%Mesh, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
- ELSE 
-   ErrStat = ErrID_Fatal
-   ErrMsg = ' order must be less than 3 in HydroDyn_Input_ExtrapInterp '
-   RETURN
- ENDIF 
- END SUBROUTINE HydroDyn_Input_ExtrapInterp
+   IF ( EqualRealNos( t(1), t(2) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(2) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   END IF
+      CALL WAMIT_Input_ExtrapInterp1( u1%WAMIT, u2%WAMIT, tin, u_out%WAMIT, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL WAMIT2_Input_ExtrapInterp1( u1%WAMIT2, u2%WAMIT2, tin, u_out%WAMIT2, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL Waves2_Input_ExtrapInterp1( u1%Waves2, u2%Waves2, tin, u_out%Waves2, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL Morison_Input_ExtrapInterp1( u1%Morison, u2%Morison, tin, u_out%Morison, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL MeshExtrapInterp1(u1%Mesh, u2%Mesh, tin, u_out%Mesh, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+ END SUBROUTINE HydroDyn_Input_ExtrapInterp1
 
 
- SUBROUTINE HydroDyn_Output_ExtrapInterp(u, tin, u_out, tin_out, ErrStat, ErrMsg )
+ SUBROUTINE HydroDyn_Input_ExtrapInterp2(u1, u2, u3, tin, u_out, tin_out, ErrStat, ErrMsg )
 !
-! This subroutine calculates a extrapolated (or interpolated) input u_out at time t_out, from previous/future time
-! values of u (which has values associated with times in t).  Order of the interpolation is given by the size of u
+! This subroutine calculates a extrapolated (or interpolated) Input u_out at time t_out, from previous/future time
+! values of u (which has values associated with times in t).  Order of the interpolation is 2.
+!
+!  expressions below based on either
+!
+!  f(t) = a + b * t + c * t**2
+!
+!  where a, b and c are determined as the solution to
+!  f(t1) = u1, f(t2) = u2, f(t3) = u3
+!
+!..................................................................................................................................
+
+ TYPE(HydroDyn_InputType), INTENT(INOUT)  :: u1      ! Input at t1 > t2 > t3
+ TYPE(HydroDyn_InputType), INTENT(INOUT)  :: u2      ! Input at t2 > t3
+ TYPE(HydroDyn_InputType), INTENT(INOUT)  :: u3      ! Input at t3
+ REAL(DbKi),                 INTENT(IN   )  :: tin(3)    ! Times associated with the Inputs
+ TYPE(HydroDyn_InputType), INTENT(INOUT)  :: u_out     ! Input at tin_out
+ REAL(DbKi),                 INTENT(IN   )  :: tin_out   ! time to be extrap/interp'd to
+ INTEGER(IntKi),             INTENT(  OUT)  :: ErrStat   ! Error status of the operation
+ CHARACTER(*),               INTENT(  OUT)  :: ErrMsg    ! Error message if ErrStat /= ErrID_None
+   ! local variables
+ REAL(DbKi)                                 :: t(3)      ! Times associated with the Inputs
+ REAL(DbKi)                                 :: t_out     ! Time to which to be extrap/interpd
+ INTEGER(IntKi)                             :: order     ! order of polynomial fit (max 2)
+ REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
+ REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
+ INTEGER(IntKi)                             :: ErrStat2 ! local errors
+ CHARACTER(1024)                            :: ErrMsg2  ! local errors
+ CHARACTER(*),            PARAMETER         :: RoutineName = 'HydroDyn_Input_ExtrapInterp2'
+    ! Initialize ErrStat
+ ErrStat = ErrID_None
+ ErrMsg  = ""
+    ! we'll subtract a constant from the times to resolve some 
+    ! numerical issues when t gets large (and to simplify the equations)
+ t = tin - tin(1)
+ t_out = tin_out - tin(1)
+
+   IF ( EqualRealNos( t(1), t(2) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(2) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   ELSE IF ( EqualRealNos( t(2), t(3) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(2) must not equal t(3) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   ELSE IF ( EqualRealNos( t(1), t(3) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(3) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   END IF
+      CALL WAMIT_Input_ExtrapInterp2( u1%WAMIT, u2%WAMIT, u3%WAMIT, tin, u_out%WAMIT, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL WAMIT2_Input_ExtrapInterp2( u1%WAMIT2, u2%WAMIT2, u3%WAMIT2, tin, u_out%WAMIT2, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL Waves2_Input_ExtrapInterp2( u1%Waves2, u2%Waves2, u3%Waves2, tin, u_out%Waves2, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL Morison_Input_ExtrapInterp2( u1%Morison, u2%Morison, u3%Morison, tin, u_out%Morison, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL MeshExtrapInterp2(u1%Mesh, u2%Mesh, u3%Mesh, tin, u_out%Mesh, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+ END SUBROUTINE HydroDyn_Input_ExtrapInterp2
+
+
+ SUBROUTINE HydroDyn_Output_ExtrapInterp(y, t, y_out, t_out, ErrStat, ErrMsg )
+!
+! This subroutine calculates a extrapolated (or interpolated) Output y_out at time t_out, from previous/future time
+! values of y (which has values associated with times in t).  Order of the interpolation is given by the size of y
 !
 !  expressions below based on either
 !
@@ -6776,21 +6815,68 @@ ENDIF
 !  f(t) = a + b * t + c * t**2
 !
 !  where a, b and c are determined as the solution to
-!  f(t1) = u1, f(t2) = u2, f(t3) = u3  (as appropriate)
+!  f(t1) = y1, f(t2) = y2, f(t3) = y3  (as appropriate)
 !
 !..................................................................................................................................
 
- TYPE(HydroDyn_outputtype), INTENT(INOUT)  :: u(:)      ! Output at t1 > t2 > t3
- REAL(DbKi),         INTENT(IN   )  :: tin(:)      ! Times associated with the Outputs
- TYPE(HydroDyn_outputtype), INTENT(INOUT)  :: u_out     ! Output at tin_out
- REAL(DbKi),         INTENT(IN   )  :: tin_out     ! time to be extrap/interp'd to
- INTEGER(IntKi),     INTENT(  OUT)  :: ErrStat   ! Error status of the operation
- CHARACTER(*),       INTENT(  OUT)  :: ErrMsg    ! Error message if ErrStat /= ErrID_None
+ TYPE(HydroDyn_OutputType), INTENT(INOUT)  :: y(:) ! Output at t1 > t2 > t3
+ REAL(DbKi),                 INTENT(IN   )  :: t(:)           ! Times associated with the Outputs
+ TYPE(HydroDyn_OutputType), INTENT(INOUT)  :: y_out ! Output at tin_out
+ REAL(DbKi),                 INTENT(IN   )  :: t_out           ! time to be extrap/interp'd to
+ INTEGER(IntKi),             INTENT(  OUT)  :: ErrStat         ! Error status of the operation
+ CHARACTER(*),               INTENT(  OUT)  :: ErrMsg          ! Error message if ErrStat /= ErrID_None
    ! local variables
- REAL(DbKi) :: t(SIZE(tin))    ! Times associated with the Outputs
- REAL(DbKi) :: t_out           ! Time to which to be extrap/interpd
- INTEGER(IntKi)                 :: order    ! order of polynomial fit (max 2)
- CHARACTER(*),    PARAMETER :: RoutineName = 'HydroDyn_Output_ExtrapInterp'
+ INTEGER(IntKi)                             :: order           ! order of polynomial fit (max 2)
+ INTEGER(IntKi)                             :: ErrStat2        ! local errors
+ CHARACTER(1024)                            :: ErrMsg2         ! local errors
+ CHARACTER(*),    PARAMETER                 :: RoutineName = 'HydroDyn_Output_ExtrapInterp'
+    ! Initialize ErrStat
+ ErrStat = ErrID_None
+ ErrMsg  = ""
+ if ( size(t) .ne. size(y)) then
+    CALL SetErrStat(ErrID_Fatal,'size(t) must equal size(y)',ErrStat,ErrMsg,RoutineName)
+    RETURN
+ endif
+ order = SIZE(y) - 1
+ IF ( order .eq. 0 ) THEN
+   CALL HydroDyn_CopyOutput(y(1), y_out, MESH_UPDATECOPY, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+ ELSE IF ( order .eq. 1 ) THEN
+   CALL HydroDyn_Output_ExtrapInterp1(y(1), y(2), t, y_out, t_out, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+ ELSE IF ( order .eq. 2 ) THEN
+   CALL HydroDyn_Output_ExtrapInterp2(y(1), y(2), y(3), t, y_out, t_out, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+ ELSE 
+   CALL SetErrStat(ErrID_Fatal,'size(y) must be less than 4 (order must be less than 3).',ErrStat,ErrMsg,RoutineName)
+   RETURN
+ ENDIF 
+ END SUBROUTINE HydroDyn_Output_ExtrapInterp
+
+
+ SUBROUTINE HydroDyn_Output_ExtrapInterp1(y1, y2, tin, y_out, tin_out, ErrStat, ErrMsg )
+!
+! This subroutine calculates a extrapolated (or interpolated) Output y_out at time t_out, from previous/future time
+! values of y (which has values associated with times in t).  Order of the interpolation is 1.
+!
+!  f(t) = a + b * t, or
+!
+!  where a and b are determined as the solution to
+!  f(t1) = y1, f(t2) = y2
+!
+!..................................................................................................................................
+
+ TYPE(HydroDyn_OutputType), INTENT(INOUT)  :: y1    ! Output at t1 > t2
+ TYPE(HydroDyn_OutputType), INTENT(INOUT)  :: y2    ! Output at t2 
+ REAL(DbKi),         INTENT(IN   )          :: tin(2)   ! Times associated with the Outputs
+ TYPE(HydroDyn_OutputType), INTENT(INOUT)  :: y_out ! Output at tin_out
+ REAL(DbKi),         INTENT(IN   )          :: tin_out  ! time to be extrap/interp'd to
+ INTEGER(IntKi),     INTENT(  OUT)          :: ErrStat  ! Error status of the operation
+ CHARACTER(*),       INTENT(  OUT)          :: ErrMsg   ! Error message if ErrStat /= ErrID_None
+   ! local variables
+ REAL(DbKi)                                 :: t(2)     ! Times associated with the Outputs
+ REAL(DbKi)                                 :: t_out    ! Time to which to be extrap/interpd
+ CHARACTER(*),                    PARAMETER :: RoutineName = 'HydroDyn_Output_ExtrapInterp1'
  REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
  REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
  REAL(DbKi),ALLOCATABLE,DIMENSION(:)        :: b1       ! temporary for extrapolation/interpolation
@@ -6805,120 +6891,106 @@ ENDIF
  t = tin - tin(1)
  t_out = tin_out - tin(1)
 
- if ( size(t) .ne. size(u)) then
-    ErrStat = ErrID_Fatal
-    ErrMsg = ' Error in HydroDyn_Output_ExtrapInterp: size(t) must equal size(u) '
-    RETURN
- endif
- if (size(u) .gt. 3) then
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in HydroDyn_Output_ExtrapInterp: size(u) must be less than 4 '
-    RETURN
- endif
- order = SIZE(u) - 1
- IF ( order .eq. 0 ) THEN
-      CALL WAMIT_Output_ExtrapInterp( u%WAMIT, tin, u_out%WAMIT, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL WAMIT2_Output_ExtrapInterp( u%WAMIT2, tin, u_out%WAMIT2, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL Waves2_Output_ExtrapInterp( u%Waves2, tin, u_out%Waves2, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL Morison_Output_ExtrapInterp( u%Morison, tin, u_out%Morison, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-  CALL MeshCopy(u(1)%Mesh, u_out%Mesh, MESH_UPDATECOPY, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-  CALL MeshCopy(u(1)%AllHdroOrigin, u_out%AllHdroOrigin, MESH_UPDATECOPY, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-IF (ALLOCATED(u_out%WriteOutput) .AND. ALLOCATED(u(1)%WriteOutput)) THEN
-  u_out%WriteOutput = u(1)%WriteOutput
-END IF ! check if allocated
- ELSE IF ( order .eq. 1 ) THEN
-  IF ( EqualRealNos( t(1), t(2) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in HydroDyn_Output_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-      CALL WAMIT_Output_ExtrapInterp( u%WAMIT, tin, u_out%WAMIT, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL WAMIT2_Output_ExtrapInterp( u%WAMIT2, tin, u_out%WAMIT2, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL Waves2_Output_ExtrapInterp( u%Waves2, tin, u_out%Waves2, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL Morison_Output_ExtrapInterp( u%Morison, tin, u_out%Morison, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-  CALL MeshExtrapInterp1(u(1)%Mesh, u(2)%Mesh, tin, u_out%Mesh, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-  CALL MeshExtrapInterp1(u(1)%AllHdroOrigin, u(2)%AllHdroOrigin, tin, u_out%AllHdroOrigin, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-IF (ALLOCATED(u_out%WriteOutput) .AND. ALLOCATED(u(1)%WriteOutput)) THEN
-  ALLOCATE(b1(SIZE(u_out%WriteOutput,1)))
-  ALLOCATE(c1(SIZE(u_out%WriteOutput,1)))
-  b1 = -(u(1)%WriteOutput - u(2)%WriteOutput)/t(2)
-  u_out%WriteOutput = u(1)%WriteOutput + b1 * t_out
+   IF ( EqualRealNos( t(1), t(2) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(2) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   END IF
+      CALL WAMIT_Output_ExtrapInterp1( y1%WAMIT, y2%WAMIT, tin, y_out%WAMIT, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL WAMIT2_Output_ExtrapInterp1( y1%WAMIT2, y2%WAMIT2, tin, y_out%WAMIT2, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL Waves2_Output_ExtrapInterp1( y1%Waves2, y2%Waves2, tin, y_out%Waves2, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL Morison_Output_ExtrapInterp1( y1%Morison, y2%Morison, tin, y_out%Morison, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL MeshExtrapInterp1(y1%Mesh, y2%Mesh, tin, y_out%Mesh, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL MeshExtrapInterp1(y1%AllHdroOrigin, y2%AllHdroOrigin, tin, y_out%AllHdroOrigin, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+IF (ALLOCATED(y_out%WriteOutput) .AND. ALLOCATED(y1%WriteOutput)) THEN
+  ALLOCATE(b1(SIZE(y_out%WriteOutput,1)))
+  ALLOCATE(c1(SIZE(y_out%WriteOutput,1)))
+  b1 = -(y1%WriteOutput - y2%WriteOutput)/t(2)
+  y_out%WriteOutput = y1%WriteOutput + b1 * t_out
   DEALLOCATE(b1)
   DEALLOCATE(c1)
 END IF ! check if allocated
- ELSE IF ( order .eq. 2 ) THEN
-  IF ( EqualRealNos( t(1), t(2) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in HydroDyn_Output_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  IF ( EqualRealNos( t(2), t(3) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in HydroDyn_Output_ExtrapInterp: t(2) must not equal t(3) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  IF ( EqualRealNos( t(1), t(3) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in HydroDyn_Output_ExtrapInterp: t(1) must not equal t(3) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-      CALL WAMIT_Output_ExtrapInterp( u%WAMIT, tin, u_out%WAMIT, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL WAMIT2_Output_ExtrapInterp( u%WAMIT2, tin, u_out%WAMIT2, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL Waves2_Output_ExtrapInterp( u%Waves2, tin, u_out%Waves2, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-      CALL Morison_Output_ExtrapInterp( u%Morison, tin, u_out%Morison, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-  CALL MeshExtrapInterp2(u(1)%Mesh, u(2)%Mesh, u(3)%Mesh, tin, u_out%Mesh, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-  CALL MeshExtrapInterp2(u(1)%AllHdroOrigin, u(2)%AllHdroOrigin, u(3)%AllHdroOrigin, tin, u_out%AllHdroOrigin, tin_out, ErrStat2, ErrMsg2 )
-         CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
-         IF (ErrStat>=AbortErrLev) RETURN
-IF (ALLOCATED(u_out%WriteOutput) .AND. ALLOCATED(u(1)%WriteOutput)) THEN
-  ALLOCATE(b1(SIZE(u_out%WriteOutput,1)))
-  ALLOCATE(c1(SIZE(u_out%WriteOutput,1)))
-  b1 = (t(3)**2*(u(1)%WriteOutput - u(2)%WriteOutput) + t(2)**2*(-u(1)%WriteOutput + u(3)%WriteOutput))/(t(2)*t(3)*(t(2) - t(3)))
-  c1 = ( (t(2)-t(3))*u(1)%WriteOutput + t(3)*u(2)%WriteOutput - t(2)*u(3)%WriteOutput ) / (t(2)*t(3)*(t(2) - t(3)))
-  u_out%WriteOutput = u(1)%WriteOutput + b1 * t_out + c1 * t_out**2
+ END SUBROUTINE HydroDyn_Output_ExtrapInterp1
+
+
+ SUBROUTINE HydroDyn_Output_ExtrapInterp2(y1, y2, y3, tin, y_out, tin_out, ErrStat, ErrMsg )
+!
+! This subroutine calculates a extrapolated (or interpolated) Output y_out at time t_out, from previous/future time
+! values of y (which has values associated with times in t).  Order of the interpolation is 2.
+!
+!  expressions below based on either
+!
+!  f(t) = a + b * t + c * t**2
+!
+!  where a, b and c are determined as the solution to
+!  f(t1) = y1, f(t2) = y2, f(t3) = y3
+!
+!..................................................................................................................................
+
+ TYPE(HydroDyn_OutputType), INTENT(INOUT)  :: y1      ! Output at t1 > t2 > t3
+ TYPE(HydroDyn_OutputType), INTENT(INOUT)  :: y2      ! Output at t2 > t3
+ TYPE(HydroDyn_OutputType), INTENT(INOUT)  :: y3      ! Output at t3
+ REAL(DbKi),                 INTENT(IN   )  :: tin(3)    ! Times associated with the Outputs
+ TYPE(HydroDyn_OutputType), INTENT(INOUT)  :: y_out     ! Output at tin_out
+ REAL(DbKi),                 INTENT(IN   )  :: tin_out   ! time to be extrap/interp'd to
+ INTEGER(IntKi),             INTENT(  OUT)  :: ErrStat   ! Error status of the operation
+ CHARACTER(*),               INTENT(  OUT)  :: ErrMsg    ! Error message if ErrStat /= ErrID_None
+   ! local variables
+ REAL(DbKi)                                 :: t(3)      ! Times associated with the Outputs
+ REAL(DbKi)                                 :: t_out     ! Time to which to be extrap/interpd
+ INTEGER(IntKi)                             :: order     ! order of polynomial fit (max 2)
+ REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
+ REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
+ REAL(DbKi),ALLOCATABLE,DIMENSION(:)        :: b1       ! temporary for extrapolation/interpolation
+ REAL(DbKi),ALLOCATABLE,DIMENSION(:)        :: c1       ! temporary for extrapolation/interpolation
+ INTEGER(IntKi)                             :: ErrStat2 ! local errors
+ CHARACTER(1024)                            :: ErrMsg2  ! local errors
+ CHARACTER(*),            PARAMETER         :: RoutineName = 'HydroDyn_Output_ExtrapInterp2'
+    ! Initialize ErrStat
+ ErrStat = ErrID_None
+ ErrMsg  = ""
+    ! we'll subtract a constant from the times to resolve some 
+    ! numerical issues when t gets large (and to simplify the equations)
+ t = tin - tin(1)
+ t_out = tin_out - tin(1)
+
+   IF ( EqualRealNos( t(1), t(2) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(2) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   ELSE IF ( EqualRealNos( t(2), t(3) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(2) must not equal t(3) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   ELSE IF ( EqualRealNos( t(1), t(3) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(3) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   END IF
+      CALL WAMIT_Output_ExtrapInterp2( y1%WAMIT, y2%WAMIT, y3%WAMIT, tin, y_out%WAMIT, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL WAMIT2_Output_ExtrapInterp2( y1%WAMIT2, y2%WAMIT2, y3%WAMIT2, tin, y_out%WAMIT2, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL Waves2_Output_ExtrapInterp2( y1%Waves2, y2%Waves2, y3%Waves2, tin, y_out%Waves2, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL Morison_Output_ExtrapInterp2( y1%Morison, y2%Morison, y3%Morison, tin, y_out%Morison, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL MeshExtrapInterp2(y1%Mesh, y2%Mesh, y3%Mesh, tin, y_out%Mesh, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+      CALL MeshExtrapInterp2(y1%AllHdroOrigin, y2%AllHdroOrigin, y3%AllHdroOrigin, tin, y_out%AllHdroOrigin, tin_out, ErrStat2, ErrMsg2 )
+        CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
+IF (ALLOCATED(y_out%WriteOutput) .AND. ALLOCATED(y1%WriteOutput)) THEN
+  ALLOCATE(b1(SIZE(y_out%WriteOutput,1)))
+  ALLOCATE(c1(SIZE(y_out%WriteOutput,1)))
+  b1 = (t(3)**2*(y1%WriteOutput - y2%WriteOutput) + t(2)**2*(-y1%WriteOutput + y3%WriteOutput))/(t(2)*t(3)*(t(2) - t(3)))
+  c1 = ( (t(2)-t(3))*y1%WriteOutput + t(3)*y2%WriteOutput - t(2)*y3%WriteOutput ) / (t(2)*t(3)*(t(2) - t(3)))
+  y_out%WriteOutput = y1%WriteOutput + b1 * t_out + c1 * t_out**2
   DEALLOCATE(b1)
   DEALLOCATE(c1)
 END IF ! check if allocated
- ELSE 
-   ErrStat = ErrID_Fatal
-   ErrMsg = ' order must be less than 3 in HydroDyn_Output_ExtrapInterp '
-   RETURN
- ENDIF 
- END SUBROUTINE HydroDyn_Output_ExtrapInterp
+ END SUBROUTINE HydroDyn_Output_ExtrapInterp2
 
 END MODULE HydroDyn_Types
 !ENDOFREGISTRYGENERATEDFILE

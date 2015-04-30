@@ -3,7 +3,7 @@
 ! WARNING This file is generated automatically by the FAST registry
 ! Do not edit.  Your changes to this file will be lost.
 !
-! FAST Registry (v2.06.00, 14-Apr-2015)
+! FAST Registry (v2.07.00, 28-Apr-2015)
 !*********************************************************************************************************************************
 ! Current_Types
 !.................................................................................................................................
@@ -145,7 +145,7 @@ ENDIF
   ErrStat = ErrID_None
   ErrMsg  = ""
 IF (ALLOCATED(InitInputData%MorisonNodezi)) THEN
-   DEALLOCATE(InitInputData%MorisonNodezi)
+  DEALLOCATE(InitInputData%MorisonNodezi)
 ENDIF
  END SUBROUTINE Current_DestroyInitInput
 
@@ -164,7 +164,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -228,27 +228,27 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrSSV0
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrSSV0
       Re_Xferred   = Re_Xferred   + 1
         DO I = 1, LEN(InData%CurrSSDirChr)
           IntKiBuf(Int_Xferred) = ICHAR(InData%CurrSSDirChr(I:I), IntKi)
           Int_Xferred = Int_Xferred   + 1
         END DO ! I
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrSSDir
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrSSDir
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrNSRef
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrNSRef
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrNSV0
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrNSV0
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrNSDir
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrNSDir
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrDIV
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrDIV
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrDIDir
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%CurrDIDir
       Re_Xferred   = Re_Xferred   + 1
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%CurrMod
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%CurrMod
       Int_Xferred   = Int_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WtrDpth
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%WtrDpth
       Re_Xferred   = Re_Xferred   + 1
   IF ( .NOT. ALLOCATED(InData%MorisonNodezi) ) THEN
     IntKiBuf( Int_Xferred ) = 0
@@ -263,7 +263,7 @@ ENDIF
       IF (SIZE(InData%MorisonNodezi)>0) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%MorisonNodezi))-1 ) = PACK(InData%MorisonNodezi,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%MorisonNodezi)
   END IF
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NMorisonNodes
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%NMorisonNodes
       Int_Xferred   = Int_Xferred   + 1
         DO I = 1, LEN(InData%DirRoot)
           IntKiBuf(Int_Xferred) = ICHAR(InData%DirRoot(I:I), IntKi)
@@ -410,10 +410,10 @@ ENDIF
   ErrStat = ErrID_None
   ErrMsg  = ""
 IF (ALLOCATED(InitOutputData%CurrVxi)) THEN
-   DEALLOCATE(InitOutputData%CurrVxi)
+  DEALLOCATE(InitOutputData%CurrVxi)
 ENDIF
 IF (ALLOCATED(InitOutputData%CurrVyi)) THEN
-   DEALLOCATE(InitOutputData%CurrVyi)
+  DEALLOCATE(InitOutputData%CurrVyi)
 ENDIF
  END SUBROUTINE Current_DestroyInitOutput
 
@@ -432,7 +432,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -517,9 +517,9 @@ ENDIF
       IF (SIZE(InData%CurrVyi)>0) ReKiBuf ( Re_Xferred:Re_Xferred+(SIZE(InData%CurrVyi))-1 ) = PACK(InData%CurrVyi,.TRUE.)
       Re_Xferred   = Re_Xferred   + SIZE(InData%CurrVyi)
   END IF
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%PCurrVxiPz0
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%PCurrVxiPz0
       Re_Xferred   = Re_Xferred   + 1
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%PCurrVyiPz0
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%PCurrVyiPz0
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE Current_PackInitOutput
 
@@ -651,7 +651,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -699,7 +699,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyContState
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyContState
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE Current_PackContState
 
@@ -782,7 +782,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -830,7 +830,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyDiscState
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyDiscState
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE Current_PackDiscState
 
@@ -913,7 +913,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -961,7 +961,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyConstrState
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyConstrState
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE Current_PackConstrState
 
@@ -1044,7 +1044,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -1092,7 +1092,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%DummyOtherState
+      IntKiBuf ( Int_Xferred:Int_Xferred+(1)-1 ) = InData%DummyOtherState
       Int_Xferred   = Int_Xferred   + 1
  END SUBROUTINE Current_PackOtherState
 
@@ -1175,7 +1175,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -1223,7 +1223,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%DT
+      DbKiBuf ( Db_Xferred:Db_Xferred+(1)-1 ) = InData%DT
       Db_Xferred   = Db_Xferred   + 1
  END SUBROUTINE Current_PackParam
 
@@ -1306,7 +1306,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -1354,7 +1354,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyInput
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyInput
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE Current_PackInput
 
@@ -1437,7 +1437,7 @@ ENDIF
   INTEGER(IntKi)                 :: Db_Xferred
   INTEGER(IntKi)                 :: Int_BufSz
   INTEGER(IntKi)                 :: Int_Xferred
-  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5     
+  INTEGER(IntKi)                 :: i,i1,i2,i3,i4,i5
   LOGICAL                        :: OnlySize ! if present and true, do not pack, just allocate buffers
   INTEGER(IntKi)                 :: ErrStat2
   CHARACTER(1024)                :: ErrMsg2
@@ -1485,7 +1485,7 @@ ENDIF
   Db_Xferred  = 1
   Int_Xferred = 1
 
-       ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyOutput
+      ReKiBuf ( Re_Xferred:Re_Xferred+(1)-1 ) = InData%DummyOutput
       Re_Xferred   = Re_Xferred   + 1
  END SUBROUTINE Current_PackOutput
 
@@ -1526,9 +1526,9 @@ ENDIF
  END SUBROUTINE Current_UnPackOutput
 
 
- SUBROUTINE Current_Input_ExtrapInterp(u, tin, u_out, tin_out, ErrStat, ErrMsg )
+ SUBROUTINE Current_Input_ExtrapInterp(u, t, u_out, t_out, ErrStat, ErrMsg )
 !
-! This subroutine calculates a extrapolated (or interpolated) input u_out at time t_out, from previous/future time
+! This subroutine calculates a extrapolated (or interpolated) Input u_out at time t_out, from previous/future time
 ! values of u (which has values associated with times in t).  Order of the interpolation is given by the size of u
 !
 !  expressions below based on either
@@ -1542,104 +1542,64 @@ ENDIF
 !
 !..................................................................................................................................
 
- TYPE(Current_inputtype), INTENT(INOUT)  :: u(:)      ! Input at t1 > t2 > t3
- REAL(DbKi),         INTENT(IN   )  :: tin(:)      ! Times associated with the Inputs
- TYPE(Current_inputtype), INTENT(INOUT)  :: u_out     ! Input at tin_out
- REAL(DbKi),         INTENT(IN   )  :: tin_out     ! time to be extrap/interp'd to
- INTEGER(IntKi),     INTENT(  OUT)  :: ErrStat   ! Error status of the operation
- CHARACTER(*),       INTENT(  OUT)  :: ErrMsg    ! Error message if ErrStat /= ErrID_None
+ TYPE(Current_InputType), INTENT(INOUT)  :: u(:) ! Input at t1 > t2 > t3
+ REAL(DbKi),                 INTENT(IN   )  :: t(:)           ! Times associated with the Inputs
+ TYPE(Current_InputType), INTENT(INOUT)  :: u_out ! Input at tin_out
+ REAL(DbKi),                 INTENT(IN   )  :: t_out           ! time to be extrap/interp'd to
+ INTEGER(IntKi),             INTENT(  OUT)  :: ErrStat         ! Error status of the operation
+ CHARACTER(*),               INTENT(  OUT)  :: ErrMsg          ! Error message if ErrStat /= ErrID_None
    ! local variables
- REAL(DbKi) :: t(SIZE(tin))    ! Times associated with the Inputs
- REAL(DbKi) :: t_out           ! Time to which to be extrap/interpd
- INTEGER(IntKi)                 :: order    ! order of polynomial fit (max 2)
- CHARACTER(*),    PARAMETER :: RoutineName = 'Current_Input_ExtrapInterp'
- REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
- REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
- INTEGER(IntKi)                             :: ErrStat2 ! local errors
- CHARACTER(1024)                            :: ErrMsg2  ! local errors
+ INTEGER(IntKi)                             :: order           ! order of polynomial fit (max 2)
+ INTEGER(IntKi)                             :: ErrStat2        ! local errors
+ CHARACTER(1024)                            :: ErrMsg2         ! local errors
+ CHARACTER(*),    PARAMETER                 :: RoutineName = 'Current_Input_ExtrapInterp'
     ! Initialize ErrStat
  ErrStat = ErrID_None
  ErrMsg  = ""
-    ! we'll subtract a constant from the times to resolve some 
-    ! numerical issues when t gets large (and to simplify the equations)
- t = tin - tin(1)
- t_out = tin_out - tin(1)
-
  if ( size(t) .ne. size(u)) then
-    ErrStat = ErrID_Fatal
-    ErrMsg = ' Error in Current_Input_ExtrapInterp: size(t) must equal size(u) '
-    RETURN
- endif
- if (size(u) .gt. 3) then
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Current_Input_ExtrapInterp: size(u) must be less than 4 '
+    CALL SetErrStat(ErrID_Fatal,'size(t) must equal size(u)',ErrStat,ErrMsg,RoutineName)
     RETURN
  endif
  order = SIZE(u) - 1
  IF ( order .eq. 0 ) THEN
-  u_out%DummyInput = u(1)%DummyInput
+   CALL Current_CopyInput(u(1), u_out, MESH_UPDATECOPY, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
  ELSE IF ( order .eq. 1 ) THEN
-  IF ( EqualRealNos( t(1), t(2) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Current_Input_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  b0 = -(u(1)%DummyInput - u(2)%DummyInput)/t(2)
-  u_out%DummyInput = u(1)%DummyInput + b0 * t_out
+   CALL Current_Input_ExtrapInterp1(u(1), u(2), t, u_out, t_out, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
  ELSE IF ( order .eq. 2 ) THEN
-  IF ( EqualRealNos( t(1), t(2) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Current_Input_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  IF ( EqualRealNos( t(2), t(3) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Current_Input_ExtrapInterp: t(2) must not equal t(3) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  IF ( EqualRealNos( t(1), t(3) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Current_Input_ExtrapInterp: t(1) must not equal t(3) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  b0 = (t(3)**2*(u(1)%DummyInput - u(2)%DummyInput) + t(2)**2*(-u(1)%DummyInput + u(3)%DummyInput))/(t(2)*t(3)*(t(2) - t(3)))
-  c0 = ( (t(2)-t(3))*u(1)%DummyInput + t(3)*u(2)%DummyInput - t(2)*u(3)%DummyInput ) / (t(2)*t(3)*(t(2) - t(3)))
-  u_out%DummyInput = u(1)%DummyInput + b0 * t_out + c0 * t_out**2
+   CALL Current_Input_ExtrapInterp2(u(1), u(2), u(3), t, u_out, t_out, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
  ELSE 
-   ErrStat = ErrID_Fatal
-   ErrMsg = ' order must be less than 3 in Current_Input_ExtrapInterp '
+   CALL SetErrStat(ErrID_Fatal,'size(u) must be less than 4 (order must be less than 3).',ErrStat,ErrMsg,RoutineName)
    RETURN
  ENDIF 
  END SUBROUTINE Current_Input_ExtrapInterp
 
 
- SUBROUTINE Current_Output_ExtrapInterp(u, tin, u_out, tin_out, ErrStat, ErrMsg )
+ SUBROUTINE Current_Input_ExtrapInterp1(u1, u2, tin, u_out, tin_out, ErrStat, ErrMsg )
 !
-! This subroutine calculates a extrapolated (or interpolated) input u_out at time t_out, from previous/future time
-! values of u (which has values associated with times in t).  Order of the interpolation is given by the size of u
+! This subroutine calculates a extrapolated (or interpolated) Input u_out at time t_out, from previous/future time
+! values of u (which has values associated with times in t).  Order of the interpolation is 1.
 !
-!  expressions below based on either
-!
-!  f(t) = a
 !  f(t) = a + b * t, or
-!  f(t) = a + b * t + c * t**2
 !
-!  where a, b and c are determined as the solution to
-!  f(t1) = u1, f(t2) = u2, f(t3) = u3  (as appropriate)
+!  where a and b are determined as the solution to
+!  f(t1) = u1, f(t2) = u2
 !
 !..................................................................................................................................
 
- TYPE(Current_outputtype), INTENT(INOUT)  :: u(:)      ! Output at t1 > t2 > t3
- REAL(DbKi),         INTENT(IN   )  :: tin(:)      ! Times associated with the Outputs
- TYPE(Current_outputtype), INTENT(INOUT)  :: u_out     ! Output at tin_out
- REAL(DbKi),         INTENT(IN   )  :: tin_out     ! time to be extrap/interp'd to
- INTEGER(IntKi),     INTENT(  OUT)  :: ErrStat   ! Error status of the operation
- CHARACTER(*),       INTENT(  OUT)  :: ErrMsg    ! Error message if ErrStat /= ErrID_None
+ TYPE(Current_InputType), INTENT(INOUT)  :: u1    ! Input at t1 > t2
+ TYPE(Current_InputType), INTENT(INOUT)  :: u2    ! Input at t2 
+ REAL(DbKi),         INTENT(IN   )          :: tin(2)   ! Times associated with the Inputs
+ TYPE(Current_InputType), INTENT(INOUT)  :: u_out ! Input at tin_out
+ REAL(DbKi),         INTENT(IN   )          :: tin_out  ! time to be extrap/interp'd to
+ INTEGER(IntKi),     INTENT(  OUT)          :: ErrStat  ! Error status of the operation
+ CHARACTER(*),       INTENT(  OUT)          :: ErrMsg   ! Error message if ErrStat /= ErrID_None
    ! local variables
- REAL(DbKi) :: t(SIZE(tin))    ! Times associated with the Outputs
- REAL(DbKi) :: t_out           ! Time to which to be extrap/interpd
- INTEGER(IntKi)                 :: order    ! order of polynomial fit (max 2)
- CHARACTER(*),    PARAMETER :: RoutineName = 'Current_Output_ExtrapInterp'
+ REAL(DbKi)                                 :: t(2)     ! Times associated with the Inputs
+ REAL(DbKi)                                 :: t_out    ! Time to which to be extrap/interpd
+ CHARACTER(*),                    PARAMETER :: RoutineName = 'Current_Input_ExtrapInterp1'
  REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
  REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
  INTEGER(IntKi)                             :: ErrStat2 ! local errors
@@ -1652,52 +1612,218 @@ ENDIF
  t = tin - tin(1)
  t_out = tin_out - tin(1)
 
- if ( size(t) .ne. size(u)) then
-    ErrStat = ErrID_Fatal
-    ErrMsg = ' Error in Current_Output_ExtrapInterp: size(t) must equal size(u) '
+   IF ( EqualRealNos( t(1), t(2) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(2) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   END IF
+  b0 = -(u1%DummyInput - u2%DummyInput)/t(2)
+  u_out%DummyInput = u1%DummyInput + b0 * t_out
+ END SUBROUTINE Current_Input_ExtrapInterp1
+
+
+ SUBROUTINE Current_Input_ExtrapInterp2(u1, u2, u3, tin, u_out, tin_out, ErrStat, ErrMsg )
+!
+! This subroutine calculates a extrapolated (or interpolated) Input u_out at time t_out, from previous/future time
+! values of u (which has values associated with times in t).  Order of the interpolation is 2.
+!
+!  expressions below based on either
+!
+!  f(t) = a + b * t + c * t**2
+!
+!  where a, b and c are determined as the solution to
+!  f(t1) = u1, f(t2) = u2, f(t3) = u3
+!
+!..................................................................................................................................
+
+ TYPE(Current_InputType), INTENT(INOUT)  :: u1      ! Input at t1 > t2 > t3
+ TYPE(Current_InputType), INTENT(INOUT)  :: u2      ! Input at t2 > t3
+ TYPE(Current_InputType), INTENT(INOUT)  :: u3      ! Input at t3
+ REAL(DbKi),                 INTENT(IN   )  :: tin(3)    ! Times associated with the Inputs
+ TYPE(Current_InputType), INTENT(INOUT)  :: u_out     ! Input at tin_out
+ REAL(DbKi),                 INTENT(IN   )  :: tin_out   ! time to be extrap/interp'd to
+ INTEGER(IntKi),             INTENT(  OUT)  :: ErrStat   ! Error status of the operation
+ CHARACTER(*),               INTENT(  OUT)  :: ErrMsg    ! Error message if ErrStat /= ErrID_None
+   ! local variables
+ REAL(DbKi)                                 :: t(3)      ! Times associated with the Inputs
+ REAL(DbKi)                                 :: t_out     ! Time to which to be extrap/interpd
+ INTEGER(IntKi)                             :: order     ! order of polynomial fit (max 2)
+ REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
+ REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
+ INTEGER(IntKi)                             :: ErrStat2 ! local errors
+ CHARACTER(1024)                            :: ErrMsg2  ! local errors
+ CHARACTER(*),            PARAMETER         :: RoutineName = 'Current_Input_ExtrapInterp2'
+    ! Initialize ErrStat
+ ErrStat = ErrID_None
+ ErrMsg  = ""
+    ! we'll subtract a constant from the times to resolve some 
+    ! numerical issues when t gets large (and to simplify the equations)
+ t = tin - tin(1)
+ t_out = tin_out - tin(1)
+
+   IF ( EqualRealNos( t(1), t(2) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(2) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   ELSE IF ( EqualRealNos( t(2), t(3) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(2) must not equal t(3) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   ELSE IF ( EqualRealNos( t(1), t(3) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(3) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   END IF
+  b0 = (t(3)**2*(u1%DummyInput - u2%DummyInput) + t(2)**2*(-u1%DummyInput + u3%DummyInput))/(t(2)*t(3)*(t(2) - t(3)))
+  c0 = ( (t(2)-t(3))*u1%DummyInput + t(3)*u2%DummyInput - t(2)*u3%DummyInput ) / (t(2)*t(3)*(t(2) - t(3)))
+  u_out%DummyInput = u1%DummyInput + b0 * t_out + c0 * t_out**2
+ END SUBROUTINE Current_Input_ExtrapInterp2
+
+
+ SUBROUTINE Current_Output_ExtrapInterp(y, t, y_out, t_out, ErrStat, ErrMsg )
+!
+! This subroutine calculates a extrapolated (or interpolated) Output y_out at time t_out, from previous/future time
+! values of y (which has values associated with times in t).  Order of the interpolation is given by the size of y
+!
+!  expressions below based on either
+!
+!  f(t) = a
+!  f(t) = a + b * t, or
+!  f(t) = a + b * t + c * t**2
+!
+!  where a, b and c are determined as the solution to
+!  f(t1) = y1, f(t2) = y2, f(t3) = y3  (as appropriate)
+!
+!..................................................................................................................................
+
+ TYPE(Current_OutputType), INTENT(INOUT)  :: y(:) ! Output at t1 > t2 > t3
+ REAL(DbKi),                 INTENT(IN   )  :: t(:)           ! Times associated with the Outputs
+ TYPE(Current_OutputType), INTENT(INOUT)  :: y_out ! Output at tin_out
+ REAL(DbKi),                 INTENT(IN   )  :: t_out           ! time to be extrap/interp'd to
+ INTEGER(IntKi),             INTENT(  OUT)  :: ErrStat         ! Error status of the operation
+ CHARACTER(*),               INTENT(  OUT)  :: ErrMsg          ! Error message if ErrStat /= ErrID_None
+   ! local variables
+ INTEGER(IntKi)                             :: order           ! order of polynomial fit (max 2)
+ INTEGER(IntKi)                             :: ErrStat2        ! local errors
+ CHARACTER(1024)                            :: ErrMsg2         ! local errors
+ CHARACTER(*),    PARAMETER                 :: RoutineName = 'Current_Output_ExtrapInterp'
+    ! Initialize ErrStat
+ ErrStat = ErrID_None
+ ErrMsg  = ""
+ if ( size(t) .ne. size(y)) then
+    CALL SetErrStat(ErrID_Fatal,'size(t) must equal size(y)',ErrStat,ErrMsg,RoutineName)
     RETURN
  endif
- if (size(u) .gt. 3) then
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Current_Output_ExtrapInterp: size(u) must be less than 4 '
-    RETURN
- endif
- order = SIZE(u) - 1
+ order = SIZE(y) - 1
  IF ( order .eq. 0 ) THEN
-  u_out%DummyOutput = u(1)%DummyOutput
+   CALL Current_CopyOutput(y(1), y_out, MESH_UPDATECOPY, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
  ELSE IF ( order .eq. 1 ) THEN
-  IF ( EqualRealNos( t(1), t(2) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Current_Output_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  b0 = -(u(1)%DummyOutput - u(2)%DummyOutput)/t(2)
-  u_out%DummyOutput = u(1)%DummyOutput + b0 * t_out
+   CALL Current_Output_ExtrapInterp1(y(1), y(2), t, y_out, t_out, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
  ELSE IF ( order .eq. 2 ) THEN
-  IF ( EqualRealNos( t(1), t(2) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Current_Output_ExtrapInterp: t(1) must not equal t(2) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  IF ( EqualRealNos( t(2), t(3) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Current_Output_ExtrapInterp: t(2) must not equal t(3) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  IF ( EqualRealNos( t(1), t(3) ) ) THEN
-    ErrStat = ErrID_Fatal
-    ErrMsg  = ' Error in Current_Output_ExtrapInterp: t(1) must not equal t(3) to avoid a division-by-zero error.'
-    RETURN
-  END IF
-  b0 = (t(3)**2*(u(1)%DummyOutput - u(2)%DummyOutput) + t(2)**2*(-u(1)%DummyOutput + u(3)%DummyOutput))/(t(2)*t(3)*(t(2) - t(3)))
-  c0 = ( (t(2)-t(3))*u(1)%DummyOutput + t(3)*u(2)%DummyOutput - t(2)*u(3)%DummyOutput ) / (t(2)*t(3)*(t(2) - t(3)))
-  u_out%DummyOutput = u(1)%DummyOutput + b0 * t_out + c0 * t_out**2
+   CALL Current_Output_ExtrapInterp2(y(1), y(2), y(3), t, y_out, t_out, ErrStat2, ErrMsg2 )
+     CALL SetErrStat(ErrStat2, ErrMsg2, ErrStat, ErrMsg,RoutineName)
  ELSE 
-   ErrStat = ErrID_Fatal
-   ErrMsg = ' order must be less than 3 in Current_Output_ExtrapInterp '
+   CALL SetErrStat(ErrID_Fatal,'size(y) must be less than 4 (order must be less than 3).',ErrStat,ErrMsg,RoutineName)
    RETURN
  ENDIF 
  END SUBROUTINE Current_Output_ExtrapInterp
+
+
+ SUBROUTINE Current_Output_ExtrapInterp1(y1, y2, tin, y_out, tin_out, ErrStat, ErrMsg )
+!
+! This subroutine calculates a extrapolated (or interpolated) Output y_out at time t_out, from previous/future time
+! values of y (which has values associated with times in t).  Order of the interpolation is 1.
+!
+!  f(t) = a + b * t, or
+!
+!  where a and b are determined as the solution to
+!  f(t1) = y1, f(t2) = y2
+!
+!..................................................................................................................................
+
+ TYPE(Current_OutputType), INTENT(INOUT)  :: y1    ! Output at t1 > t2
+ TYPE(Current_OutputType), INTENT(INOUT)  :: y2    ! Output at t2 
+ REAL(DbKi),         INTENT(IN   )          :: tin(2)   ! Times associated with the Outputs
+ TYPE(Current_OutputType), INTENT(INOUT)  :: y_out ! Output at tin_out
+ REAL(DbKi),         INTENT(IN   )          :: tin_out  ! time to be extrap/interp'd to
+ INTEGER(IntKi),     INTENT(  OUT)          :: ErrStat  ! Error status of the operation
+ CHARACTER(*),       INTENT(  OUT)          :: ErrMsg   ! Error message if ErrStat /= ErrID_None
+   ! local variables
+ REAL(DbKi)                                 :: t(2)     ! Times associated with the Outputs
+ REAL(DbKi)                                 :: t_out    ! Time to which to be extrap/interpd
+ CHARACTER(*),                    PARAMETER :: RoutineName = 'Current_Output_ExtrapInterp1'
+ REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
+ REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
+ INTEGER(IntKi)                             :: ErrStat2 ! local errors
+ CHARACTER(1024)                            :: ErrMsg2  ! local errors
+    ! Initialize ErrStat
+ ErrStat = ErrID_None
+ ErrMsg  = ""
+    ! we'll subtract a constant from the times to resolve some 
+    ! numerical issues when t gets large (and to simplify the equations)
+ t = tin - tin(1)
+ t_out = tin_out - tin(1)
+
+   IF ( EqualRealNos( t(1), t(2) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(2) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   END IF
+  b0 = -(y1%DummyOutput - y2%DummyOutput)/t(2)
+  y_out%DummyOutput = y1%DummyOutput + b0 * t_out
+ END SUBROUTINE Current_Output_ExtrapInterp1
+
+
+ SUBROUTINE Current_Output_ExtrapInterp2(y1, y2, y3, tin, y_out, tin_out, ErrStat, ErrMsg )
+!
+! This subroutine calculates a extrapolated (or interpolated) Output y_out at time t_out, from previous/future time
+! values of y (which has values associated with times in t).  Order of the interpolation is 2.
+!
+!  expressions below based on either
+!
+!  f(t) = a + b * t + c * t**2
+!
+!  where a, b and c are determined as the solution to
+!  f(t1) = y1, f(t2) = y2, f(t3) = y3
+!
+!..................................................................................................................................
+
+ TYPE(Current_OutputType), INTENT(INOUT)  :: y1      ! Output at t1 > t2 > t3
+ TYPE(Current_OutputType), INTENT(INOUT)  :: y2      ! Output at t2 > t3
+ TYPE(Current_OutputType), INTENT(INOUT)  :: y3      ! Output at t3
+ REAL(DbKi),                 INTENT(IN   )  :: tin(3)    ! Times associated with the Outputs
+ TYPE(Current_OutputType), INTENT(INOUT)  :: y_out     ! Output at tin_out
+ REAL(DbKi),                 INTENT(IN   )  :: tin_out   ! time to be extrap/interp'd to
+ INTEGER(IntKi),             INTENT(  OUT)  :: ErrStat   ! Error status of the operation
+ CHARACTER(*),               INTENT(  OUT)  :: ErrMsg    ! Error message if ErrStat /= ErrID_None
+   ! local variables
+ REAL(DbKi)                                 :: t(3)      ! Times associated with the Outputs
+ REAL(DbKi)                                 :: t_out     ! Time to which to be extrap/interpd
+ INTEGER(IntKi)                             :: order     ! order of polynomial fit (max 2)
+ REAL(DbKi)                                 :: b0       ! temporary for extrapolation/interpolation
+ REAL(DbKi)                                 :: c0       ! temporary for extrapolation/interpolation
+ INTEGER(IntKi)                             :: ErrStat2 ! local errors
+ CHARACTER(1024)                            :: ErrMsg2  ! local errors
+ CHARACTER(*),            PARAMETER         :: RoutineName = 'Current_Output_ExtrapInterp2'
+    ! Initialize ErrStat
+ ErrStat = ErrID_None
+ ErrMsg  = ""
+    ! we'll subtract a constant from the times to resolve some 
+    ! numerical issues when t gets large (and to simplify the equations)
+ t = tin - tin(1)
+ t_out = tin_out - tin(1)
+
+   IF ( EqualRealNos( t(1), t(2) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(2) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   ELSE IF ( EqualRealNos( t(2), t(3) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(2) must not equal t(3) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   ELSE IF ( EqualRealNos( t(1), t(3) ) ) THEN
+     CALL SetErrStat(ErrID_Fatal, 't(1) must not equal t(3) to avoid a division-by-zero error.', ErrStat, ErrMsg,RoutineName)
+     RETURN
+   END IF
+  b0 = (t(3)**2*(y1%DummyOutput - y2%DummyOutput) + t(2)**2*(-y1%DummyOutput + y3%DummyOutput))/(t(2)*t(3)*(t(2) - t(3)))
+  c0 = ( (t(2)-t(3))*y1%DummyOutput + t(3)*y2%DummyOutput - t(2)*y3%DummyOutput ) / (t(2)*t(3)*(t(2) - t(3)))
+  y_out%DummyOutput = y1%DummyOutput + b0 * t_out + c0 * t_out**2
+ END SUBROUTINE Current_Output_ExtrapInterp2
 
 END MODULE Current_Types
 !ENDOFREGISTRYGENERATEDFILE
