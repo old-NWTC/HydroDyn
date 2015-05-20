@@ -1,60 +1,92 @@
 #================================================================================#
-# This makefile created by B. Jonkman on 2-Apr-2013,                             #
-# adapted from Crunch (M. Buhl on 25-Jan-2013).                                  #
-# (c) 2013 National Renewable Energy Laboratory                                  #
+# This makefile created by B. Jonkman on 20-May-2015,                            #
+# adapted from FAST v8.                                                          #
+# (c) 2015 National Renewable Energy Laboratory                                  #
 #                                                                                #
 # This makefile has been tested on Windows 7 with gfortran.                      #
 # This makefile works with mingw32-make.exe.                                     #
 #                                                                                #
-                                                                                #
-# Older versions of the source code may not work with this makefile.             #
 #================================================================================#
-
-   # 32-bit or 64-bit?
-BITS = 32
-#BITS = 64
-
-
-   # Location of source files for FAST, AeroDyn, InflowWind, and the NWTC Library.
-   # You will probably need to change these for your system.
-
-
-ifeq ($(OS),Windows_NT)
-   NWTC_Lib_DIR = C:/Users/bjonkman/Documents/DATA/DesignCodes/miscellaneous/nwtc_subs/SVNdirectory/trunk/source
-   HD_DIR       = C:/Users/bjonkman/Documents/DATA/DesignCodes/simulators/HydroDyn/SVNdirectory/branches/HydroDyn_Modularization/Source
-   HD_Reg_DIR   = C:/Users/bjonkman/Documents/DATA/DesignCodes/simulators/HydroDyn/SVNdirectory/branches/HydroDyn_Modularization/Source/RegistryFiles
-
-   Registry     = REGISTRY
-else
-   NWTC_Lib_DIR = $(HOME)/PC/CAEtools/miscellaneous/nwtc_subs/SVNdirectory/trunk/source
-   HD_DIR       = $(HOME)/PC/CAEtools/simulators/HydroDyn/SVNdirectory/branches/HydroDyn_Modularization/Source
-   HD_Reg_DIR   = $(HOME)/PC/CAEtools/simulators/HydroDyn/SVNdirectory/branches/HydroDyn_Modularization/Source/RegistryFiles
-
-   Registry     = registry.exe
-
-endif
 
 
    # Name of compiler to use and flags to use.
 FC      = gfortran
-FFLAGS  = -O2 -m$(BITS) -fbacktrace -finit-local-zero -fno-automatic -ffree-line-length-none -x f95-cpp-input
-LDFLAGS = -O2 -m$(BITS) -fbacktrace
 
-# other useful gfortran options:
-#  -fdefault-real-8 -fcheck=bounds -std=f2003 -O0 -v
+# 32-bit or 64-bit?
+BITS = 32
+#BITS = 64
 
 
-   # Precision.
+FFLAGS  = -O2 -m$(BITS) -fbacktrace -ffree-line-length-none -x f95-cpp-input
+LDFLAGS = -O2 -m$(BITS) -fbacktrace -Wl,--stack=999999999,--large-address-aware
 
-# Use "SingPrec" for single precision and "DoubPrec" for double precision. You may also need to change an option switch to make constants DP.
-PREC = SingPrec
+#FFLAGS  = -O0 -m$(BITS) -fbacktrace -ffree-line-length-none -x f95-cpp-input -g -pg
+#LDFLAGS = -O0 -m$(BITS) -fbacktrace -Wl,--stack=999999999,--large-address-aware -g -pg
+
+#.........................................
+# preprocessor definitions:
+#  -DDOUBLE_PRECISION
+#
+# some useful gfortran options:
+#  -DFPE_TRAP_ENABLED
+#  -Wl,--large-address-aware   # not necessary when $(BITS) is 64 (64-bit target)
+#  -Wl,--stack=999999999       # not necessary when $(BITS) is 64
+#  -Wconversion-extra -Wconversion
+#  -fdefault-real-8 -fcheck=bounds,do,mem,pointer -std=f2003 -O0 -v -Wall
+#  -pg                          # generate debugging info for debugger
+# http://gcc.gnu.org/onlinedocs/gfortran/Option-Index.html#Option-Index
+#
+# makefile options:
+#  --warn-undefined-variables
+#.........................................
+
+
+   # Location of source files for FAST, and its modules.
+
+MAIN_DIR     = ../Source
+BIN_DIR      = ../bin
+
+NWTC_Lib_DIR = $(MAIN_DIR)/dependencies/NWTC_Library
+NETLIB_DIR   = $(MAIN_DIR)/dependencies/NetLib
+ED_DIR       = $(MAIN_DIR)/dependencies/ElastoDyn
+HD_DIR       = $(MAIN_DIR)
+
+HD_DIR_Reg   = $(HD_DIR)
+
+   # Names and locations of the Registry, MAP libraries, and instructions for linking with LAPACK.
+   # You will probably need to change these for your system.
+
+ifeq ($(OS),Windows_NT)
+
+   Registry     = $(BIN_DIR)/Registry_win32.exe
+   LDFLAGS     := $(LDFLAGS) -llapack -lblas -LC:/LAPACK/win32
+   LAPACK_LINK :=
+
+else
+
+   Registry     = registry.exe
+
+   UNAME := $(shell uname -s)
+
+   ifeq ($(UNAME), Darwin)
+         # Mac needs some additional flags prepended for linking to get lapack working:
+      LDFLAGS     := -framework Accelerate $(LDFLAGS)
+      LAPACK_LINK :=
+   else
+        # ifeq ($(UNAME), Linux)
+        # (bjj verify this:)
+        # I've been told that the lapack linking needs to occur at the end of the line (after all the object files) on linux:
+      LAPACK_LINK  = -llapack -lblas
+   endif
+
+endif
 
 
 
    # Destination and RootName for executable
 
 OUTPUT_NAME = HydroDyn
-DEST_DIR    = .
+DEST_DIR    = $(BIN_DIR)
 
    #==========================================================#
    # You should not need to change anything beyond this point #
@@ -68,15 +100,17 @@ ifeq ($(OS),Windows_NT)
    EXE_EXT   = _gwin$(BITS).exe
    INTER_DIR = Obj_win$(BITS)
    MD_CMD    = @mkdir
+   CP_CMD    = copy
    OBJ_EXT   = .obj
    PATH_SEP  = \\
    SYS_FILE  = SysGnuWin
 else
-      # Linux
+      # Linux/Mac
    DEL_CMD   = rm -f
    EXE_EXT   = _glin$(BITS)
    INTER_DIR = Obj_lin$(BITS)
    MD_CMD    = @mkdir -p
+   CP_CMD    = cp
    OBJ_EXT   = .o
    PATH_SEP  = /
    SYS_FILE  = SysGnuLinux
@@ -85,22 +119,30 @@ endif
 
    # Source files (by module)
 
-LIB_SOURCES =           \
-	$(PREC).f90          \
-	NWTC_Base.f90        \
-	$(SYS_FILE).f90      \
-	NWTC_IO.f90          \
-	NWTC_Num.f90         \
-	ModMesh_Types.f90    \
-	ModMesh.f90          \
-	ModMesh_Mapping.f90  \
+LIB_SOURCES =              \
+	SingPrec.f90           \
+	NWTC_Base.f90          \
+	$(SYS_FILE).f90        \
 	NWTC_Library_Types.f90 \
+	NWTC_IO.f90            \
+	NWTC_Num.f90           \
+	ModMesh_Types.f90      \
+	ModMesh.f90            \
+	ModMesh_Mapping.f90    \
 	NWTC_Library.f90
 
+NETLIB_SOURCES=            \
+	NWTC_FFTPACK.f90        \
+	NWTC_LAPACK.f90         \
+	fftpack4.1.f
+
+
 HD_SOURCES =                 \
-	FFTMod.f90                \
 	SS_Radiation_Types.f90    \
 	SS_Radiation.f90          \
+	Waves2_Types.f90          \
+	Waves2_Output.f90         \
+	Waves2.f90                \
 	Waves_Types.f90           \
 	Waves.f90                 \
 	Current_Types.f90         \
@@ -110,10 +152,13 @@ HD_SOURCES =                 \
 	Morison.f90               \
 	Conv_Radiation_Types.f90  \
 	Conv_Radiation.f90        \
+	WAMIT2_Types.f90          \
+	WAMIT2_Output.f90         \
+	WAMIT2.f90                \
 	WAMIT_Types.f90           \
+	WAMIT_Interp.f90          \
 	WAMIT_Output.f90          \
 	WAMIT.f90                 \
-	WAMIT_Interp.f90			  \
 	HydroDyn_Output.f90       \
 	HydroDyn_Types.f90        \
 	HydroDyn_Input.f90        \
@@ -121,82 +166,110 @@ HD_SOURCES =                 \
 	HydroDyn_DriverCode.f90
 
 
-vpath %.f90 $(NWTC_Lib_DIR) $(HD_DIR) $(HD_Reg_DIR)
-vpath %.f   $(HD_DIR)
-vpath %.mod $(INTER_DIR)
-vpath %.obj $(INTER_DIR)
-vpath %.txt $(HD_Reg_DIR)
 
-LIB_OBJS      = $(LIB_SOURCES:.f90=.obj)
-HD_OBJS       = $(HD_SOURCES:.f90=.obj) fftpack.obj
-ALL_OBJS      = $(LIB_OBJS) $(HD_OBJS)
+vpath %.f90       $(NWTC_Lib_DIR) $(NETLIB_DIR) $(HD_DIR)
+vpath %.f         $(NETLIB_DIR)
+vpath %.mod       $(INTER_DIR)
+vpath %$(OBJ_EXT) $(INTER_DIR)
+vpath %.txt       $(HD_DIR_Reg)
+
+
+ALL_SOURCES = $(LIB_SOURCES) $(NETLIB_SOURCES) $(HD_SOURCES)
+ALL_OBJS    = $(ALL_SOURCES:.f90=$(OBJ_EXT))
+ALL_OBJS   := $(ALL_OBJS:.f=$(OBJ_EXT))
+
 
    # Rule to do everything.
 
 all:     default
+# use this for "all" for debugging: print variables:
+#all:     ; $(info $$IceF_SOURCES is [${IceF_SOURCES}]) echo debugging
+#
 default:  $(INTER_DIR) $(DEST_DIR)/$(OUTPUT_NAME)$(EXE_EXT)
 
 
    # General rules for compliling the files.
 
-%.obj: %.f90
-	$(FC)  -I $(INTER_DIR) $(FFLAGS) -c $< -o $(INTER_DIR)/$@ -J $(INTER_DIR) -B $(INTER_DIR)
+%$(OBJ_EXT): %.f90
+	$(FC) -I $(INTER_DIR) $(FFLAGS) -c $< -o $(INTER_DIR)/$@ -J $(INTER_DIR) -B $(INTER_DIR)
 
-fftpack.obj: fftpack.f
-	$(F77) -I $(INTER_DIR) $(FFLAGS) -c $< -o $(INTER_DIR)/$@ -J $(INTER_DIR) -B $(INTER_DIR)
+%$(OBJ_EXT): %.F90
+	$(FC) -I $(INTER_DIR) $(FFLAGS) -c $< -o $(INTER_DIR)/$@ -J $(INTER_DIR) -B $(INTER_DIR)
+
+%$(OBJ_EXT): %.f
+	$(FC) -I $(INTER_DIR) $(FFLAGS) -c $< -o $(INTER_DIR)/$@ -J $(INTER_DIR) -B $(INTER_DIR)
 
 
+
+   # General rules for creating _Types.f90 files from Registry files.
+
+   # HydroDyn Registry files:
+$(HD_DIR)/%_Types.f90: %.txt
+	$(Registry) $< -I $(NWTC_Lib_DIR) -I $(HD_DIR_Reg)  -O $(HD_DIR)
 
 
    #  Dependency rules.
 #NWTC Library dependency rules:
-NWTC_Base.obj:           $(PREC).obj
-$(SYS_FILE).obj:         NWTC_Base.obj
-NWTC_Library_Types.obj:  $(SYS_FILE).obj
-NWTC_IO.obj:             NWTC_Library_Types.obj
-NWTC_Num.obj:            NWTC_IO.obj
-ModMesh_Types.obj:       NWTC_Num.obj
-ModMesh.obj:             ModMesh_Types.obj
-ModMesh_Mapping.obj:     ModMesh.obj
-NWTC_Library.obj:        ModMesh.obj  ModMesh_Mapping.obj
+NWTC_Base$(OBJ_EXT):              SingPrec$(OBJ_EXT)
+$(SYS_FILE)$(OBJ_EXT):            NWTC_Base$(OBJ_EXT)
+NWTC_Library_Types$(OBJ_EXT):     $(SYS_FILE)$(OBJ_EXT)
+NWTC_IO$(OBJ_EXT):                NWTC_Library_Types$(OBJ_EXT)
+NWTC_Num$(OBJ_EXT):               NWTC_IO$(OBJ_EXT)
+ModMesh_Types$(OBJ_EXT):          NWTC_Num$(OBJ_EXT)
+ModMesh$(OBJ_EXT):                ModMesh_Types$(OBJ_EXT)
+ModMesh_Mapping$(OBJ_EXT):        ModMesh$(OBJ_EXT) NWTC_LAPACK$(OBJ_EXT)
+NWTC_Library$(OBJ_EXT):           ModMesh$(OBJ_EXT)  ModMesh_Mapping$(OBJ_EXT)
+
+NWTC_LAPACK$(OBJ_EXT):            NWTC_Base$(OBJ_EXT)
+NWTC_FFTPACK$(OBJ_EXT):           NWTC_Library$(OBJ_EXT) fftpack4.1$(OBJ_EXT)
+fftpack4.1$(OBJ_EXT):             SingPrec$(OBJ_EXT)
 
 
 #HydroDyn dependency rules:
-fftpack.obj:                NWTC_Library.obj
-FFTMod.obj:                 NWTC_Library.obj  fftpack.obj
+SS_Radiation_Types$(OBJ_EXT):     NWTC_Library$(OBJ_EXT)
+SS_Radiation$(OBJ_EXT):           SS_Radiation_Types$(OBJ_EXT)
 
-SS_Radiation_Types.obj:     NWTC_Library.obj
-SS_Radiation.obj:           SS_Radiation_Types.obj
+Waves2_Types$(OBJ_EXT):           NWTC_Library$(OBJ_EXT)
+Waves2_Output$(OBJ_EXT):          Waves2_Types$(OBJ_EXT)
+Waves2$(OBJ_EXT):                 NWTC_Library$(OBJ_EXT)  Waves2_Types$(OBJ_EXT)  NWTC_FFTPACK$(OBJ_EXT)  \
+                                     Waves2_Output$(OBJ_EXT)  Waves$(OBJ_EXT)
 
-Waves_Types.obj:            NWTC_Library.obj
-Waves.obj:                  Waves_Types.obj  FFTMod.obj
+Waves_Types$(OBJ_EXT):            NWTC_Library$(OBJ_EXT)
+Waves$(OBJ_EXT):                  Waves_Types$(OBJ_EXT)   NWTC_FFTPACK$(OBJ_EXT)
 
-Current_Types.obj:          NWTC_Library.obj
-Current.obj:                Current_Types.obj
+Current_Types$(OBJ_EXT):          NWTC_Library$(OBJ_EXT)
+Current$(OBJ_EXT):                Current_Types$(OBJ_EXT)
 
-Morison_Types.obj:          NWTC_Library.obj
-Morison_Output.obj:         Morison_Types.obj Waves.obj
-Morison.obj:                Morison_Types.obj Morison_Output.obj
+Morison_Types$(OBJ_EXT):          NWTC_Library$(OBJ_EXT)
+Morison_Output$(OBJ_EXT):         Morison_Types$(OBJ_EXT) Waves$(OBJ_EXT)
+Morison$(OBJ_EXT):                Morison_Types$(OBJ_EXT) Morison_Output$(OBJ_EXT)
 
-Conv_Radiation_Types.obj:   NWTC_Library.obj
-Conv_Radiation.obj:         Conv_Radiation_Types.obj
+Conv_Radiation_Types$(OBJ_EXT):   NWTC_Library$(OBJ_EXT)
+Conv_Radiation$(OBJ_EXT):         Conv_Radiation_Types$(OBJ_EXT)
 
-WAMIT_Types.obj:            NWTC_Library.obj Conv_Radiation_Types.obj SS_Radiation_Types.obj Waves_Types.obj
-WAMIT.obj:                  WAMIT_Types.obj WAMIT_Output.obj Waves_Types.obj Conv_Radiation.obj SS_Radiation.obj FFTMod.obj WAMIT_Interp.obj
+WAMIT2_Types$(OBJ_EXT):           NWTC_Library$(OBJ_EXT)
+WAMIT2_Output$(OBJ_EXT):          NWTC_Library$(OBJ_EXT)  WAMIT2_Types$(OBJ_EXT)
+WAMIT2$(OBJ_EXT):                 NWTC_Library$(OBJ_EXT)  WAMIT_Interp$(OBJ_EXT)  WAMIT2_Output$(OBJ_EXT)  \
+                                    NWTC_FFTPACK$(OBJ_EXT)  Waves$(OBJ_EXT)
 
-WAMIT_Interp.obj:				 NWTC_Library.obj
+WAMIT_Types$(OBJ_EXT):            NWTC_Library$(OBJ_EXT) Conv_Radiation_Types$(OBJ_EXT) SS_Radiation_Types$(OBJ_EXT) Waves_Types$(OBJ_EXT)
+WAMIT$(OBJ_EXT):                  WAMIT_Types$(OBJ_EXT) WAMIT_Output$(OBJ_EXT) Waves_Types$(OBJ_EXT) Conv_Radiation$(OBJ_EXT) \
+                                    SS_Radiation$(OBJ_EXT) NWTC_FFTPACK$(OBJ_EXT) WAMIT_Interp$(OBJ_EXT)
 
-HydroDyn_Output_Types.obj:  NWTC_Library.obj
-WAMIT_Output.obj:           WAMIT_Types.obj Waves.obj
-HydroDyn_Output.obj:        HydroDyn_Types.obj Waves.obj
+WAMIT_Interp$(OBJ_EXT):           NWTC_Library$(OBJ_EXT)
+WAMIT_Output$(OBJ_EXT):           WAMIT_Types$(OBJ_EXT) Waves$(OBJ_EXT)
+HydroDyn_Output$(OBJ_EXT):        HydroDyn_Types$(OBJ_EXT) Waves$(OBJ_EXT)
 
-HydroDyn_Types.obj:         NWTC_Library.obj  HydroDyn_Output_Types.obj  Current_Types.obj  Waves_Types.obj  Conv_Radiation_Types.obj SS_Radiation_Types.obj WAMIT_Types.obj Morison_Types.obj
-HydroDyn_Input.obj:         HydroDyn_Types.obj  Waves.obj Morison.obj
-HydroDyn.obj:               HydroDyn_Types.obj  HydroDyn_Input.obj  HydroDyn_Output.obj  WAMIT.obj  Current.obj  Morison.obj
+HydroDyn_Types$(OBJ_EXT):         NWTC_Library$(OBJ_EXT)  Current_Types$(OBJ_EXT)  Waves_Types$(OBJ_EXT)  Waves2_Types$(OBJ_EXT) \
+                                     Conv_Radiation_Types$(OBJ_EXT) SS_Radiation_Types$(OBJ_EXT) \
+                                     WAMIT_Types$(OBJ_EXT)  WAMIT2_Types$(OBJ_EXT)  Morison_Types$(OBJ_EXT)
+HydroDyn_Input$(OBJ_EXT):         HydroDyn_Types$(OBJ_EXT)  Waves$(OBJ_EXT) Morison$(OBJ_EXT)  HydroDyn_Output$(OBJ_EXT)  \
+                                     WAMIT_Output$(OBJ_EXT)  Waves2_Output$(OBJ_EXT)  WAMIT2_Output$(OBJ_EXT)
+HydroDyn$(OBJ_EXT):               HydroDyn_Types$(OBJ_EXT)  HydroDyn_Input$(OBJ_EXT)  HydroDyn_Output$(OBJ_EXT)  WAMIT$(OBJ_EXT) \
+                                     Current$(OBJ_EXT)  Morison$(OBJ_EXT)  Waves2$(OBJ_EXT)  WAMIT2$(OBJ_EXT)
 
+HydroDyn_DriverCode$(OBJ_EXT):    HydroDyn$(OBJ_EXT)
 
-# HydroDyn DriverCode dependency rules:
-HydroDyn_DriverCode.obj:              NWTC_Library.obj  HydroDyn.obj
 
 
    # Make sure the destination directory for the intermediate files exist.
@@ -205,45 +278,19 @@ $(INTER_DIR):
 	$(MD_CMD) $(INTER_DIR)
 
 
-   # Rules for creating _Types.f90 files from Registry files.
-
-Current_Types.f90:
-	$(Registry) ./RegistryFiles/Current.txt
-
-
-Waves_Types.f90:
-	$(Registry) ./RegistryFiles/Waves.txt
-
-
-SS_Radiation_Types.f90:
-	$(Registry) ./RegistryFiles/SS_Radiation.txt
-
-
-Conv_Radiation_Types.f90:
-	$(Registry) ./RegistryFiles/Conv_Radiation.txt
-
-
-WAMIT_Types.f90:
-	$(Registry) ./RegistryFiles/WAMIT.txt
-
-
-Morison_Types.f90:
-	$(Registry) ./RegistryFiles/Morison.txt
-
-
-HydroDyn_Types.f90:
-	$(Registry) ./RegistryFiles/HydroDyn.txt
-
-
-
-
-   # For linking HydroDyn Driver Code.
+   # For linking FAST.
 
 $(DEST_DIR)/$(OUTPUT_NAME)$(EXE_EXT): $(ALL_OBJS) | $(INTER_DIR)
 	$(FC) $(LDFLAGS) -I $(INTER_DIR) -o $(DEST_DIR)/$(OUTPUT_NAME)$(EXE_EXT) \
-	$(foreach src, $(ALL_OBJS), $(addprefix $(INTER_DIR)/,$(src)))
+	$(foreach src, $(ALL_OBJS), $(addprefix $(INTER_DIR)/,$(src))) $(LAPACK_LINK)
 
    # Cleanup afterwards.
 
 clean:
-	$(DEL_CMD) $(INTER_DIR)$(PATH_SEP)*.mod $(INTER_DIR)$(PATH_SEP)*.obj Current_Types.f90 Waves_Types.f90 SS_Radiation_Types.f90 Conv_Radiation_Types.f90 WAMIT_Types.f90 Morison_Types.f90 HydroDyn_Types.f90
+	$(DEL_CMD) $(INTER_DIR)$(PATH_SEP)*.mod $(INTER_DIR)$(PATH_SEP)*$(OBJ_EXT)
+
+superclean:
+	$(DEL_CMD) $(INTER_DIR)$(PATH_SEP)*.mod $(INTER_DIR)$(PATH_SEP)*$(OBJ_EXT)
+	$(DEL_CMD) "$(DEST_DIR)$(PATH_SEP)$(OUTPUT_NAME)$(EXE_EXT)"
+	$(DEL_CMD) "$(HD_DIR)$(PATH_SEP)*_Types.f90"
+	$(DEL_CMD) *_Types.f90
