@@ -13,12 +13,13 @@
 FC      = gfortran
 
 # 32-bit or 64-bit?
-#BITS = 32
-BITS = 64
+BITS = 32
+#BITS = 64
 
 
 FFLAGS  = -O2 -m$(BITS) -fbacktrace -ffree-line-length-none -x f95-cpp-input
-LDFLAGS = -O2 -m$(BITS) -fbacktrace #-Wl,--stack=999999999,--large-address-aware
+LDFLAGS = -O2 -m$(BITS) -fbacktrace
+
 
 #FFLAGS  = -O0 -m$(BITS) -fbacktrace -ffree-line-length-none -x f95-cpp-input -g -pg
 #LDFLAGS = -O0 -m$(BITS) -fbacktrace -Wl,--stack=999999999,--large-address-aware -g -pg
@@ -64,7 +65,8 @@ ifeq ($(OS),Windows_NT)
 
 else
 
-   Registry     = ~/software-development/windsvn/FAST_Registry/registry.exe
+   #Registry     = ~/software-development/windsvn/FAST_Registry/registry.exe
+   Registry    := registry.exe
 
    UNAME := $(shell uname -s)
 
@@ -76,7 +78,7 @@ else
         # ifeq ($(UNAME), Linux)
         # (bjj verify this:)
         # I've been told that the lapack linking needs to occur at the end of the line (after all the object files) on linux:
-      LAPACK_LINK  = -llapack -lblas
+      LAPACK_LINK  := -llapack -lblas
    endif
 
 endif
@@ -119,7 +121,7 @@ endif
 
    # Source files (by module)
 
-LIB_SOURCES =              \
+LIB_SOURCES =             \
 	SingPrec.f90           \
 	NWTC_Base.f90          \
 	$(SYS_FILE).f90        \
@@ -168,7 +170,6 @@ HD_SOURCES =                 \
 
 
 vpath %.f90       $(NWTC_Lib_DIR) $(NETLIB_DIR) $(HD_DIR)
-vpath %_Types.f90 $(HD_DIR)
 vpath %.f         $(NETLIB_DIR)
 vpath %.mod       $(INTER_DIR)
 vpath %$(OBJ_EXT) $(INTER_DIR)
@@ -184,8 +185,8 @@ ALL_OBJS   := $(ALL_OBJS:.f=$(OBJ_EXT))
 
 all:     default
 # use this for "all" for debugging: print variables:
-#all:     ; $(info $$IceF_SOURCES is [${IceF_SOURCES}]) echo debugging
-#
+#all:     ; $(info $$HD_DIR_Reg is [${HD_DIR_Reg}]) echo debugging
+
 default:  $(INTER_DIR) $(DEST_DIR)/$(OUTPUT_NAME)$(EXE_EXT)
 
 
