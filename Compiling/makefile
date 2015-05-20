@@ -13,12 +13,12 @@
 FC      = gfortran
 
 # 32-bit or 64-bit?
-BITS = 32
-#BITS = 64
+#BITS = 32
+BITS = 64
 
 
 FFLAGS  = -O2 -m$(BITS) -fbacktrace -ffree-line-length-none -x f95-cpp-input
-LDFLAGS = -O2 -m$(BITS) -fbacktrace -Wl,--stack=999999999,--large-address-aware
+LDFLAGS = -O2 -m$(BITS) -fbacktrace #-Wl,--stack=999999999,--large-address-aware
 
 #FFLAGS  = -O0 -m$(BITS) -fbacktrace -ffree-line-length-none -x f95-cpp-input -g -pg
 #LDFLAGS = -O0 -m$(BITS) -fbacktrace -Wl,--stack=999999999,--large-address-aware -g -pg
@@ -51,7 +51,7 @@ NETLIB_DIR   = $(MAIN_DIR)/dependencies/NetLib
 ED_DIR       = $(MAIN_DIR)/dependencies/ElastoDyn
 HD_DIR       = $(MAIN_DIR)
 
-HD_DIR_Reg   = $(HD_DIR)
+HD_DIR_Reg   = $(HD_DIR)/RegistryFiles
 
    # Names and locations of the Registry, MAP libraries, and instructions for linking with LAPACK.
    # You will probably need to change these for your system.
@@ -64,7 +64,7 @@ ifeq ($(OS),Windows_NT)
 
 else
 
-   Registry     = registry.exe
+   Registry     = ~/software-development/windsvn/FAST_Registry/registry.exe
 
    UNAME := $(shell uname -s)
 
@@ -168,6 +168,7 @@ HD_SOURCES =                 \
 
 
 vpath %.f90       $(NWTC_Lib_DIR) $(NETLIB_DIR) $(HD_DIR)
+vpath %_Types.f90 $(HD_DIR)
 vpath %.f         $(NETLIB_DIR)
 vpath %.mod       $(INTER_DIR)
 vpath %$(OBJ_EXT) $(INTER_DIR)
@@ -188,7 +189,7 @@ all:     default
 default:  $(INTER_DIR) $(DEST_DIR)/$(OUTPUT_NAME)$(EXE_EXT)
 
 
-   # General rules for compliling the files.
+   # General rules for compiling the files.
 
 %$(OBJ_EXT): %.f90
 	$(FC) -I $(INTER_DIR) $(FFLAGS) -c $< -o $(INTER_DIR)/$@ -J $(INTER_DIR) -B $(INTER_DIR)
@@ -204,8 +205,8 @@ default:  $(INTER_DIR) $(DEST_DIR)/$(OUTPUT_NAME)$(EXE_EXT)
    # General rules for creating _Types.f90 files from Registry files.
 
    # HydroDyn Registry files:
-$(HD_DIR)/%_Types.f90: %.txt
-	$(Registry) $< -I $(NWTC_Lib_DIR) -I $(HD_DIR_Reg)  -O $(HD_DIR)
+$(HD_DIR)/%_Types.f90: $(HD_DIR_Reg)/%.txt
+	$(Registry) $< -I $(NWTC_Lib_DIR) -I $(HD_DIR_Reg) -O $(HD_DIR)
 
 
    #  Dependency rules.
@@ -226,33 +227,33 @@ fftpack4.1$(OBJ_EXT):             SingPrec$(OBJ_EXT)
 
 
 #HydroDyn dependency rules:
-SS_Radiation_Types$(OBJ_EXT):     NWTC_Library$(OBJ_EXT)
+SS_Radiation_Types$(OBJ_EXT):     NWTC_Library$(OBJ_EXT) $(HD_DIR)/SS_Radiation_Types.f90
 SS_Radiation$(OBJ_EXT):           SS_Radiation_Types$(OBJ_EXT)
 
-Waves2_Types$(OBJ_EXT):           NWTC_Library$(OBJ_EXT)
+Waves2_Types$(OBJ_EXT):           NWTC_Library$(OBJ_EXT) $(HD_DIR)/Waves2_Types.f90
 Waves2_Output$(OBJ_EXT):          Waves2_Types$(OBJ_EXT)
 Waves2$(OBJ_EXT):                 NWTC_Library$(OBJ_EXT)  Waves2_Types$(OBJ_EXT)  NWTC_FFTPACK$(OBJ_EXT)  \
                                      Waves2_Output$(OBJ_EXT)  Waves$(OBJ_EXT)
 
-Waves_Types$(OBJ_EXT):            NWTC_Library$(OBJ_EXT)
+Waves_Types$(OBJ_EXT):            NWTC_Library$(OBJ_EXT) $(HD_DIR)/Waves_Types.f90
 Waves$(OBJ_EXT):                  Waves_Types$(OBJ_EXT)   NWTC_FFTPACK$(OBJ_EXT)
 
-Current_Types$(OBJ_EXT):          NWTC_Library$(OBJ_EXT)
+Current_Types$(OBJ_EXT):          NWTC_Library$(OBJ_EXT) $(HD_DIR)/Current_Types.f90
 Current$(OBJ_EXT):                Current_Types$(OBJ_EXT)
 
-Morison_Types$(OBJ_EXT):          NWTC_Library$(OBJ_EXT)
+Morison_Types$(OBJ_EXT):          NWTC_Library$(OBJ_EXT) $(HD_DIR)/Morison_Types.f90
 Morison_Output$(OBJ_EXT):         Morison_Types$(OBJ_EXT) Waves$(OBJ_EXT)
 Morison$(OBJ_EXT):                Morison_Types$(OBJ_EXT) Morison_Output$(OBJ_EXT)
 
-Conv_Radiation_Types$(OBJ_EXT):   NWTC_Library$(OBJ_EXT)
+Conv_Radiation_Types$(OBJ_EXT):   NWTC_Library$(OBJ_EXT) $(HD_DIR)/Conv_Radiation_Types.f90
 Conv_Radiation$(OBJ_EXT):         Conv_Radiation_Types$(OBJ_EXT)
 
-WAMIT2_Types$(OBJ_EXT):           NWTC_Library$(OBJ_EXT)
+WAMIT2_Types$(OBJ_EXT):           NWTC_Library$(OBJ_EXT) $(HD_DIR)/WAMIT2_Types.f90
 WAMIT2_Output$(OBJ_EXT):          NWTC_Library$(OBJ_EXT)  WAMIT2_Types$(OBJ_EXT)
 WAMIT2$(OBJ_EXT):                 NWTC_Library$(OBJ_EXT)  WAMIT_Interp$(OBJ_EXT)  WAMIT2_Output$(OBJ_EXT)  \
                                     NWTC_FFTPACK$(OBJ_EXT)  Waves$(OBJ_EXT)
 
-WAMIT_Types$(OBJ_EXT):            NWTC_Library$(OBJ_EXT) Conv_Radiation_Types$(OBJ_EXT) SS_Radiation_Types$(OBJ_EXT) Waves_Types$(OBJ_EXT)
+WAMIT_Types$(OBJ_EXT):            NWTC_Library$(OBJ_EXT) Conv_Radiation_Types$(OBJ_EXT) SS_Radiation_Types$(OBJ_EXT) Waves_Types$(OBJ_EXT) $(HD_DIR)/WAMIT_Types.f90
 WAMIT$(OBJ_EXT):                  WAMIT_Types$(OBJ_EXT) WAMIT_Output$(OBJ_EXT) Waves_Types$(OBJ_EXT) Conv_Radiation$(OBJ_EXT) \
                                     SS_Radiation$(OBJ_EXT) NWTC_FFTPACK$(OBJ_EXT) WAMIT_Interp$(OBJ_EXT)
 
@@ -262,7 +263,7 @@ HydroDyn_Output$(OBJ_EXT):        HydroDyn_Types$(OBJ_EXT) Waves$(OBJ_EXT)
 
 HydroDyn_Types$(OBJ_EXT):         NWTC_Library$(OBJ_EXT)  Current_Types$(OBJ_EXT)  Waves_Types$(OBJ_EXT)  Waves2_Types$(OBJ_EXT) \
                                      Conv_Radiation_Types$(OBJ_EXT) SS_Radiation_Types$(OBJ_EXT) \
-                                     WAMIT_Types$(OBJ_EXT)  WAMIT2_Types$(OBJ_EXT)  Morison_Types$(OBJ_EXT)
+                                     WAMIT_Types$(OBJ_EXT)  WAMIT2_Types$(OBJ_EXT)  Morison_Types$(OBJ_EXT) $(HD_DIR)/HydroDyn_Types.f90
 HydroDyn_Input$(OBJ_EXT):         HydroDyn_Types$(OBJ_EXT)  Waves$(OBJ_EXT) Morison$(OBJ_EXT)  HydroDyn_Output$(OBJ_EXT)  \
                                      WAMIT_Output$(OBJ_EXT)  Waves2_Output$(OBJ_EXT)  WAMIT2_Output$(OBJ_EXT)
 HydroDyn$(OBJ_EXT):               HydroDyn_Types$(OBJ_EXT)  HydroDyn_Input$(OBJ_EXT)  HydroDyn_Output$(OBJ_EXT)  WAMIT$(OBJ_EXT) \
@@ -292,5 +293,5 @@ clean:
 superclean:
 	$(DEL_CMD) $(INTER_DIR)$(PATH_SEP)*.mod $(INTER_DIR)$(PATH_SEP)*$(OBJ_EXT)
 	$(DEL_CMD) "$(DEST_DIR)$(PATH_SEP)$(OUTPUT_NAME)$(EXE_EXT)"
-	$(DEL_CMD) "$(HD_DIR)$(PATH_SEP)*_Types.f90"
+	$(DEL_CMD) "$(HD_DIR)$(PATH_SEP)"*_Types.f90
 	$(DEL_CMD) *_Types.f90
