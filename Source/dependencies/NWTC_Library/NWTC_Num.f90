@@ -17,8 +17,8 @@
 ! limitations under the License.
 !
 !**********************************************************************************************************************************
-! File last committed: $Date: 2015-04-14 14:00:21 -0600 (Tue, 14 Apr 2015) $
-! (File) Revision #: $Rev: 297 $
+! File last committed: $Date: 2015-09-04 09:33:56 -0600 (Fri, 04 Sep 2015) $
+! (File) Revision #: $Rev: 333 $
 ! URL: $HeadURL: https://windsvn.nrel.gov/NWTC_Library/trunk/source/NWTC_Num.f90 $
 !**********************************************************************************************************************************
 MODULE NWTC_Num
@@ -89,7 +89,6 @@ MODULE NWTC_Num
 
 !=======================================================================
 
-
       ! Global numeric-related variables.
 
    REAL(DbKi)                                :: D2R_D                         ! Factor to convert degrees to radians in double precision
@@ -117,29 +116,29 @@ MODULE NWTC_Num
    REAL(ReKi)                                :: TwoByPi                       ! 2/Pi
    REAL(ReKi)                                :: TwoPi                         ! 2*Pi
 
-
-   TYPE, PUBLIC               :: CubSplineType                                ! This derived type is used to hold data for performing cubic splines.
-      INTEGER                                :: NumPts                        ! The number of points in the XAry and YAry arrays.
-      REAL(ReKi), ALLOCATABLE                :: Coef      (:,:)               ! The NumPts-1 length array of cubic coefficients.  The second dimension must be "0:3".
-      REAL(ReKi), ALLOCATABLE                :: XAry      (:)                 ! The NumPts length array of x values for the interpolation.
-      REAL(ReKi), ALLOCATABLE                :: YAry      (:)                 ! The NumPts length array of y values for the interpolation.
-   END TYPE CubSplineType
-
-   TYPE, PUBLIC               :: RegCubSplineType                             ! This derived type is used to hold data for performing cubic splines wuth regularly-spaced data.
-      INTEGER                                :: NumPts                        ! The number of points in the XAry and YAry arrays.
-      REAL(ReKi), ALLOCATABLE                :: Coef      (:,:)               ! The NumPts-1 length array of cubic coefficients.  The second dimension must be "0:3".
-      REAL(ReKi)                             :: DelX                          ! The distance between the equally spaced points in XAry.
-      REAL(ReKi), ALLOCATABLE                :: XAry      (:)                 ! The NumPts length array of x values for the interpolation.
-      REAL(ReKi), ALLOCATABLE                :: YAry      (:)                 ! The NumPts length array of y values for the interpolation.
-   END TYPE RegCubSplineType
-
-   TYPE, PUBLIC               :: RegGridType                                  ! This derived type is used to hold the contents of a regular grid of data.
-      INTEGER                                :: NumDims                       ! The number of dimensions for this grid.
-      REAL(ReKi), ALLOCATABLE                :: Mins      (:)                 ! The set of minimums for the grid in each NumDims dimensions.
-      REAL(ReKi), ALLOCATABLE                :: Steps     (:)                 ! The set of step sizes for the grid in each NumDims dimensions.
-      REAL(ReKi), ALLOCATABLE                :: Grid      (:)                 ! The NumDims dimensional grid.
-   END TYPE RegGridType
-
+!bjj: I'm not sure why MLB added these 3 types; they don't seem to be used anywhere
+   !TYPE, PUBLIC               :: CubSplineType                                ! This derived type is used to hold data for performing cubic splines.
+   !   INTEGER                                :: NumPts                        ! The number of points in the XAry and YAry arrays.
+   !   REAL(ReKi), ALLOCATABLE                :: Coef      (:,:)               ! The NumPts-1 length array of cubic coefficients.  The second dimension must be "0:3".
+   !   REAL(ReKi), ALLOCATABLE                :: XAry      (:)                 ! The NumPts length array of x values for the interpolation.
+   !   REAL(ReKi), ALLOCATABLE                :: YAry      (:)                 ! The NumPts length array of y values for the interpolation.
+   !END TYPE CubSplineType
+   !
+   !TYPE, PUBLIC               :: RegCubSplineType                             ! This derived type is used to hold data for performing cubic splines wuth regularly-spaced data.
+   !   INTEGER                                :: NumPts                        ! The number of points in the XAry and YAry arrays.
+   !   REAL(ReKi), ALLOCATABLE                :: Coef      (:,:)               ! The NumPts-1 length array of cubic coefficients.  The second dimension must be "0:3".
+   !   REAL(ReKi)                             :: DelX                          ! The distance between the equally spaced points in XAry.
+   !   REAL(ReKi), ALLOCATABLE                :: XAry      (:)                 ! The NumPts length array of x values for the interpolation.
+   !   REAL(ReKi), ALLOCATABLE                :: YAry      (:)                 ! The NumPts length array of y values for the interpolation.
+   !END TYPE RegCubSplineType
+   !
+   !TYPE, PUBLIC               :: RegGridType                                  ! This derived type is used to hold the contents of a regular grid of data.
+   !   INTEGER                                :: NumDims                       ! The number of dimensions for this grid.
+   !   REAL(ReKi), ALLOCATABLE                :: Mins      (:)                 ! The set of minimums for the grid in each NumDims dimensions.
+   !   REAL(ReKi), ALLOCATABLE                :: Steps     (:)                 ! The set of step sizes for the grid in each NumDims dimensions.
+   !   REAL(ReKi), ALLOCATABLE                :: Grid      (:)                 ! The NumDims dimensional grid.
+   !END TYPE RegGridType
+!bjj: end of MLB types removed
 
 !=======================================================================
 
@@ -151,11 +150,47 @@ MODULE NWTC_Num
       MODULE PROCEDURE EqualRealNos16
    END INTERFACE
 
+   
+      ! Create interface for a generic TwoNorm that uses specific routines.
 
+   INTERFACE TwoNorm
+      MODULE PROCEDURE TwoNormR4
+      MODULE PROCEDURE TwoNormR8
+      MODULE PROCEDURE TwoNormR16
+   END INTERFACE
+   
+      ! Create interface for a generic Trace that uses specific routines.
+
+   INTERFACE trace
+      MODULE PROCEDURE traceR4
+      MODULE PROCEDURE traceR8
+      MODULE PROCEDURE traceR16
+   END INTERFACE
+   
+   
+      ! Create interface for a generic DCM log/exp interfaces that use specific routines.
+
+   INTERFACE DCM_exp
+      MODULE PROCEDURE DCM_expR
+      MODULE PROCEDURE DCM_expD
+   END INTERFACE
+   
+   INTERFACE DCM_logMap
+      MODULE PROCEDURE DCM_logMapR
+      MODULE PROCEDURE DCM_logMapD
+   END INTERFACE
+
+   INTERFACE DCM_SetLogMapForInterp
+      MODULE PROCEDURE DCM_SetLogMapForInterpR
+      MODULE PROCEDURE DCM_SetLogMapForInterpD
+   END INTERFACE
+   
+   
       ! Create interface for a generic Eye that uses specific routines.
 
    INTERFACE Eye
       MODULE PROCEDURE Eye2   ! matrix of two dimensions
+      MODULE PROCEDURE Eye2D  ! matrix of two dimensions (double precision)
       MODULE PROCEDURE Eye3   ! matrix of three dimensions
    END INTERFACE
 
@@ -318,7 +353,7 @@ CONTAINS
 
    INTEGER(IntKi), INTENT(OUT)  :: ErrStat                                    ! Error status.
 
-   CHARACTER(4096), INTENT(OUT) :: ErrMsg                                     ! Error message.
+   CHARACTER(*), INTENT(OUT)    :: ErrMsg                                     ! Error message.
 
 
       ! Local declarations.
@@ -332,32 +367,34 @@ CONTAINS
 
    INTEGER(IntKi)               :: ErrStatLcL                                 ! Local error status.
    INTEGER                      :: I                                          ! The index into the arrays.
+   CHARACTER(*), PARAMETER      :: RoutineName = 'CubicSplineInit'
 
-
+   ErrStat = ErrID_None
+   ErrMsg  = ""
 
       ! Allocate the various intermediate arrays.
 
    ALLOCATE ( DelX( AryLen - 1 ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the DelX array in CubicSplineInit.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the DelX array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( Slope( AryLen - 1 ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the Slope array in CubicSplineInit.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the Slope array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( U( AryLen - 1 ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the U array in CubicSplineInit.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the U array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( V( AryLen - 1 ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the V array in CubicSplineInit.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the V array.' )
       RETURN
    ENDIF
 
@@ -458,7 +495,7 @@ CONTAINS
 
    INTEGER(IntKi), INTENT(OUT)  :: ErrStat                                    ! Error status.
 
-   CHARACTER(4096), INTENT(OUT) :: ErrMsg                                     ! Error message.
+   CHARACTER(*), INTENT(OUT)    :: ErrMsg                                     ! Error message.
 
 
       ! Local declarations.
@@ -475,7 +512,7 @@ CONTAINS
    INTEGER                      :: I                                          ! The index into the arrays.
    INTEGER                      :: NumCrvs                                    ! Number of curves to be interpolated.
    INTEGER                      :: NumPts                                     ! Number of points in each curve.
-
+   CHARACTER(*), PARAMETER      :: RoutineName = 'CubicSplineInitM'
 
 
       ! How big are the arrays?
@@ -488,37 +525,37 @@ CONTAINS
 
    ALLOCATE ( ZLo( NumCrvs ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the ZLo array in CubicSplineInitM.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the ZLo array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( ZHi( NumCrvs ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the ZHi array in CubicSplineInitM.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the ZHi array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( DelX( NumPts - 1 ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the DelX array in CubicSplineInitM.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the DelX array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( Slope( NumPts-1, NumCrvs ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the Slope array in CubicSplineInitM.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the Slope array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( U( NumPts - 1 ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the U array in CubicSplineInitM.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the U array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( V( NumPts-1, NumCrvs ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the V array in CubicSplineInitM.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the V array.' )
       RETURN
    ENDIF
 
@@ -527,6 +564,12 @@ CONTAINS
 
    DO I=1,NumPts-1
       DelX (I  ) =   XAry(I+1  ) - XAry(I  )
+      
+      if ( equalRealNos( DelX(I), 0.0_ReKi ) ) then
+         CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':XAry must have unique values.' )
+         RETURN
+      ENDIF
+      
       Slope(I,:) = ( YAry(I+1,:) - YAry(I,:) )/DelX(I)
    END DO ! I
 
@@ -537,6 +580,11 @@ CONTAINS
    V(1,:) = 6.0_ReKi*( Slope(2,:) - Slope(1,:) )
 
    DO I=2,NumPts-1
+      if ( equalRealNos( U(I-1), 0.0_ReKi ) ) then
+         CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':XAry must be monotonic.' )
+         RETURN
+      ENDIF
+            
       U(I)   = 2.0_ReKi*( DelX (I-1) + DelX (I)     ) - DelX(I-1)*DelX(I-1  )/U(I-1)
       V(I,:) = 6.0_ReKi*( Slope(I,:) - Slope(I-1,:) ) - DelX(I-1)*   V(I-1,:)/U(I-1)
    END DO ! I
@@ -549,14 +597,13 @@ CONTAINS
    ZHi(:) = 0.0_ReKi
 
    DO I=NumPts-1,1,-1
-      ZLo(:)      = ( V(I,:) - DelX(I)*ZHi(:) )/U(I)
+      ZLo(:)      = ( V(I,:) - DelX(I)*ZHi(:) )/U(I)                             ! bjj: already checked for u(I) == 0
       Coef(I,:,1) = Slope(I,:) - DelX(I)*( ZHi(:)/6.0_ReKi + ZLo(:)/3.0_ReKi )
       Coef(I,:,2) = 0.5_ReKi*ZLo(:)
-      Coef(I,:,3) = ( ZHi(:) - ZLo(:) )/( 6.0_ReKi*DelX(I) )
+      Coef(I,:,3) = ( ZHi(:) - ZLo(:) )/( 6.0_ReKi*DelX(I) )                     ! bjj: already checked for DelX(I) == 0
       ZHi(:)      = ZLo(:)
    END DO ! I
-
-
+   
    CALL ExitThisRoutine ( ErrID_None, 'No Problemo' )
 
    RETURN
@@ -601,6 +648,63 @@ CONTAINS
 
    END SUBROUTINE CubicSplineInitM ! ( XAry, YAry, Coef, ErrStat, ErrMsg )
 !=======================================================================
+   SUBROUTINE CubicLinSplineInitM ( XAry, YAry, Coef, ErrStat, ErrMsg )
+
+
+      ! This routine calculates the parameters needed to compute a irregularly-spaced natural linear spline.      
+      ! This routine does not require that the XAry be regularly spaced.
+
+
+      ! Argument declarations:
+
+   REAL(ReKi), INTENT(OUT)      :: Coef  (:,:,0:)                             ! The coefficients for the cubic polynomials.
+   REAL(ReKi), INTENT(IN)       :: XAry  (:)                                  ! Input array of x values.
+   REAL(ReKi), INTENT(IN)       :: YAry  (:,:)                                ! Input array of y values with multiple curves.
+
+   INTEGER(IntKi), INTENT(OUT)  :: ErrStat                                    ! Error status.
+
+   CHARACTER(*), INTENT(OUT)    :: ErrMsg                                     ! Error message.
+
+
+      ! Local declarations.
+
+   REAL(ReKi)                   :: DelX                                       ! The distances between the randomly spaced points.
+
+   INTEGER                      :: I                                          ! The index into the arrays.
+   INTEGER                      :: NumPts                                     ! Number of points in each curve.
+   CHARACTER(*), PARAMETER      :: RoutineName = 'CubicLinSplineInitM'
+
+
+      ! How big are the arrays?
+
+   NumPts  = SIZE( XAry )
+   ErrStat = ErrID_None
+   ErrMsg  = ""
+
+      ! Determine the coefficients of the polynomials.
+
+   
+   DO I=NumPts-1,1,-1
+      DelX =   XAry(I+1  ) - XAry(I  )
+      
+      if ( equalRealNos( DelX, 0.0_ReKi ) ) then
+         CALL SetErrStat ( ErrID_Fatal, 'XAry must have unique values.',ErrStat,ErrMsg,RoutineName )
+         RETURN
+      ENDIF
+      
+            
+      Coef(I,:,0) = YAry(I,:)
+      Coef(I,:,1) = (YAry(I+1,: ) - YAry(I,:  )) / DelX
+      Coef(I,:,2) = 0.0_ReKi
+      Coef(I,:,3) = 0.0_ReKi
+   END DO ! I
+
+
+   RETURN
+
+
+   END SUBROUTINE CubicLinSplineInitM ! ( XAry, YAry, Coef, ErrStat, ErrMsg )
+!=======================================================================
    FUNCTION CubicSplineInterp ( X, AryLen, XAry, YAry, Coef, ErrStat, ErrMsg )
 
 
@@ -625,7 +729,7 @@ CONTAINS
 
    INTEGER(IntKi), INTENT(OUT)  :: ErrStat                                    ! Error status.
 
-   CHARACTER(4096), INTENT(OUT) :: ErrMsg                                     ! Error message.
+   CHARACTER(*), INTENT(OUT)    :: ErrMsg                                     ! Error message.
 
 
       ! Local declarations.
@@ -636,6 +740,8 @@ CONTAINS
    INTEGER                      :: ILo                                        ! The index into the array for which X is just above or equal to XAry(ILo).
 
 
+   ErrStat = ErrID_None
+   ErrMsg  = ""
 
       ! See if X is within the range of XAry.  Return the end point if it is not.
 
@@ -657,40 +763,7 @@ CONTAINS
    CubicSplineInterp = Coef(ILo,0) + XOff*( Coef(ILo,1) + XOff*( Coef(ILo,2) + XOff*Coef(ILo,3) ) )
 
 
-   CALL ExitThisRoutine ( ErrID_None, 'No Problemo' )
-
    RETURN
-
-   !=======================================================================
-   CONTAINS
-   !=======================================================================
-      SUBROUTINE ExitThisRoutine ( ErrID, Msg )
-
-         ! This subroutine cleans up the parent routine before exiting.
-
-
-            ! Argument declarations.
-
-         INTEGER(IntKi), INTENT(IN)       :: ErrID                            ! The error identifier (ErrLev)
-
-         CHARACTER(*),   INTENT(IN)       :: Msg                              ! The error message (ErrMsg)
-
-
-            ! Local declarations.
-
-         LOGICAL                          :: IsOpen                           ! A flag that indicates if the input unit is still open.
-
-
-            ! Set error status/message
-
-         ErrStat = ErrID
-         ErrMsg  = Msg
-
-
-         RETURN
-
-      END SUBROUTINE ExitThisRoutine ! ( ErrID, Msg )
-
    END FUNCTION CubicSplineInterp ! ( X, AryLen, XAry, YAry, Coef, ErrStat, ErrMsg )
 !=======================================================================
    FUNCTION CubicSplineInterpM ( X, XAry, YAry, Coef, ErrStat, ErrMsg ) RESULT( Res )
@@ -716,7 +789,7 @@ CONTAINS
 
    INTEGER(IntKi), INTENT(OUT)  :: ErrStat                                    ! Error status.
 
-   CHARACTER(4096), INTENT(OUT) :: ErrMsg                                     ! Error message.
+   CHARACTER(*),    INTENT(OUT) :: ErrMsg                                     ! Error message.
 
 
       ! Local declarations.
@@ -728,18 +801,22 @@ CONTAINS
    INTEGER                      :: NumCrvs                                    ! Number of curves to be interpolated.
    INTEGER                      :: NumPts                                     ! Number of points in each curve.
 
-
+   CHARACTER(*), PARAMETER      :: RoutineName = 'RegCubicSplineInterpM'
 
       ! How big are the arrays?
 
    NumPts  = SIZE( XAry )
    NumCrvs = SIZE( YAry, 2 )
-   NumCrvs = SIZE( YAry, 2 )
+   !NumCrvs = SIZE( YAry, 2 )
 
    ALLOCATE ( Res( NumCrvs ) , STAT=ErrStatLcl )
    IF ( ErrStatLcl /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, '  >> Error allocating memory for the function result array in RegCubicSplineInterpM.' )
+      ErrStat = ErrID_Fatal
+      ErrMsg = RoutineName//':Error allocating memory for the function result array.'
       RETURN
+   ELSE
+      ErrStat = ErrID_None
+      ErrMsg  = ""
    ENDIF
 
 
@@ -762,54 +839,91 @@ CONTAINS
 
    Res(:) = Coef(ILo,:,0) + XOff*( Coef(ILo,:,1) + XOff*( Coef(ILo,:,2) + XOff*Coef(ILo,:,3) ) )
 
-
-   CALL ExitThisRoutine ( ErrID_None, 'No Problemo' )
-
    RETURN
-
-   !=======================================================================
-   CONTAINS
-   !=======================================================================
-      SUBROUTINE ExitThisRoutine ( ErrID, Msg )
-
-         ! This subroutine cleans up the parent routine before exiting.
-
-
-            ! Argument declarations.
-
-         INTEGER(IntKi), INTENT(IN)       :: ErrID                            ! The error identifier (ErrLev)
-
-         CHARACTER(*),   INTENT(IN)       :: Msg                              ! The error message (ErrMsg)
-
-
-            ! Local declarations.
-
-         LOGICAL                          :: IsOpen                           ! A flag that indicates if the input unit is still open.
-
-
-            ! Set error status/message
-
-         ErrStat = ErrID
-         ErrMsg  = Msg
-
-
-         RETURN
-
-      END SUBROUTINE ExitThisRoutine ! ( ErrID, Msg )
 
    END FUNCTION CubicSplineInterpM ! ( X, XAry, YAry, Coef, ErrStat, ErrMsg )
 !=======================================================================         
-   FUNCTION DCM_exp(lambda)
+   FUNCTION DCM_expD(lambda)
+   
+      ! This function computes a matrix exponential.
+      !
+      ! "'Interpolation' of DCMs", M.A. Sprague, 11 March 2014, Eq. 31-33
+      
+   REAL(DbKi), INTENT(IN)  :: lambda(3)
+   REAL(DbKi)              :: DCM_expD(3,3)
+   
+      ! local variables
+   REAL(DbKi)              :: stheta         ! sine of angle of rotation   
+   REAL(DbKi)              :: theta          ! angle of rotation   
+   REAL(DbKi)              :: theta2         ! angle of rotation squared
+   REAL(DbKi)              :: tmp_Mat(3,3)
+   
+   INTEGER(IntKi)          :: ErrStat
+   CHARACTER(30)           :: ErrMsg  
+   
+   
+   theta = TwoNorm(lambda)                   ! Eq. 32
+   theta2 = theta**2
+
+   IF ( EqualRealNos(theta,   0.0_DbKi)   .or. &
+        EqualRealNos(theta2,  0.0_DbKi) ) THEN  !
+      
+      CALL eye(DCM_expD, ErrStat, ErrMsg)    ! Eq. 33a
+      
+   ELSE   
+      
+         ! convert lambda to skew-symmetric matrix:
+      tmp_mat(1,1) =  0.0_DbKi                                            
+      tmp_mat(2,1) = -lambda(3)                                           
+      tmp_mat(3,1) =  lambda(2)                                           
+      tmp_mat(1,2) =              lambda(3)                               
+      tmp_mat(2,2) =              0.0_DbKi                                
+      tmp_mat(3,2) =             -lambda(1)                               
+      tmp_mat(1,3) =                               -lambda(2)             
+      tmp_mat(2,3) =                                lambda(1)             
+      tmp_mat(3,3) =                                0.0_DbKi            
+      
+      
+         ! Eq. 33b
+      !DCM_exp = I + sin(theta)/theta*tmp_mat + (1-cos(theta))/theta**2)*matmul(tmp_mat,tmp_mat)
+      
+         ! one method:
+      !CALL eye(DCM_exp, ErrStat, ErrMsg)                  
+      !DCM_exp = DCM_exp + sin(theta)/theta*tmp_mat 
+      !DCM_exp = DCM_exp + (1-cos(theta))/theta2 * MATMUL(tmp_mat, tmp_mat) 
+      
+         ! hopefully this order of calculations gives better numerical results:
+      stheta = sin(theta)
+      DCM_expD      = (1-cos(theta))/theta * tmp_mat      
+      DCM_expD(1,1) = DCM_expD(1,1) + stheta
+      DCM_expD(2,2) = DCM_expD(2,2) + stheta
+      DCM_expD(3,3) = DCM_expD(3,3) + stheta
+      
+      DCM_expD = matmul( DCM_expD, tmp_mat )
+      DCM_expD = DCM_expD / theta
+      DCM_expD(1,1) = DCM_expD(1,1) + 1.0_DbKi ! add identity
+      DCM_expD(2,2) = DCM_expD(2,2) + 1.0_DbKi
+      DCM_expD(3,3) = DCM_expD(3,3) + 1.0_DbKi
+            
+   END IF
+
+   
+      
+   END FUNCTION DCM_expD
+!=======================================================================  
+   FUNCTION DCM_expR(lambda)
    
       ! This function computes a matrix exponential.
       !
       ! "'Interpolation' of DCMs", M.A. Sprague, 11 March 2014, Eq. 31-33
       
    REAL(ReKi), INTENT(IN)  :: lambda(3)
-   REAL(ReKi)              :: DCM_exp(3,3)
+   REAL(ReKi)              :: DCM_expR(3,3)
    
       ! local variables
+   REAL(ReKi)              :: stheta         ! sine of angle of rotation   
    REAL(ReKi)              :: theta          ! angle of rotation   
+   REAL(ReKi)              :: theta2         ! angle of rotation squared
    REAL(ReKi)              :: tmp_Mat(3,3)
    
    INTEGER(IntKi)          :: ErrStat
@@ -817,10 +931,13 @@ CONTAINS
    
    
    theta = TwoNorm(lambda)                   ! Eq. 32
-   
+   theta2 = theta**2
 
-   IF (EqualRealNos(theta, 0.0_ReKi) ) THEN    
-      CALL eye(DCM_exp, ErrStat, ErrMsg)    ! Eq. 33a
+   IF ( EqualRealNos(theta,   0.0_ReKi)   .or. &
+        EqualRealNos(theta2,  0.0_ReKi) ) THEN  !
+      
+      CALL eye(DCM_expR, ErrStat, ErrMsg)    ! Eq. 33a
+      
    ELSE   
       
          ! convert lambda to skew-symmetric matrix:
@@ -834,17 +951,35 @@ CONTAINS
       tmp_mat(2,3) =                                lambda(1)             
       tmp_mat(3,3) =                                0.0_ReKi            
       
-         ! Eq. 33b
-      CALL eye(DCM_exp, ErrStat, ErrMsg)                  
-      DCM_exp = DCM_exp + sin(theta)/theta*tmp_mat + (1-cos(theta))/theta**2 * MATMUL(tmp_mat, tmp_mat) 
       
+         ! Eq. 33b
+      !DCM_exp = I + sin(theta)/theta*tmp_mat + (1-cos(theta))/theta**2)*matmul(tmp_mat,tmp_mat)
+      
+         ! one method:
+      !CALL eye(DCM_exp, ErrStat, ErrMsg)                  
+      !DCM_exp = DCM_exp + sin(theta)/theta*tmp_mat 
+      !DCM_exp = DCM_exp + (1-cos(theta))/theta2 * MATMUL(tmp_mat, tmp_mat) 
+      
+         ! hopefully this order of calculations gives better numerical results:
+      stheta = sin(theta)
+      DCM_expR      = (1-cos(theta))/theta * tmp_mat      
+      DCM_expR(1,1) = DCM_expR(1,1) + stheta
+      DCM_expR(2,2) = DCM_expR(2,2) + stheta
+      DCM_expR(3,3) = DCM_expR(3,3) + stheta
+      
+      DCM_expR = matmul( DCM_expR, tmp_mat )
+      DCM_expR = DCM_expR / theta
+      DCM_expR(1,1) = DCM_expR(1,1) + 1.0_ReKi ! add identity
+      DCM_expR(2,2) = DCM_expR(2,2) + 1.0_ReKi
+      DCM_expR(3,3) = DCM_expR(3,3) + 1.0_ReKi
+            
    END IF
 
    
       
-   END FUNCTION DCM_exp
+   END FUNCTION DCM_expR
 !=======================================================================  
-   SUBROUTINE DCM_logMap(DCM, logMap, ErrStat, ErrMsg)
+   SUBROUTINE DCM_logMapD(DCM, logMap, ErrStat, ErrMsg, thetaOut)
 
       ! This function computes the logarithmic map for a direction 
       ! cosine matrix.
@@ -852,88 +987,292 @@ CONTAINS
       ! "'Interpolation' of DCMs", M.A. Sprague, 11 March 2014, Eq. 24-30
       ! with eigenvector equations updated to account for numerics
    
-   REAL(ReKi),       INTENT(IN)    :: DCM(3,3)
-   REAL(ReKi),       INTENT(   OUT):: logMap(3)
-   INTEGER(IntKi),   INTENT(  OUT) :: ErrStat                   ! Error status of the operation
-   CHARACTER(*),     INTENT(  OUT) :: ErrMsg                    ! Error message if ErrStat /= ErrID_None
+   REAL(DbKi),         INTENT(IN)    :: DCM(3,3)
+   REAL(DbKi),         INTENT(  OUT) :: logMap(3)
+   REAL(DbKi),OPTIONAL,INTENT(  OUT) :: thetaOut
+   INTEGER(IntKi),     INTENT(  OUT) :: ErrStat                   ! Error status of the operation
+   CHARACTER(*),       INTENT(  OUT) :: ErrMsg                    ! Error message if ErrStat /= ErrID_None
    
       ! local variables
-   REAL(ReKi)                      :: temp
-   REAL(ReKi)                      :: theta
-   REAL(ReKi)                      :: v(3)
-   REAL(ReKi)                      :: skewSym(3,3) ! an anti-symmetric matrix
+   REAL(DbKi)                        :: theta
+   REAL(DbKi)                        :: cosTheta
+   REAL(DbKi)                        :: TwoSinTheta
+   REAL(DbKi)                        :: v(3)
+   INTEGER(IntKi)                    :: indx_max, i
       
          ! initialization
       ErrStat = ErrID_None
       ErrMsg  = ""   
    
    
-      temp  = 0.5_ReKi*( trace(DCM) - 1.0_ReKi )
-      temp  = min( max(temp,-1.0_ReKi), 1.0_ReKi ) !make sure it's in a valid range (to avoid cases where this is slightly outside the +/-1 range)
-      theta = ACOS( temp )                                                      ! Eq. 25
-   
-      IF ( EqualRealNos(0.0_ReKi, theta) ) THEN
-         logMap = 0.0_ReKi                                                   ! Eq. 26a
-      ELSEIF ( EqualRealNos( pi, theta ) ) THEN
+      cosTheta = 0.5_DbKi*( trace(DCM) - 1.0_DbKi )
+      cosTheta = min( max(cosTheta,-1.0_DbKi), 1.0_DbKi ) !make sure it's in a valid range (to avoid cases where this is slightly outside the +/-1 range)
+      theta    = ACOS( cosTheta )                                                   ! Eq. 25 ( 0<=theta<=pi )
+
+      IF ( PRESENT( thetaOut ) ) THEN
+         thetaOut = theta
+      END IF      
       
-         ! calculate the eigenvector of DCM associated with eigenvalue +1:
       
-         temp = -1.0_ReKi + DCM(2,2) + DCM(2,3)*DCM(3,2) + DCM(3,3) - DCM(2,2)*DCM(3,3)
-         if ( .NOT. EqualRealNos(temp, 0.0_ReKi) ) then
-
-            v(1) = 1.0_ReKi
-            v(2) = -(DCM(2,1) + DCM(2,3)*DCM(3,1) - DCM(2,1)*DCM(3,3))/temp
-            v(3) = -(DCM(3,1) - DCM(2,2)*DCM(3,1) + DCM(2,1)*DCM(3,2))/temp
-
-         else 
-            temp = -1.0_ReKi + DCM(1,1) + DCM(1,3)*DCM(3,1) + DCM(3,3) - DCM(1,1)*DCM(3,3)
-            if ( .NOT. EqualRealNos(temp, 0.0_ReKi) ) then
-
-               v(1) = -(DCM(1,2) + DCM(1,3)*DCM(3,2) - DCM(1,2)*DCM(3,3))/temp
-               v(2) =  1.0_ReKi
-               v(3) = -(DCM(3,2) + DCM(1,2)*DCM(3,1) - DCM(1,1)*DCM(3,2))/temp
-
-            else 
-               temp = -1.0_ReKi + DCM(1,1) + DCM(1,2)*DCM(2,1) + DCM(2,2) - DCM(1,1)*DCM(2,2)
-               if ( .NOT. EqualRealNos(temp, 0.0_ReKi) ) then
-
-                  v(1) = -(DCM(1,3) - DCM(1,3)*DCM(2,2) + DCM(1,2)*DCM(2,3))/temp
-                  v(2) = -(DCM(1,3)*DCM(2,1) + DCM(2,3) - DCM(1,1)*DCM(2,3))/temp
-                  v(3) = 1.0_ReKi
+      !IF ( EqualRealNos( pi_D, theta )  ) THEN
+      IF ( theta > 3.1_DbKi ) THEN  ! theta/(2*sin(theta)) blows up quickly as theta approaches pi, 
+         ! so I'm putting a pretty large tolerance on pi here, and using a different equation to find the solution near pi
+                     
+         !d11 = 1 - (1-cos(theta))/theta^2 * (logMap3^2 + logMap2^2)
+         !d22 = 1 - (1-cos(theta))/theta^2 * (logMap3^2 + logMap1^2)
+         !d33 = 1 - (1-cos(theta))/theta^2 * (logMap2^2 + logMap1^2)
+                  
+         logMap(1) = theta * sqrt(abs( 0.5_DbKi * ( 1.0_DbKi + DCM(1,1) - DCM(2,2) - DCM(3,3) ) / (1.0_DbKi-cosTheta) ))
+         logMap(2) = theta * sqrt(abs( 0.5_DbKi * ( 1.0_DbKi - DCM(1,1) + DCM(2,2) - DCM(3,3) ) / (1.0_DbKi-cosTheta) ))
+         logMap(3) = theta * sqrt(abs( 0.5_DbKi * ( 1.0_DbKi - DCM(1,1) - DCM(2,2) + DCM(3,3) ) / (1.0_DbKi-cosTheta) ))
+               
+         ! we choose logMap1 positive then we get the signs for logMap2 and logMap3:
+         if ( .not. EqualRealNos( logMap(1), 0.0_DbKi ) ) then
+            !d12+d21=2*(1-cos(theta))/theta**2 * logMap(1)*logMap(2); 2*(1-cos(theta))/theta**2 * logMap(1)>0 so logMap(2) is sign(logMap(2),d12+d21)
+            !d13+d31=2*(1-cos(theta))/theta**2 * logMap(1)*logMap(3); 2*(1-cos(theta))/theta**2 * logMap(1)>0 so logMap(3) is sign(logMap(3),d13+d31)
             
-               else
-                     ! break with error
-                  ErrStat = ErrID_Fatal
-                  WRITE( ErrMsg, '("DCM_logMap:invalid DCM matrix",3("'//Newline//'",4x,3(ES10.3E2,1x)))') DCM(1,:),DCM(2,:),DCM(3,:)               
-                  RETURN
-               end if         
-            end if         
-         endif
-                         
-            ! normalize the eigenvector:
-         v = v / TwoNorm(v)                                                       ! Eq. 27                  
+            logMap(2) = sign( logMap(2), DCM(1,2)+DCM(2,1) )
+            logMap(3) = sign( logMap(3), DCM(1,3)+DCM(3,1) )            
+         else
+            ! because logMap1 is zero, we can choose logMap2 positive:
+            
+            !d23+d32=2*(1-cos(theta))/theta**2 * logMap(2)*logMap(3); 2*(1-cos(theta))/theta**2 * logMap(2)>0 so logMap(3) is sign(logMap(3),d23+d32)
+            logMap(3) = sign( logMap(3), DCM(2,3)+DCM(3,2) )            
+            
+         end if
+                    
+         ! at this point we may have the wrong sign for logMap (though if theta==pi, it doesn't matter because we can change it in the DCM_setLogMapforInterp() routines)
+         ! we'll do a little checking to see if we should change the sign:
+         
+         IF ( EqualRealNos( pi_D, theta )  ) RETURN
+         
+         v(1) = -DCM(3,2) + DCM(2,3) !-skewSym(3,2)
+         v(2) =  DCM(3,1) - DCM(1,3) ! skewSym(3,1)
+         v(3) = -DCM(2,1) + DCM(1,2) !-skewSym(2,1)
+ 
+         indx_max = 1
+         do i=2,3
+            if ( abs(v(i)) > abs(v(indx_max)) ) indx_max = i
+         end do
+         
+         if ( .not. EqualRealNos( sign(1.0_DbKi,v(indx_max)), sign(1.0_DbKi,logMap(indx_max)) )) logMap = -logMap
+         
+      ELSE
+         
+         TwoSinTheta = 2.0_DbKi*sin(theta)
+         
+         IF ( EqualRealNos(0.0_DbKi, theta) .or. EqualRealNos( 0.0_DbKi, TwoSinTheta ) ) THEN
+         
+            !skewSym = DCM - TRANSPOSE(DCM)
+            !
+            !logMap(1) = -skewSym(3,2)
+            !logMap(2) =  skewSym(3,1)
+            !logMap(3) = -skewSym(2,1)
+            !
+            !logMap = 0.5_DbKi * logMap   ! Eq. 26b with limit as x approaches 0 of (x/sin(x)) = 1
+         
+         
+            logMap = 0.0_DbKi                                                   ! Eq. 26a
+                  
+         ELSE ! 0 < theta < pi 
       
-            ! calculate the skew-symmetric tensor (note we could change sign here for continuity)
-         v =  pi*v                                                                ! Eq. 26c  
+            !skewSym = DCM - TRANSPOSE(DCM)
       
-         logMap(1) = -v(1)
-         logMap(2) =  v(2)
-         logMap(3) = -v(3)
+            logMap(1) = -DCM(3,2) + DCM(2,3) !-skewSym(3,2)
+            logMap(2) =  DCM(3,1) - DCM(1,3) ! skewSym(3,1)
+            logMap(3) = -DCM(2,1) + DCM(1,2) !-skewSym(2,1)
       
-      ELSE ! 0 < theta < pi 
-      
-         skewSym = DCM - TRANSPOSE(DCM)
-      
-         logMap(1) = -skewSym(3,2)
-         logMap(2) =  skewSym(3,1)
-         logMap(3) = -skewSym(2,1)
-      
-         logMap = 0.5_ReKi * theta / sin(theta) * logMap   ! Eq. 26b
+            logMap    = theta / TwoSinTheta * logMap   ! Eq. 26b
+         END IF
+         
       END IF
-   
-   END SUBROUTINE DCM_logMap   
+
+      
+   END SUBROUTINE DCM_logMapD
 !=======================================================================
-SUBROUTINE DCM_SetLogMapForInterp( tensor )
+   SUBROUTINE DCM_logMapR(DCM, logMap, ErrStat, ErrMsg, thetaOut)
+
+      ! This function computes the logarithmic map for a direction 
+      ! cosine matrix.
+      !
+      ! "'Interpolation' of DCMs", M.A. Sprague, 11 March 2014, Eq. 24-30
+      ! with eigenvector equations updated to account for numerics
+   
+   REAL(ReKi),         INTENT(IN)    :: DCM(3,3)
+   REAL(ReKi),         INTENT(  OUT) :: logMap(3)
+   REAL(ReKi),OPTIONAL,INTENT(  OUT) :: thetaOut
+   INTEGER(IntKi),     INTENT(  OUT) :: ErrStat                   ! Error status of the operation
+   CHARACTER(*),       INTENT(  OUT) :: ErrMsg                    ! Error message if ErrStat /= ErrID_None
+   
+      ! local variables
+   REAL(ReKi)                        :: cosTheta
+   REAL(ReKi)                        :: theta
+   REAL(ReKi)                        :: TwoSinTheta
+   REAL(ReKi)                        :: v(3)
+   REAL(ReKi)                        :: skewSym(3,3) ! an anti-symmetric matrix
+   INTEGER(IntKi)                    :: indx_max, i
+      
+         ! initialization
+      ErrStat = ErrID_None
+      ErrMsg  = ""   
+   
+   
+      cosTheta  = 0.5_ReKi*( trace(DCM) - 1.0_ReKi )
+      cosTheta  = min( max(cosTheta,-1.0_ReKi), 1.0_ReKi ) !make sure it's in a valid range (to avoid cases where this is slightly outside the +/-1 range)
+      theta     = ACOS( cosTheta )                         ! Eq. 25 ( 0<=theta<=pi )
+      
+      
+      !IF ( EqualRealNos( pi, theta )  ) THEN
+      IF ( theta > 3.1_ReKi ) THEN  ! theta/(2*sin(theta)) blows up quickly as theta approaches pi, 
+         ! so I'm putting a pretty large tolerance on pi here, and using a different equation to find the solution near pi
+                     
+         !d11 = 1 - (1-cos(theta))/theta^2 * (logMap3^2 + logMap2^2)
+         !d22 = 1 - (1-cos(theta))/theta^2 * (logMap3^2 + logMap1^2)
+         !d33 = 1 - (1-cos(theta))/theta^2 * (logMap2^2 + logMap1^2)
+         
+         logMap(1) = theta * sqrt(abs( 0.5_ReKi * ( 1.0_ReKi + DCM(1,1) - DCM(2,2) - DCM(3,3) ) / (1.0_ReKi-cosTheta) ))
+         logMap(2) = theta * sqrt(abs( 0.5_ReKi * ( 1.0_ReKi - DCM(1,1) + DCM(2,2) - DCM(3,3) ) / (1.0_ReKi-cosTheta) ))
+         logMap(3) = theta * sqrt(abs( 0.5_ReKi * ( 1.0_ReKi - DCM(1,1) - DCM(2,2) + DCM(3,3) ) / (1.0_ReKi-cosTheta) ))
+               
+         ! we choose logMap1 positive then we get the signs for logMap2 and logMap3:
+         if ( .not. EqualRealNos( logMap(1), 0.0_ReKi ) ) then
+            !d12+d21=2*(1-cos(theta))/theta**2 * logMap(1)*logMap(2); 2*(1-cos(theta))/theta**2 * logMap(1)>0 so logMap(2) is sign(logMap(2),d12+d21)
+            !d13+d31=2*(1-cos(theta))/theta**2 * logMap(1)*logMap(3); 2*(1-cos(theta))/theta**2 * logMap(1)>0 so logMap(3) is sign(logMap(3),d13+d31)
+            
+            logMap(2) = sign( logMap(2), DCM(1,2)+DCM(2,1) )
+            logMap(3) = sign( logMap(3), DCM(1,3)+DCM(3,1) )            
+         else
+            ! because logMap1 is zero, we can choose logMap2 positive:
+            
+            !d23+d32=2*(1-cos(theta))/theta**2 * logMap(2)*logMap(3); 2*(1-cos(theta))/theta**2 * logMap(2)>0 so logMap(3) is sign(logMap(3),d23+d32)
+            logMap(3) = sign( logMap(3), DCM(2,3)+DCM(3,2) )            
+            
+         end if
+                    
+         ! at this point we may have the wrong sign for logMap (though if theta==pi, it doesn't matter because we can change it in the DCM_setLogMapforInterp() routines)
+         ! we'll do a little checking to see if we should change the sign:
+         
+         IF ( EqualRealNos( pi, theta )  ) RETURN
+         
+         v(1) = -DCM(3,2) + DCM(2,3) !-skewSym(3,2)
+         v(2) =  DCM(3,1) - DCM(1,3) ! skewSym(3,1)
+         v(3) = -DCM(2,1) + DCM(1,2) !-skewSym(2,1)
+ 
+         indx_max = 1
+         do i=2,3
+            if ( abs(v(i)) > abs(v(indx_max)) ) indx_max = i
+         end do
+         
+         if ( .not. EqualRealNos( sign(1.0_ReKi,v(indx_max)), sign(1.0_ReKi,logMap(indx_max)) )) logMap = -logMap
+         
+      ELSE
+         
+         TwoSinTheta = 2.0_ReKi*sin(theta)
+         
+         IF ( EqualRealNos(0.0_ReKi, theta) .or. EqualRealNos( 0.0_ReKi, TwoSinTheta ) ) THEN
+         
+            !skewSym = DCM - TRANSPOSE(DCM)
+            !
+            !logMap(1) = -skewSym(3,2)
+            !logMap(2) =  skewSym(3,1)
+            !logMap(3) = -skewSym(2,1)
+            !
+            !logMap = 0.5_ReKi * logMap   ! Eq. 26b with limit as x approaches 0 of (x/sin(x)) = 1
+         
+         
+            logMap = 0.0_ReKi                                                   ! Eq. 26a
+                  
+         ELSE ! 0 < theta < pi 
+      
+            logMap(1) = -DCM(3,2) + DCM(2,3) !-skewSym(3,2)
+            logMap(2) =  DCM(3,1) - DCM(1,3) ! skewSym(3,1)
+            logMap(3) = -DCM(2,1) + DCM(1,2) !-skewSym(2,1)
+      
+            logMap    = theta / TwoSinTheta * logMap   ! Eq. 26b
+         END IF
+         
+      END IF
+      
+      IF ( PRESENT( thetaOut ) ) THEN
+         thetaOut = theta
+      END IF      
+      
+   END SUBROUTINE DCM_logMapR  
+!=======================================================================  
+   SUBROUTINE DCM_SetLogMapForInterpD( tensor )
+
+   ! this routine sets the rotation parameters (tensors from DCM_logMap)
+   ! so that they can be appropriately interpolated, based on
+   ! continunity of the neighborhood. The tensor input matrix has columns
+   ! of rotational parameters; one column for each set of values to be 
+   ! interpolated
+   !
+   ! This is based on the 2pi periodicity of rotations:
+   ! if tensor is one solution to DCM_logMap( DCM ), then so is
+   !  tensor*( 1 + TwoPi*k/TwoNorm(tensor) ) for any integer k
+      
+   
+   REAL(DbKi),     INTENT(INOUT) :: tensor(:,:)
+
+   REAL(DbKi)                    :: diff1, diff2      ! magnitude-squared of difference between two adjacent values
+   REAL(DbKi)                    :: temp(3), temp1(3) ! difference between two tensors
+   REAL(DbKi)                    :: period(3)         ! the period to add to the rotational parameters
+   INTEGER(IntKi)                :: nc                ! size of the tensors matrix
+   INTEGER(IntKi)                :: ic                ! loop counters for each array dimension
+   
+   nc = size(tensor,2)
+          
+      ! 
+   do ic=2,nc      
+      
+      diff1 = TwoNorm( tensor(:,ic) )
+      
+      if ( .NOT. EqualRealNos( diff1, 0.0_DbKi) ) then
+            ! check if we're going around a 2pi boundary:
+      
+         period = tensor(:,ic) * ( Twopi_D/diff1 )
+      
+         temp1 = tensor(:,ic-1) - tensor(:,ic)
+         diff1 = DOT_PRODUCT( temp1, temp1 )
+                            
+            ! try for k < 0
+         temp = temp1 + period !k=-1; 
+         diff2 = DOT_PRODUCT( temp, temp )
+      
+         if (diff2 < diff1) then
+         
+            do while (diff2 < diff1)
+               tensor(:,ic) = tensor(:,ic) - period  !k=k-1
+                              
+               diff1 = diff2
+               temp  = temp + period !k=k-1; % = tensor(:,ic-1) - tensor(:,ic)
+               diff2 = DOT_PRODUCT( temp, temp )
+            end do
+         
+         else
+            ! try for k > 0
+         
+               ! check if the new value is too small:
+            temp = temp1 - period !k=+1; 
+            diff2 = DOT_PRODUCT( temp, temp )
+            
+            do while (diff2 < diff1)
+               tensor(:,ic) = tensor(:,ic) + period  !k=k+1
+
+               diff1 = diff2
+               temp  = temp - period !k=k+1; % = tensor(:,ic-1) - tensor(:,ic)
+               diff2 = DOT_PRODUCT( temp, temp )
+            end do
+   
+         end if
+      
+      end if ! tensor vector isn't zero=length
+            
+   end do
+                 
+   END SUBROUTINE DCM_SetLogMapForInterpD
+!=======================================================================         
+   SUBROUTINE DCM_SetLogMapForInterpR( tensor )
 
    ! this routine sets the rotation parameters (tensors from DCM_logMap)
    ! so that they can be appropriately interpolated, based on
@@ -979,7 +1318,7 @@ SUBROUTINE DCM_SetLogMapForInterp( tensor )
                tensor(:,ic) = tensor(:,ic) - period  !k=k-1
                               
                diff1 = diff2
-               temp  = temp1 + period !k=k-1; 
+               temp  = temp + period !k=k-1; % = tensor(:,ic-1) - tensor(:,ic)
                diff2 = DOT_PRODUCT( temp, temp )
             end do
          
@@ -994,7 +1333,7 @@ SUBROUTINE DCM_SetLogMapForInterp( tensor )
                tensor(:,ic) = tensor(:,ic) + period  !k=k+1
 
                diff1 = diff2
-               temp  = temp1 + period !k=k-1; 
+               temp  = temp - period !k=k+1; % = tensor(:,ic-1) - tensor(:,ic)
                diff2 = DOT_PRODUCT( temp, temp )
             end do
    
@@ -1004,7 +1343,7 @@ SUBROUTINE DCM_SetLogMapForInterp( tensor )
             
    end do
                  
-END SUBROUTINE DCM_SetLogMapForInterp
+   END SUBROUTINE DCM_SetLogMapForInterpR
 !=======================================================================     
    FUNCTION EqualRealNos4 ( ReNum1, ReNum2 )
 
@@ -1115,7 +1454,152 @@ END SUBROUTINE DCM_SetLogMapForInterp
    ENDIF
 
 
-  END FUNCTION EqualRealNos16
+   END FUNCTION EqualRealNos16
+!=======================================================================
+   FUNCTION EulerConstruct(theta) result(M)
+   
+      ! this function creates a rotation matrix, M, from a 1-2-3 rotation
+      ! sequence of the 3 Euler angles, theta_x, theta_y, and theta_z.
+      ! M represents a change of basis (from global to local coordinates; 
+      ! not a physical rotation of the body). it is the inverse of EulerExtract().
+      !
+      ! M = R(theta_z) * R(theta_y) * R(theta_x)
+      !   = [ cz sz 0 |   [ cy  0 -sy |   [ 1   0   0 |
+      !     |-sz cz 0 | * |  0  1   0 | * | 0  cx  sx |
+      !     |  0  0 1 ]   | sy  0  cy ]   | 0 -sx  cx ]
+      !   = [ cy*cz   cx*sz+sx*sy*cz    sx*sz-cx*sy*cz |
+      !     |-cy*sz   cx*cz-sx*sy*sz    sx*cz+cx*sy*sz |
+      !     | sy           -sx*cy             cx*cy    ]
+      ! where cz = cos(theta_z), sz = sin(theta_z), cy = cos(theta_y), etc.
+   
+      REAL(ReKi)             :: M(3,3)    ! rotation matrix M 
+      REAL(ReKi), INTENT(IN) :: theta(3)  ! the 3 rotation angles: theta_x, theta_y, theta_z
+      
+      REAL(ReKi)             :: cx        ! cos(theta_x)
+      REAL(ReKi)             :: sx        ! sin(theta_x)
+      REAL(ReKi)             :: cy        ! cos(theta_y)
+      REAL(ReKi)             :: sy        ! sin(theta_y)
+      REAL(ReKi)             :: cz        ! cos(theta_z)
+      REAL(ReKi)             :: sz        ! sin(theta_z)
+   
+
+      cx = cos( theta(1) )
+      sx = sin( theta(1) )
+      
+      cy = cos( theta(2) )
+      sy = sin( theta(2) )
+      
+      cz = cos( theta(3) )
+      sz = sin( theta(3) )
+         
+      M(1,1) =  cy*cz            
+      M(2,1) = -cy*sz            
+      M(3,1) =  sy    
+      
+      M(1,2) =  cx*sz+sx*sy*cz            
+      M(2,2) =  cx*cz-sx*sy*sz            
+      M(3,2) =       -sx*cy     
+      
+      M(1,3) =  sx*sz-cx*sy*cz            
+      M(2,3) =  sx*cz+cx*sy*sz            
+      M(3,3) =        cx*cy               
+   
+   END FUNCTION EulerConstruct
+!=======================================================================
+   FUNCTION EulerExtract(M) result(theta)
+   
+      ! if M is a rotation matrix from a 1-2-3 rotation sequence, this function
+      ! returns the 3 Euler angles, theta_x, theta_y, and theta_z, that formed 
+      ! the matrix. M represents a change of basis (from global to local coordinates; 
+      ! not a physical rotation of the body). M is the inverse of EulerConstruct().
+      !
+      ! M = R(theta_z) * R(theta_y) * R(theta_x)
+      !   = [ cz sz 0 |   [ cy  0 -sy |   [ 1   0   0 |
+      !     |-sz cz 0 | * |  0  1   0 | * | 0  cx  sx |
+      !     |  0  0 1 ]   | sy  0  cy ]   | 0 -sx  cx ]
+      !   = [ cy*cz   cx*sz+sx*sy*cz    sx*sz-cx*sy*cz |
+      !     |-cy*sz   cx*cz-sx*sy*sz    sx*cz+cx*sy*sz |
+      !     | sy           -sx*cy             cx*cy    ]
+      ! where cz = cos(theta_z), sz = sin(theta_z), cy = cos(theta_y), etc.
+      ! 
+      ! returned angles are in the range [-pi, pi]
+   
+      REAL(ReKi), INTENT(IN) :: M(3,3)    ! rotation matrix M 
+      REAL(ReKi)             :: theta(3)  ! the 3 rotation angles: theta_x, theta_y, theta_z
+      
+      REAL(ReKi)             :: cx        ! cos(theta_x)
+      REAL(ReKi)             :: sx        ! sin(theta_x)
+      REAL(ReKi)             :: cy        ! cos(theta_y)
+!     REAL(ReKi)             :: sy        ! sin(theta_y)
+      REAL(ReKi)             :: cz        ! cos(theta_z)
+      REAL(ReKi)             :: sz        ! sin(theta_z)
+   
+         ! use trig identity sz**2 + cz**2 = 1 to get abs(cy):
+      cy = sqrt( m(1,1)**2 + m(2,1)**2 ) 
+!      cy = sqrt( m(3,3)**2 + m(3,2)**2 ) 
+            
+      if ( EqualRealNos(cy,0.0_ReKi) ) then
+      !if ( cy < 16*epsilon(0.0_ReKi) ) then
+         
+         theta(2) = atan2( m(3,1), cy )               ! theta_y
+         
+         ! cy = 0 -> sy = +/- 1
+         ! M  = [  0   cx*sz+/-sx*cz    sx*sz-/+cx*cz |
+         !      |  0   cx*cz-/+sx*sz    sx*cz+/-cx*sz |
+         !      |+/-1        0                0       ]
+         
+         ! gimbal lock allows us to choose theta_z = 0
+         theta(3) = 0.0_ReKi                          ! theta_z
+         
+         ! which reduces the matrix to 
+         ! M  = [  0  +/-sx  -/+cx |
+         !      |  0     cx     sx |
+         !      |+/-1    0       0 ]
+         
+         theta(1) = atan2(  m(2,3), m(2,2) )          ! theta_x
+         
+      else
+         ! atan2( cy*sz, cy*cz )
+         theta(3) = atan2( -m(2,1), m(1,1) )          ! theta_z         
+         cz       = cos( theta(3) )
+         sz       = sin( theta(3) )
+
+            ! get the appropriate sign for cy:
+         if ( EqualRealNos(cz, 0.0_ReKi) ) then
+            cy = sign( cy, -m(2,1)/sz )
+            !cy = -m(2,1)/sz
+         else
+            cy = sign( cy, m(1,1)/cz )
+            !cy = -m(1,1)/cz
+         end if
+         theta(2) = atan2( m(3,1), cy )               ! theta_y
+         
+        !theta(1) = atan2( -m(3,2), m(3,3) )          ! theta_x
+         
+         ! for numerical reasons, we're going to get theta_x using
+         ! M' = (R(theta_z) * R(theta_y))^T * M = R(theta_x)
+         !    = [ cy  0  sy |   [ cz -sz 0 |       [ 1   0   0 |
+         !      |  0  1   0 | * | sz  cz 0 | * M = | 0  cx  sx |
+         !      |-sy  0  cy ]   |  0   0 1 ]       | 0 -sx  cx ]
+         !    = [ cy*cz  -cy*sz  sy |       [ 1   0   0 |
+         !      |    sz      cz   0 | * M = | 0  cx  sx |
+         !      |-sy*cz   sy*sz  cy ]       | 0 -sx  cx ]
+         ! taking M'(2,2) and M'(2,3) , we get cx and sx:
+         ! sz*m(1,2) + cz*m(2,2) = cx
+         ! sz*m(1,3) + cz*m(2,3) = sx
+
+         cz = cos( theta(3) )
+         sz = sin( theta(3) )
+         
+         cx = sz*m(1,2) + cz*m(2,2)
+         sx = sz*m(1,3) + cz*m(2,3)
+         
+         theta(1) = atan2( sx, cx )
+         
+      end if
+            
+      
+   END FUNCTION EulerExtract
 !=======================================================================
    SUBROUTINE Eye2( A, ErrStat, ErrMsg )
 
@@ -1154,6 +1638,44 @@ END SUBROUTINE DCM_SetLogMapForInterp
    END DO
 
    END SUBROUTINE Eye2
+!=======================================================================
+   SUBROUTINE Eye2D( A, ErrStat, ErrMsg )
+
+      ! This routine sets the matrix A(:,:) to the identity
+      ! matrix (all zeros, with ones on the diagonal)
+      ! Note that this also returns the "pseudo-identity" when A(:,:)
+      ! is not square (i.e., nr/=nc).
+
+   REAL(DbKi),     INTENT(INOUT) :: A (:,:)                        ! Array to matricies to set to the identity matrix (nr,nc,n)
+   INTEGER(IntKi), INTENT(OUT)   :: ErrStat                        ! Error level
+   CHARACTER(*),   INTENT(OUT)   :: ErrMsg                         ! ErrMsg corresponding to ErrStat
+
+      ! local variables
+   INTEGER                       :: j                              ! loop counter
+   INTEGER                       :: nr                             ! number of rows
+   INTEGER                       :: nc                             ! number of columns
+
+
+   nr = SIZE(A,1)
+   nc = SIZE(A,2)
+
+   IF (nr /= nc) THEN
+      ErrStat = ErrID_Info
+      ErrMsg  = 'NWTC Library, Eye(): Matrix is not square.'
+   ELSE
+      ErrStat = ErrID_None
+      ErrMsg = ''
+   END IF
+
+      ! initialize to zero:
+   A = 0._DbKi
+
+      ! set the diagonals to one:
+   DO j = 1, MIN(nr,nc) ! the diagonal of the matrix
+      A(j,j) = 1._DbKi
+   END DO
+
+   END SUBROUTINE Eye2D
 !=======================================================================
    SUBROUTINE Eye3( A, ErrStat, ErrMsg )
 
@@ -1297,7 +1819,7 @@ END SUBROUTINE DCM_SetLogMapForInterp
    INTEGER(IntKi), INTENT(OUT)  :: ErrStat                                    ! Error status.
    INTEGER(IntKi), INTENT(OUT)  :: Ind                                        ! The index of the point in Ary just below Val.
 
-   CHARACTER(4096), INTENT(OUT) :: ErrMsg                                     ! Error message.
+   CHARACTER(*),   INTENT(OUT)  :: ErrMsg                                     ! Error message.
 
 
       ! Local declarations.
@@ -1311,13 +1833,12 @@ END SUBROUTINE DCM_SetLogMapForInterp
       ! Check the validity of the data.
 
    IF ( NumPts == 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, ' >> The value of NumPts cannot be zero when calling GetOffsetReg.' )
+      ErrStat = ErrID_Fatal
+      ErrMsg = 'GetOffsetReg:The value of NumPts cannot be zero.'
       RETURN
-   END IF
-
-   IF ( NumPts == 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, ' >> The value of NumPts cannot be zero when calling GetOffsetReg.' )
-      RETURN
+   ELSE
+      ErrStat = ErrID_None
+      ErrMsg  = ""
    END IF
 
 
@@ -1341,40 +1862,7 @@ END SUBROUTINE DCM_SetLogMapForInterp
    Ind   = INT( ( Val - Ary(1) )/Del ) + 1
    Fract = ( Val - Ary(Ind) )/Del
 
-
-   CALL ExitThisRoutine ( ErrID_None, 'No Problemo' )
-
    RETURN
-
-   !=======================================================================
-   CONTAINS
-   !=======================================================================
-      SUBROUTINE ExitThisRoutine ( ErrID, Msg )
-
-         ! This subroutine cleans up the parent routine before exiting.
-
-
-            ! Argument declarations.
-
-         INTEGER(IntKi), INTENT(IN)       :: ErrID                            ! The error identifier (ErrLev)
-
-         CHARACTER(*),   INTENT(IN)       :: Msg                              ! The error message (ErrMsg)
-
-
-            ! Local declarations.
-
-         LOGICAL                          :: IsOpen                           ! A flag that indicates if the input unit is still open.
-
-
-            ! Set error status/message
-
-         ErrStat = ErrID
-         ErrMsg  = Msg
-
-
-         RETURN
-
-      END SUBROUTINE ExitThisRoutine ! ( ErrID, Msg )
 
    END SUBROUTINE GetOffsetReg ! ( Ary, NumPts, Val, Ind, Fract, ErrStat, ErrMsg )
 !=======================================================================
@@ -1448,7 +1936,7 @@ END SUBROUTINE DCM_SetLogMapForInterp
 
    GetSmllRotAngs = 0.0
    ErrStat        = ErrID_None
-
+   ErrMsg         = ""
 
       ! calculate the small angles
    GetSmllRotAngs(1) = DCMat(2,3) - DCMat(3,2)
@@ -1512,7 +2000,7 @@ END SUBROUTINE DCM_SetLogMapForInterp
       CALL ProgAbort ( ' In function GL_Loc, the number of points used for Gauss-Legendre Quadrature must be between 1 and 6' &
                     //' (inclusive).  Instead, it is "'//TRIM( Int2LStr( NPts ) )//'".', PRESENT(ErrStat) )
       IF ( PRESENT(ErrStat) ) THEN ! this should always be true here
-         ErrStat = 1
+         ErrStat = ErrID_Fatal
          RETURN
       END IF
    END IF
@@ -1521,7 +2009,7 @@ END SUBROUTINE DCM_SetLogMapForInterp
       CALL ProgAbort ( ' In function GL_Loc, the point being used for Gauss-Legendre Quadrature must be between 1 and ' &
                    //TRIM( Int2LStr( NPts ) )//' (inclusive).  Instead, it is "'//TRIM( Int2LStr( Ipt ) )//'".', PRESENT(ErrStat) )
       IF ( PRESENT(ErrStat) ) THEN
-         ErrStat = 1
+         ErrStat = ErrID_Fatal
          RETURN
       END IF
    END IF
@@ -2464,6 +2952,26 @@ END SUBROUTINE InterpStpReal3D
    RETURN
    END SUBROUTINE MPi2Pi
 !=======================================================================
+   FUNCTION OuterProduct(vec1,vec2)
+   
+   ! this routine calculates the outer product of two vectors
+
+   REAL(ReKi),INTENT(IN):: vec1(:),vec2(:)
+   REAL(ReKi)::OuterProduct(SIZE(vec1),SIZE(vec2))
+
+   INTEGER(IntKi)::i,j,n1,n2
+
+   n1=SIZE(vec1)
+   n2=SIZE(vec2)
+
+   DO i=1,n1
+       DO j=1,n2
+           OuterProduct(i,j) = vec1(i) * vec2(j)
+       ENDDO
+   ENDDO
+
+   END FUNCTION OuterProduct   
+!=======================================================================
    FUNCTION PSF ( Npsf, NumPrimes, subtract )
 
     ! This routine factors the number N into its primes.  If any of those
@@ -2746,7 +3254,7 @@ END SUBROUTINE InterpStpReal3D
 
    INTEGER(IntKi), INTENT(OUT)  :: ErrStat                                    ! Error status.
 
-   CHARACTER(4096), INTENT(OUT) :: ErrMsg                                     ! Error message.
+   CHARACTER(*),   INTENT(OUT)  :: ErrMsg                                     ! Error message.
 
 
       ! Local declarations.
@@ -2762,26 +3270,26 @@ END SUBROUTINE InterpStpReal3D
 
    INTEGER(IntKi)               :: ErrStatLcL                                 ! Local error status.
    INTEGER                      :: I                                          ! The index into the arrays.
-
+   CHARACTER(*), PARAMETER      :: RoutineName = 'RegCubicSplineInit'
 
 
       ! Allocate the various intermediate arrays.
 
    ALLOCATE ( Slope( AryLen - 1 ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the Slope array in RegCubicSplineInit.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the Slope array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( U( AryLen - 1 ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the U array in RegCubicSplineInit.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the U array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( V( AryLen - 1 ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the V array in RegCubicSplineInit.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the V array.' )
       RETURN
    ENDIF
 
@@ -2885,8 +3393,8 @@ END SUBROUTINE InterpStpReal3D
 
    INTEGER(IntKi), INTENT(OUT)  :: ErrStat                                    ! Error status.
 
-   CHARACTER(4096), INTENT(OUT) :: ErrMsg                                     ! Error message.
-
+   CHARACTER(*),   INTENT(OUT)  :: ErrMsg                                     ! Error message.
+   
 
       ! Local declarations.
 
@@ -2905,7 +3413,7 @@ END SUBROUTINE InterpStpReal3D
    INTEGER                      :: NumCrvs                                    ! Number of curves to be interpolated.
    INTEGER                      :: NumPts                                     ! Number of points in each curve.
 
-
+   CHARACTER(*), PARAMETER      :: RoutineName = 'RegCubicSplineInitM'
 
       ! How big are the arrays?
 
@@ -2917,31 +3425,31 @@ END SUBROUTINE InterpStpReal3D
 
    ALLOCATE ( ZLo( NumCrvs ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the ZLo array in CubicSplineInitM.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the ZLo array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( ZHi( NumCrvs ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the ZHi array in CubicSplineInitM.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the ZHi array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( Slope( NumPts-1, NumCrvs ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the Slope array in RegCubicSplineInitM.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the Slope array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( U( NumPts - 1 ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the U array in RegCubicSplineInitM.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the U array.' )
       RETURN
    ENDIF
 
    ALLOCATE ( V( NumPts-1, NumCrvs ), STAT=ErrStatLcL )
    IF ( ErrStatLcL /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, NewLine//' >> Error allocating memory for the V array in RegCubicSplineInitM.' )
+      CALL ExitThisRoutine ( ErrID_Fatal, RoutineName//':Error allocating memory for the V array.' )
       RETURN
    ENDIF
 
@@ -3020,6 +3528,8 @@ END SUBROUTINE InterpStpReal3D
 
             ! Deallocate the Words array if it had been allocated.
 
+         IF ( ALLOCATED( ZHi   ) )  DEALLOCATE( ZHi   )
+         IF ( ALLOCATED( ZLo   ) )  DEALLOCATE( ZLo   )
          IF ( ALLOCATED( Slope ) )  DEALLOCATE( Slope )
          IF ( ALLOCATED( U     ) )  DEALLOCATE( U     )
          IF ( ALLOCATED( V     ) )  DEALLOCATE( V     )
@@ -3056,7 +3566,7 @@ END SUBROUTINE InterpStpReal3D
 
    INTEGER(IntKi), INTENT(OUT)  :: ErrStat                                    ! Error status.
 
-   CHARACTER(4096), INTENT(OUT) :: ErrMsg                                     ! Error message.
+   CHARACTER(*),   INTENT(OUT)  :: ErrMsg                                     ! Error message.
 
 
       ! Local declarations.
@@ -3065,7 +3575,8 @@ END SUBROUTINE InterpStpReal3D
 
    INTEGER                      :: ILo                                        ! The index into the array for which X is just above or equal to XAry(ILo).
 
-
+   ErrStat = ErrID_None
+   ErrMsg  = ""
 
       ! See if X is within the range of XAry.  Return the end point if it is not.
 
@@ -3087,39 +3598,7 @@ END SUBROUTINE InterpStpReal3D
    RegCubicSplineInterp = Coef(ILo,0) + XOff*( Coef(ILo,1) + XOff*( Coef(ILo,2) + XOff*Coef(ILo,3) ) )
 
 
-   CALL ExitThisRoutine ( ErrID_None, 'No Problemo' )
-
    RETURN
-
-   !=======================================================================
-   CONTAINS
-   !=======================================================================
-      SUBROUTINE ExitThisRoutine ( ErrID, Msg )
-
-         ! This subroutine cleans up the parent routine before exiting.
-
-
-            ! Argument declarations.
-
-         INTEGER(IntKi), INTENT(IN)       :: ErrID                            ! The error identifier (ErrLev)
-
-         CHARACTER(*),   INTENT(IN)       :: Msg                              ! The error message (ErrMsg)
-
-
-            ! Local declarations.
-
-         LOGICAL                          :: IsOpen                           ! A flag that indicates if the input unit is still open.
-
-
-            ! Set error status/message
-
-         ErrStat = ErrID
-         ErrMsg  = Msg
-
-
-         RETURN
-
-      END SUBROUTINE ExitThisRoutine ! ( ErrID, Msg )
 
    END FUNCTION RegCubicSplineInterp ! ( X, AryLen, XAry, YAry, DelX, Coef, ErrStat, ErrMsg )
 !=======================================================================
@@ -3147,7 +3626,7 @@ END SUBROUTINE InterpStpReal3D
 
    INTEGER(IntKi), INTENT(OUT)  :: ErrStat                                    ! Error status.
 
-   CHARACTER(4096), INTENT(OUT) :: ErrMsg                                     ! Error message.
+   CHARACTER(*),   INTENT(OUT)  :: ErrMsg                                     ! Error message.
 
 
       ! Local declarations.
@@ -3160,6 +3639,8 @@ END SUBROUTINE InterpStpReal3D
    INTEGER                      :: NumPts                                     ! Number of points in each curve.
 
 
+   ErrStat = ErrID_None
+   ErrMsg  = ""
 
       ! How big are the arrays?  Use the size to allocate the result.
 
@@ -3168,7 +3649,8 @@ END SUBROUTINE InterpStpReal3D
 
    ALLOCATE ( Res( NumCrvs ) , STAT=ErrStatLcl )
    IF ( ErrStatLcl /= 0 )  THEN
-      CALL ExitThisRoutine ( ErrID_Fatal, '  >> Error allocating memory for the function result array in RegCubicSplineInterpM.' )
+      ErrStat = ErrID_Fatal
+      ErrMsg  = "RegCubicSplineInterpM:Error allocating memory for the function result."
       RETURN
    ENDIF
 
@@ -3193,40 +3675,7 @@ END SUBROUTINE InterpStpReal3D
    Res(:) = Coef(ILo,:,0) + XOff*( Coef(ILo,:,1) + XOff*( Coef(ILo,:,2) + XOff*Coef(ILo,:,3) ) )
 
 
-   CALL ExitThisRoutine ( ErrID_None, 'No Problemo' )
-
    RETURN
-
-   !=======================================================================
-   CONTAINS
-   !=======================================================================
-      SUBROUTINE ExitThisRoutine ( ErrID, Msg )
-
-         ! This subroutine cleans up the parent routine before exiting.
-
-
-            ! Argument declarations.
-
-         INTEGER(IntKi), INTENT(IN)       :: ErrID                            ! The error identifier (ErrLev)
-
-         CHARACTER(*),   INTENT(IN)       :: Msg                              ! The error message (ErrMsg)
-
-
-            ! Local declarations.
-
-         LOGICAL                          :: IsOpen                           ! A flag that indicates if the input unit is still open.
-
-
-            ! Set error status/message
-
-         ErrStat = ErrID
-         ErrMsg  = Msg
-
-
-         RETURN
-
-      END SUBROUTINE ExitThisRoutine ! ( ErrID, Msg )
-
    END FUNCTION RegCubicSplineInterpM ! ( X, XAry, YAry, DelX, Coef, ErrStat, ErrMsg )
 !=======================================================================
    SUBROUTINE RombergInt(f, a, b, R, err, eps, ErrStat)
@@ -3263,7 +3712,7 @@ END SUBROUTINE InterpStpReal3D
 
          ! Local declarations:
 
-      INTEGER                           :: m, i, j, k
+      INTEGER                           :: m, i, j, k, IOS
       INTEGER, PARAMETER                :: mmax = 50       ! Maximum iteration number for m
       INTEGER, PARAMETER                :: imax = 50       ! Maximum iteration number for i
 
@@ -3272,7 +3721,15 @@ END SUBROUTINE InterpStpReal3D
       REAL(ReKi)                        :: sumf
 
          ! Initialize T
-      ALLOCATE( T( mmax, imax ) )
+      ALLOCATE( T( mmax, imax ), Stat=ios )
+      IF (IOS /= 0) THEN
+         CALL ProgAbort ( 'RombergInt: Error allocating T.', PRESENT(ErrStat) )
+         IF ( PRESENT(ErrStat) ) THEN
+            ErrStat = ErrID_Fatal
+            RETURN
+         END IF
+      END IF
+      
       T = 0
 
       T(1, 1) = 0.5*(b - a)*( f(a) + f(b) )
@@ -3320,13 +3777,114 @@ END SUBROUTINE InterpStpReal3D
       CALL ProgAbort ( ' In subroutine RombergInt, the iteration reaches the maximum number. The integration did NOT converge! ', &
                        PRESENT(ErrStat) )
       IF ( PRESENT(ErrStat) ) THEN
-         ErrStat = 1
+         ErrStat = ErrID_Fatal
          RETURN
       END IF
 
       RETURN
    END SUBROUTINE RombergInt
 !=======================================================================
+   SUBROUTINE RunTimes( StrtTime, UsrTime1, SimStrtTime, UsrTime2, ZTime, UsrTime_out )
+   ! This routine displays a message that gives that status of the simulation and the predicted end time of day.
+
+      IMPLICIT                        NONE
+
+         ! Passed variables
+
+      INTEGER   ,INTENT(IN)          :: StrtTime (8)                                    ! Start time of simulation (including initialization)
+      INTEGER   ,INTENT(IN)          :: SimStrtTime (8)                                 ! Start time of simulation (after initialization)
+      REAL(ReKi),INTENT(IN)          :: UsrTime1                                        ! User CPU time for simulation initialization.
+      REAL(ReKi),INTENT(IN)          :: UsrTime2                                        ! User CPU time for simulation (without intialization)
+      REAL(DbKi),INTENT(IN)          :: ZTime                                           ! The final simulation time (not necessarially TMax)
+      REAL(ReKi),INTENT(OUT),OPTIONAL:: UsrTime_out                                     ! User CPU time for entire run - optional value returned to calling routine
+
+         ! Local variables
+
+      REAL(ReKi)                      :: ClckTime                                        ! Elapsed clock time for the entire run.
+      REAL(ReKi)                      :: ClckTimeSim                                     ! Elapsed clock time for the simulation phase of the run.
+      REAL(ReKi)                      :: Factor                                          ! Ratio of seconds to a specified time period.
+      REAL(ReKi)                      :: TRatio                                          ! Ratio of simulation time to elapsed clock time.
+      REAL(ReKi), PARAMETER           :: SecPerDay = 24*60*60.0_ReKi                     ! Number of seconds per day
+                                      
+      REAL(ReKi)                      :: UsrTime                                         ! User CPU time for entire run.
+      REAL(ReKi)                      :: UsrTimeSim                                      ! User CPU time for simulation (not including initialization).
+      INTEGER                         :: EndTimes (8)                                    ! An array holding the ending clock time of the simulation.
+                                      
+      CHARACTER( 8)                   :: TimePer
+      CHARACTER(MaxWrScrLen)          :: BlankLine
+
+         ! Get the end times to compare with start times.
+
+      CALL DATE_AND_TIME ( VALUES=EndTimes )
+      CALL CPU_TIME ( UsrTime )
+      UsrTime = MAX( 0.0_ReKi, UsrTime )  ! CPU_TIME: If a meaningful time cannot be returned, a processor-dependent negative value is returned
+   
+
+      ! Calculate the elapsed wall-clock time in seconds.
+
+      ClckTime     = GetClockTime(StrtTime,      EndTimes)
+     !ClckTimeInit = GetClockTime(StrtTime,   SimStrtTime)
+      ClckTimeSim  = GetClockTime(SimStrtTime,   EndTimes)
+
+         ! Calculate CPU times.
+
+      UsrTime    = MAX( 0.0_ReKi, UsrTime - UsrTime1 )
+      UsrTimeSim = MAX( 0.0_ReKi, UsrTime - UsrTime2 )
+
+
+      IF ( .NOT. EqualRealNos( UsrTimeSim, 0.0_ReKi ) .AND. ZTime > 0.0_DbKi )  THEN
+
+         TRatio = REAL(ZTime,ReKi) / UsrTimeSim
+
+         IF     ( UsrTime > SecPerDay )  THEN
+            Factor = 1.0_ReKi/SecPerDay
+            TimePer = ' days'
+         ELSEIF ( UsrTime >  3600.0_ReKi )  THEN
+            Factor = 1.0_ReKi/3600.0_ReKi
+            TimePer = ' hours'
+         ELSEIF ( UsrTime >    60.0_ReKi )  THEN
+            Factor = 1.0_ReKi/60.0_ReKi
+            TimePer = ' minutes'
+         ELSE
+            Factor = 1.0_ReKi
+            TimePer = ' seconds'
+         ENDIF
+
+         BlankLine = ""
+         CALL WrOver( BlankLine )  ! BlankLine contains MaxWrScrLen spaces
+         CALL WrScr1( ' Total Real Time:       '//TRIM( Num2LStr( Factor*ClckTime      ) )//TRIM( TimePer ) )
+         CALL WrScr ( ' Total CPU Time:        '//TRIM( Num2LStr( Factor*UsrTime       ) )//TRIM( TimePer ) )
+   !     CALL WrScr ( ' ')
+   !     CALL WrScr ( ' Simulation Real Time:  '//TRIM( Num2LStr( Factor*ClckTimeSim   ) )//TRIM( TimePer ) )
+         CALL WrScr ( ' Simulation CPU Time:   '//TRIM( Num2LStr( Factor*UsrTimeSim    ) )//TRIM( TimePer ) )      
+         CALL WrScr ( ' Simulated Time:        '//TRIM( Num2LStr( Factor*REAL( ZTime ) ) )//TRIM( TimePer ) )
+         CALL WrScr ( ' Time Ratio (Sim/CPU):  '//TRIM( Num2LStr( TRatio ) ) )
+
+      ENDIF
+
+      IF (PRESENT(UsrTime_out)) UsrTime_out = UsrTime
+      RETURN
+   CONTAINS
+
+      FUNCTION GetClockTime(StartClockTime, EndClockTime)
+      ! return the number of seconds between StartClockTime and EndClockTime
+   
+         REAL                         :: GetClockTime          ! Elapsed clock time for the simulation phase of the run.
+         INTEGER   , INTENT(IN)       :: StartClockTime (8)                                 ! Start time of simulation (after initialization)
+         INTEGER   , INTENT(IN)       :: EndClockTime (8)                                 ! Start time of simulation (after initialization)
+   
+      !bjj: This calculation will be wrong at certain times (e.g. if it's near midnight on the last day of the month), but to my knowledge, no one has complained...
+         GetClockTime =       0.001*( EndClockTime(8) - StartClockTime(8) ) &  ! Is the milliseconds of the second (range 0 to 999) - local time
+                        +           ( EndClockTime(7) - StartClockTime(7) ) &  ! Is the seconds of the minute (range 0 to 59) - local time
+                        +      60.0*( EndClockTime(6) - StartClockTime(6) ) &  ! Is the minutes of the hour (range 0 to 59) - local time
+                        +    3600.0*( EndClockTime(5) - StartClockTime(5) ) &  ! Is the hour of the day (range 0 to 23) - local time
+                        + SecPerDay*( EndClockTime(3) - StartClockTime(3) )    ! Is the day of the month
+   
+   
+      END FUNCTION GetClockTime
+   
+   END SUBROUTINE RunTimes   
+!=======================================================================   
    SUBROUTINE SetAnglesForInterp( angles )
 
       ! this routine takes angles (in radians) and converts them to appropriate
@@ -3399,6 +3957,119 @@ END SUBROUTINE InterpStpReal3D
 
    RETURN
    END SUBROUTINE SetConstants
+!=======================================================================   
+   SUBROUTINE SimStatus_FirstTime( PrevSimTime, PrevClockTime, SimStrtTime, UsrTimeSim, ZTime, TMax )
+      ! This routine displays a message that gives that status of the simulation.
+
+      IMPLICIT                        NONE
+
+         ! Passed variables
+      REAL(DbKi), INTENT(IN   )    :: ZTime                                           ! Current simulation time (s)
+      REAL(DbKi), INTENT(IN   )    :: TMax                                            ! Expected simulation time (s)
+      REAL(DbKi), INTENT(  OUT)    :: PrevSimTime                                     ! Previous time message was written to screen (s > 0)
+      REAL(ReKi), INTENT(  OUT)    :: PrevClockTime                                   ! Previous clock time in seconds past midnight
+      INTEGER,    INTENT(  OUT)    :: SimStrtTime (8)                                 ! An array containing the elements of the start time.
+      REAL(ReKi), INTENT(  OUT)    :: UsrTimeSim                                      ! User CPU time for simulation (without intialization)
+
+         ! Local variables.
+
+      REAL(ReKi)                   :: CurrClockTime                                   ! Current time in seconds past midnight.
+
+
+         ! How many seconds past midnight?
+
+      CALL DATE_AND_TIME ( Values=SimStrtTime )
+      CALL CPU_TIME ( UsrTimeSim )                                                    ! Initial CPU time   
+      UsrTimeSim = MAX( 0.0_ReKi, UsrTimeSim )  ! CPU_TIME: If a meaningful time cannot be returned, a processor-dependent negative value is returned
+
+      CurrClockTime = TimeValues2Seconds( SimStrtTime )
+
+
+      CALL WrScr ( ' Timestep: '//TRIM( Num2LStr( NINT( ZTime ) ) )//' of '//TRIM( Num2LStr( TMax ) )//' seconds.')
+
+
+      ! Let's save this time as the previous time for the next call to the routine
+      PrevClockTime = CurrClockTime
+      PrevSimTime   = ZTime
+
+      RETURN
+   END SUBROUTINE SimStatus_FirstTime
+!=======================================================================
+   SUBROUTINE SimStatus( PrevSimTime, PrevClockTime, ZTime, TMax )
+   
+   ! This routine displays a message that gives that status of the simulation and the predicted end time of day.
+
+      IMPLICIT                        NONE
+
+         ! Passed variables
+      REAL(DbKi), INTENT(IN)       :: ZTime                                ! Current simulation time (s)
+      REAL(DbKi), INTENT(IN)       :: TMax                                 ! Expected simulation time (s)
+      REAL(DbKi), INTENT(INOUT)    :: PrevSimTime                          ! Previous time message was written to screen (s > 0)
+      REAL(ReKi), INTENT(INOUT)    :: PrevClockTime                        ! Previous clock time in seconds past midnight
+
+
+         ! Local variables.
+
+      REAL(ReKi)                   :: CurrClockTime                        ! Current time in seconds past midnight.
+      REAL(ReKi)                   :: DeltTime                             ! The amount of time elapsed since the last call.
+      REAL(ReKi)                   :: EndTime                              ! Approximate time of day when simulation will complete.
+      REAL(ReKi), PARAMETER        :: InSecHr  = 1.0_ReKi/3600.0_ReKi      ! Inverse of the number of seconds in an hour
+      REAL(ReKi), PARAMETER        :: InSecMn  = 1.0_ReKi/  60.0_ReKi      ! Inverse of the number of seconds in a minute
+      REAL(ReKi)                   :: SimTimeLeft                          ! Approximate clock time remaining before simulation completes
+
+      REAL(ReKi), PARAMETER        :: SecPerDay = 24*60*60.0_ReKi          ! Number of seconds per day
+
+      INTEGER(4)                   :: EndHour                              ! The hour when the simulations is expected to complete.
+      INTEGER(4)                   :: EndMin                               ! The minute when the simulations is expected to complete.
+      INTEGER(4)                   :: EndSec                               ! The second when the simulations is expected to complete.
+      INTEGER(4)                   :: TimeAry  (8)                         ! An array containing the elements of the start time.
+
+      CHARACTER(MaxWrScrLen)       :: BlankLine
+      CHARACTER( 8)                :: ETimeStr                             ! String containing the end time.
+
+
+      IF ( ZTime <= PrevSimTime ) RETURN
+
+
+         ! How many seconds past midnight?
+
+      CALL DATE_AND_TIME ( Values=TimeAry )
+      CurrClockTime = TimeValues2Seconds( TimeAry )
+
+         ! Calculate elapsed clock time
+
+      DeltTime = CurrClockTime - PrevClockTime
+
+
+         ! We may have passed midnight since the last revoultion.  We will assume that (ZTime - PrevSimTime) of 
+        !  simulation time doesn't take more than a day.
+
+      IF ( CurrClockTime < PrevClockTime )  THEN
+         DeltTime = DeltTime + SecPerDay
+      ENDIF
+
+
+         ! Estimate the end time in hours, minutes, and seconds
+
+      SimTimeLeft = REAL( ( TMax - ZTime )*DeltTime/( ZTime - PrevSimTime ), ReKi )          ! DeltTime/( ZTime - PrevSimTime ) is the delta_ClockTime divided by the delta_SimulationTime
+      EndTime  =  MOD( CurrClockTime+SimTimeLeft, SecPerDay )
+      EndHour  =  INT(   EndTime*InSecHr )
+      EndMin   =  INT( ( EndTime - REAL( 3600*EndHour ) )*InSecMn )
+      EndSec   = NINT(   EndTime - REAL( 3600*EndHour + 60*EndMin ) ) !bjj: this NINT can make the seconds say "60"
+
+      WRITE (ETimeStr,"(I2.2,2(':',I2.2))")  EndHour, EndMin, EndSec
+
+      BlankLine = ""
+      CALL WrOver( BlankLine )  ! BlankLine contains MaxWrScrLen spaces
+      CALL WrOver ( ' Timestep: '//TRIM( Num2LStr( NINT( ZTime ) ) )//' of '//TRIM( Num2LStr( TMax ) )// &
+                    ' seconds. Estimated final completion at '//ETimeStr//'.'                             )
+
+         ! Let's save this time as the previous time for the next call to the routine
+      PrevClockTime = CurrClockTime
+      PrevSimTime   = ZTime
+
+      RETURN
+   END SUBROUTINE SimStatus   
 !=======================================================================
    SUBROUTINE SmllRotTrans( RotationType, Theta1, Theta2, Theta3, TransMat, ErrTxt, ErrStat, ErrMsg )
 
@@ -3638,38 +4309,119 @@ END SUBROUTINE InterpStpReal3D
    RETURN
    END FUNCTION StdDevFn ! ( Ary, AryLen, Mean )
 !=======================================================================
-   FUNCTION trace(A)
+   FUNCTION TimeValues2Seconds( TimeAry )
+      ! This routine takes an array of time values such as that returned from
+      !     CALL DATE_AND_TIME ( Values=TimeAry )
+      ! and converts TimeAry to the number of seconds past midnight.
+
+      ! Passed variables:
+   INTEGER, INTENT(IN)          :: TimeAry  (8)                                    ! An array containing the elements of the time
+   REAL(ReKi)                   :: TimeValues2Seconds                              ! Current time in seconds past midnight
+
+
+   TimeValues2Seconds = 3600*TimeAry(5) + 60*TimeAry(6) + TimeAry(7) + 0.001_ReKi*TimeAry(8)
+
+   END FUNCTION TimeValues2Seconds
+!=======================================================================
+   FUNCTION traceR4(A)
    
       ! This function computes the trace of a square matrix:
       ! SUM ( A(i,i) ) for i=1, min( SIZE(A,1), SIZE(A,2) )
       
-   REAL(ReKi), INTENT(IN)  :: A(:,:)
-   REAL(ReKi)              :: trace
+   REAL(SiKi), INTENT(IN)  :: A(:,:)
+   REAL(SiKi)              :: traceR4
    
    INTEGER(IntKi)          :: n     ! rows/cols in A
    INTEGER(IntKi)          :: i     ! loop counter
    
    n = min( SIZE(A,1), SIZE(A,2) )
 
-   trace = 0.0_ReKi
+   traceR4 = 0.0_ReKi
    do i=1,n
-      trace = trace + A(i,i)
+      traceR4 = traceR4 + A(i,i)
    end do
    
-   END FUNCTION trace
+   END FUNCTION traceR4
 !=======================================================================
-   FUNCTION TwoNorm(v)
+   FUNCTION traceR8(A)
+   
+      ! This function computes the trace of a square matrix:
+      ! SUM ( A(i,i) ) for i=1, min( SIZE(A,1), SIZE(A,2) )
+      
+   REAL(R8Ki), INTENT(IN)  :: A(:,:)
+   REAL(R8Ki)              :: traceR8
+   
+   INTEGER(IntKi)          :: n     ! rows/cols in A
+   INTEGER(IntKi)          :: i     ! loop counter
+   
+   n = min( SIZE(A,1), SIZE(A,2) )
+
+   traceR8 = 0.0_ReKi
+   do i=1,n
+      traceR8 = traceR8 + A(i,i)
+   end do
+   
+   END FUNCTION traceR8
+!=======================================================================
+   FUNCTION traceR16(A)
+   
+      ! This function computes the trace of a square matrix:
+      ! SUM ( A(i,i) ) for i=1, min( SIZE(A,1), SIZE(A,2) )
+      
+   REAL(QuKi), INTENT(IN)  :: A(:,:)
+   REAL(QuKi)              :: traceR16
+   
+   INTEGER(IntKi)          :: n     ! rows/cols in A
+   INTEGER(IntKi)          :: i     ! loop counter
+   
+   n = min( SIZE(A,1), SIZE(A,2) )
+
+   traceR16 = 0.0_ReKi
+   do i=1,n
+      traceR16 = traceR16 + A(i,i)
+   end do
+   
+   END FUNCTION traceR16
+!=======================================================================
+   FUNCTION TwoNormR4(v)
    
       ! this function returns the 2-norm of a vector v
       ! fortran 2008 has Norm2() built in
       
-      REAL(ReKi), INTENT(IN)  :: v(:)      
-      REAL(ReKi)              :: TwoNorm      
+      REAL(SiKi), INTENT(IN)  :: v(:)      
+      REAL(SiKi)              :: TwoNormR4      
       
-      TwoNorm = SQRT( DOT_PRODUCT(v, v) )
+      TwoNormR4 = SQRT( DOT_PRODUCT(v, v) )
       
       
    END FUNCTION
+!=======================================================================
+   FUNCTION TwoNormR8(v)
+   
+      ! this function returns the 2-norm of a vector v
+      ! fortran 2008 has Norm2() built in
+      
+      REAL(R8Ki), INTENT(IN)  :: v(:)      
+      REAL(R8Ki)              :: TwoNormR8      
+      
+      TwoNormR8 = SQRT( DOT_PRODUCT(v, v) )
+      
+      
+   END FUNCTION
+!=======================================================================
+   FUNCTION TwoNormR16(v)
+   
+      ! this function returns the 2-norm of a vector v
+      ! fortran 2008 has Norm2() built in
+      
+      REAL(QuKi), INTENT(IN)  :: v(:)      
+      REAL(QuKi)              :: TwoNormR16      
+      
+      TwoNormR16 = SQRT( DOT_PRODUCT(v, v) )
+      
+      
+   END FUNCTION
+
 !=======================================================================  
    SUBROUTINE Zero2TwoPi ( Angle )
 
