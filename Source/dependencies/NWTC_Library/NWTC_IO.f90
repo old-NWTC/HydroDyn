@@ -17,8 +17,8 @@
 ! limitations under the License.
 !
 !**********************************************************************************************************************************
-! File last committed: $Date: 2015-09-04 09:33:56 -0600 (Fri, 04 Sep 2015) $
-! (File) Revision #: $Rev: 333 $
+! File last committed: $Date: 2015-10-05 12:07:59 -0600 (Mon, 05 Oct 2015) $
+! (File) Revision #: $Rev: 343 $
 ! URL: $HeadURL: https://windsvn.nrel.gov/NWTC_Library/trunk/source/NWTC_IO.f90 $
 !**********************************************************************************************************************************
 MODULE NWTC_IO
@@ -35,7 +35,7 @@ MODULE NWTC_IO
 !=======================================================================
 
    TYPE(ProgDesc), PARAMETER    :: NWTC_Ver = &                               ! The name, version, and date of the NWTC Subroutine Library.
-                                    ProgDesc( 'NWTC Subroutine Library', 'v2.06.05a-bjj', '4-Sep-2015')
+                                    ProgDesc( 'NWTC Subroutine Library', 'v2.06.05a-bjj', '5-Oct-2015')
 
    TYPE, PUBLIC                 :: FNlist_Type                                ! This type stores a linked list of file names.
       CHARACTER(1024)                        :: FileName                      ! A file name.
@@ -124,7 +124,9 @@ MODULE NWTC_IO
       MODULE PROCEDURE AllIPAry2
       MODULE PROCEDURE AllFPAry1
       MODULE PROCEDURE AllRPAry2
-      MODULE PROCEDURE AllRPAry3
+      MODULE PROCEDURE AllR4PAry3
+      MODULE PROCEDURE AllR8PAry3
+      MODULE PROCEDURE AllR16PAry3
 !      MODULE PROCEDURE AllRPAry4   !not yet coded
    END INTERFACE
 
@@ -805,14 +807,14 @@ CONTAINS
    RETURN
    END SUBROUTINE AllRPAry2 
 !=======================================================================
-   SUBROUTINE AllRPAry3 (  Ary, AryDim1, AryDim2, AryDim3, Descr, ErrStat, ErrMsg ) 
+   SUBROUTINE AllR4PAry3 (  Ary, AryDim1, AryDim2, AryDim3, Descr, ErrStat, ErrMsg ) 
 
 
       ! This routine allocates a 3-D REAL array.
 
       ! Argument declarations.
 
-   REAL(ReKi),   POINTER             :: Ary    (:,:,:)                             ! Array to be allocated
+   REAL(SiKi),   POINTER             :: Ary    (:,:,:)                             ! Array to be allocated
    INTEGER,      INTENT(IN)          :: AryDim1                                    ! The size of the first dimension of the array.
    INTEGER,      INTENT(IN)          :: AryDim2                                    ! The size of the second dimension of the array.
    INTEGER,      INTENT(IN)          :: AryDim3                                    ! The size of the third dimension of the array.
@@ -839,7 +841,79 @@ CONTAINS
    
    Ary = 0
    RETURN
-  END SUBROUTINE AllRPAry3
+  END SUBROUTINE AllR4PAry3
+!=======================================================================
+   SUBROUTINE AllR8PAry3 (  Ary, AryDim1, AryDim2, AryDim3, Descr, ErrStat, ErrMsg ) 
+
+
+      ! This routine allocates a 3-D REAL array.
+
+      ! Argument declarations.
+
+   REAL(R8Ki),   POINTER             :: Ary    (:,:,:)                             ! Array to be allocated
+   INTEGER,      INTENT(IN)          :: AryDim1                                    ! The size of the first dimension of the array.
+   INTEGER,      INTENT(IN)          :: AryDim2                                    ! The size of the second dimension of the array.
+   INTEGER,      INTENT(IN)          :: AryDim3                                    ! The size of the third dimension of the array.
+   INTEGER,      INTENT(OUT)         :: ErrStat                                    ! Error status
+   CHARACTER(*), INTENT(OUT)         :: ErrMsg                                     ! Error message corresponding to ErrStat
+   CHARACTER(*), INTENT(IN)          :: Descr                                      ! Brief array description.
+
+
+   IF ( ASSOCIATED(Ary) ) THEN
+      DEALLOCATE(Ary)
+      !ErrStat = ErrID_Warn
+      !ErrMsg = " AllRPAry3: Ary already allocated."
+   END IF
+
+   ALLOCATE ( Ary(AryDim1,AryDim2,AryDim3) , STAT=ErrStat )
+   IF ( ErrStat /= 0 ) THEN
+      ErrStat = ErrID_Fatal
+      ErrMsg = 'Error allocating '//TRIM(Num2LStr(AryDim1*AryDim2*AryDim3*BYTES_IN_REAL))//&
+                  ' bytes of memory for the '//TRIM( Descr )//' array.'
+   ELSE
+      ErrStat = ErrID_None
+      ErrMsg  = ''
+   END IF
+   
+   Ary = 0
+   RETURN
+   END SUBROUTINE AllR8PAry3
+!=======================================================================
+   SUBROUTINE AllR16PAry3 (  Ary, AryDim1, AryDim2, AryDim3, Descr, ErrStat, ErrMsg ) 
+
+
+      ! This routine allocates a 3-D REAL array.
+
+      ! Argument declarations.
+
+   REAL(QuKi),   POINTER             :: Ary    (:,:,:)                             ! Array to be allocated
+   INTEGER,      INTENT(IN)          :: AryDim1                                    ! The size of the first dimension of the array.
+   INTEGER,      INTENT(IN)          :: AryDim2                                    ! The size of the second dimension of the array.
+   INTEGER,      INTENT(IN)          :: AryDim3                                    ! The size of the third dimension of the array.
+   INTEGER,      INTENT(OUT)         :: ErrStat                                    ! Error status
+   CHARACTER(*), INTENT(OUT)         :: ErrMsg                                     ! Error message corresponding to ErrStat
+   CHARACTER(*), INTENT(IN)          :: Descr                                      ! Brief array description.
+
+
+   IF ( ASSOCIATED(Ary) ) THEN
+      DEALLOCATE(Ary)
+      !ErrStat = ErrID_Warn
+      !ErrMsg = " AllRPAry3: Ary already allocated."
+   END IF
+
+   ALLOCATE ( Ary(AryDim1,AryDim2,AryDim3) , STAT=ErrStat )
+   IF ( ErrStat /= 0 ) THEN
+      ErrStat = ErrID_Fatal
+      ErrMsg = 'Error allocating '//TRIM(Num2LStr(AryDim1*AryDim2*AryDim3*BYTES_IN_REAL))//&
+                  ' bytes of memory for the '//TRIM( Descr )//' array.'
+   ELSE
+      ErrStat = ErrID_None
+      ErrMsg  = ''
+   END IF
+   
+   Ary = 0
+   RETURN
+   END SUBROUTINE AllR16PAry3
 !=======================================================================
    SUBROUTINE AllLAry1 ( Ary, AryDim, Descr, ErrStat, ErrMsg )
 
@@ -4366,8 +4440,8 @@ CONTAINS
       LastFile => FirstFile
       NULLIFY ( LastFile%Next )
       LastFile%Filename = TopFileName
-      FileInfo%NumLines = 0
       CurrFile => LastFile
+      FileInfo%NumLines = 0
 
       CALL ScanComFile ( FirstFile, CurrFile, LastFile, 1, 0, FileInfo%NumLines, ErrStatLcl, ErrMsg2 )
          CALL SetErrStat( ErrStatLcl, ErrMsg2, ErrStat, ErrMsg, RoutineName )
@@ -4409,7 +4483,7 @@ CONTAINS
          CurrFile => CurrFile%Next
       ENDDO
 
-      
+
          ! Allocate the arrays to hold the non-comments, the files they occur in, and which lines they were found on.
          ! This MUST be done before calling ReadComFile.
 
