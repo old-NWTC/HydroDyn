@@ -67,6 +67,7 @@ else
 
    #Registry     = ~/software-development/windsvn/FAST_Registry/registry.exe
    Registry    := registry.exe
+   Registry := ~/software-development/windsvn/FAST/branches/FAST_Registry/registry.exe
 
    UNAME := $(shell uname -s)
 
@@ -161,6 +162,7 @@ HD_SOURCES =                 \
 	WAMIT_Interp.f90          \
 	WAMIT_Output.f90          \
 	WAMIT.f90                 \
+	UserWaves.f90             \
 	HydroDyn_Output.f90       \
 	HydroDyn_Types.f90        \
 	HydroDyn_Input.f90        \
@@ -237,7 +239,8 @@ Waves2$(OBJ_EXT):                 NWTC_Library$(OBJ_EXT)  Waves2_Types$(OBJ_EXT)
                                      Waves2_Output$(OBJ_EXT)  Waves$(OBJ_EXT)
 
 Waves_Types$(OBJ_EXT):            NWTC_Library$(OBJ_EXT) $(HD_DIR)/Waves_Types.f90
-Waves$(OBJ_EXT):                  Waves_Types$(OBJ_EXT)   NWTC_FFTPACK$(OBJ_EXT)
+Waves$(OBJ_EXT):                  Waves_Types$(OBJ_EXT)   NWTC_FFTPACK$(OBJ_EXT) UserWaves$(OBJ_EXT)
+
 
 Current_Types$(OBJ_EXT):          NWTC_Library$(OBJ_EXT) $(HD_DIR)/Current_Types.f90
 Current$(OBJ_EXT):                Current_Types$(OBJ_EXT)
@@ -272,6 +275,7 @@ HydroDyn$(OBJ_EXT):               HydroDyn_Types$(OBJ_EXT)  HydroDyn_Input$(OBJ_
 
 HydroDyn_DriverCode$(OBJ_EXT):    HydroDyn$(OBJ_EXT)
 
+UserWaves$(OBJ_EXT):              NWTC_Library$(OBJ_EXT) NWTC_FFTPACK$(OBJ_EXT) 
 
 
    # Make sure the destination directory for the intermediate files exist.
