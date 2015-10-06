@@ -6,7 +6,7 @@ TRUE             Echo                - Echo the input file data (flag)
 ---------------------- HYDRODYN -----------------------------------------------
 "./Test_006.dat" HDInputFile         - Primary HydroDyn input file name (quoted string)
 "./Test_006"     OutRootName         - The name which prefixes all HydroDyn generated files (quoted string)
-40800            NSteps              - Number of time steps in the simulations (-)
+4080            NSteps              - Number of time steps in the simulations (-)
 0.00729          TimeInterval        - TimeInterval for the simulation (sec)
 ---------------------- WAMIT INPUTS -------------------------------------------
 0                WAMITInputsMod      - Inputs model {0: all inputs are zero for every timestep, 1: steadystate inputs, 2: read inputs from a file (InputsFile)} (switch)
