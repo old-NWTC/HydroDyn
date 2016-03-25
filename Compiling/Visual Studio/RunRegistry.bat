@@ -41,7 +41,7 @@ REM ----------------------------------------------------------------------------
 
 
 
-%REGISTRY% "%HD_Reg_Loc%\%ModuleName%.txt" -I %NWTC_Lib_Loc% -I %HD_Reg_Loc%
+%REGISTRY% "%HD_Reg_Loc%\%ModuleName%.txt" -I %NWTC_Lib_Loc% -I %HD_Reg_Loc% -O %Source_Loc%
 GOTO checkError
 
 
@@ -51,7 +51,7 @@ IF %ERRORLEVEL% NEQ 0 (
 ECHO Error running  Registry for HydroDyn.
 ) ELSE (
 ECHO %ModuleName%_Types.f90 was created.
-COPY /Y "%ModuleName%_Types.f90" "%Source_Loc%"
+rem COPY /Y "%ModuleName%_Types.f90" "%Source_Loc%"
 )
 
 
