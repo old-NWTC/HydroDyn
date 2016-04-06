@@ -17,8 +17,8 @@
 ! limitations under the License.
 !
 !**********************************************************************************************************************************
-! File last committed: $Date: 2016-01-21 14:33:25 -0700 (Thu, 21 Jan 2016) $
-! (File) Revision #: $Rev: 357 $
+! File last committed: $Date: 2016-04-04 14:01:20 -0600 (Mon, 04 Apr 2016) $
+! (File) Revision #: $Rev: 366 $
 ! URL: $HeadURL: https://windsvn.nrel.gov/NWTC_Library/trunk/source/ModMesh_Mapping.f90 $
 !**********************************************************************************************************************************
 !> This code implements the spatial mapping algorithms described in 
@@ -1045,16 +1045,17 @@ SUBROUTINE CreateMapping_ProjectToLine2(Mesh1, Mesh2, NodeMap, Mesh1_TYPE, ErrSt
 #ifdef DEBUG_MESHMAPPING
                WRITE( Un, '(A,I5,A,I5,A,ES10.5,A)' ) 'Element ', closest_elem, ' is closest to node ', i, &
                                                    '. It has a relative position of ', closest_elem_position, '.'
-#endif               
+
                WRITE( Un, '(A)') '************************************************** Mesh1 ***************************************************'
-               WRITE( Un, '(A)' ) 'Mesh1 is the destination mesh for transfer of motions/scalars; it is the source mesh for transfer of loads.'
+               WRITE( Un, '(A)') 'Mesh1 is the destination mesh for transfer of motions/scalars; it is the source mesh for transfer of loads.'
                WRITE( Un, '(A)') '************************************************************************************************************'
                CALL MeshPrintInfo ( Un, Mesh1 )
                WRITE( Un, '(A)') '************************************************** Mesh2 ***************************************************'
-               WRITE( Un, '(A)' ) 'Mesh2 is the source mesh for transfer of motions/scalars; it is the destination mesh for transfer of loads.'
+               WRITE( Un, '(A)') 'Mesh2 is the source mesh for transfer of motions/scalars; it is the destination mesh for transfer of loads.'
                WRITE( Un, '(A)') '************************************************************************************************************'
                CALL MeshPrintInfo ( Un, Mesh2 )
                ! CLOSE(Un) ! by not closing this, I can ensure unique file names.
+#endif               
                
                RETURN
             endif
