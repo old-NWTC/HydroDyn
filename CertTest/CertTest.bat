@@ -18,6 +18,7 @@ rem @SET MBC_SOURCE=C:\Users\bjonkman\Data\DesignCodes\MBC\Source
 
 ::=======================================================================================================
 IF /I "%1"=="-DEBUG" GOTO debugVer
+IF /I "%1"=="-X64" GOTO x64
 IF /I "%1"=="-GFORTRAN" GOTO gfortran
 IF /I "%1"=="-IFORT" GOTO ifort
 IF /I "%1"=="-DEVBUILD" GOTO devBuild
@@ -26,6 +27,11 @@ IF /I "%1"=="-DEVDEBUG" GOTO devDebugBuild
 :releaseVer
 @SET EXE_VER=Using released version of HydroDynDriver (IVF/VS)
 @SET HydroDyn=..\bin\HydroDynDriver_win32.exe
+goto CertTest
+
+:x64
+@SET EXE_VER=Using released version of HydroDynDriver (IVF/VS)
+@SET HydroDyn=..\bin\HydroDynDriver_x64.exe
 goto CertTest
 
 :debugVer
